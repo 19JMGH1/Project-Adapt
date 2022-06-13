@@ -33,16 +33,20 @@ public class CraftingRecipes {
 		else if (LESU()) {}
 		else if (coalGenerator()) {}
 		else if (refiner()) {}
+		else if (heatingCoil()) {}
+		else if (electricFurnace()) {}
+
 		//Shapeless crafting recipes go at the bottom to take less priority
 		else if (sharpStone()) {}
 		else if (tier1Crafting()) {}
+		else {System.out.println("No craft");} //Used for testing purposes
 	}
 
 	//Shaped crafting recipes start here
 	public boolean stonePick()
 	{
 		int IDs[][] = {{1, 4},
-					   {2, 0}};
+				{2, 0}};
 		int numOfItems[][] = {{1, 1}, {2, 1}, {4, 1}};
 		return shapedCrafting(IDs, numOfItems, 6, 1);
 	}
@@ -70,12 +74,12 @@ public class CraftingRecipes {
 		int numOfItems[][] = {{2, 2}};
 		return shapedCrafting(IDs, numOfItems, 9, 1);
 	}
-	
+
 	public boolean cabinet()
 	{
 		int IDs[][] =  {{2, 2, 2},
-						{2, 0, 2},
-						{2, 2, 2}};
+				{2, 0, 2},
+				{2, 2, 2}};
 		int numOfItems[][] = {{2, 8}};
 		return shapedCrafting(IDs, numOfItems, 40, 1);
 	}
@@ -91,83 +95,101 @@ public class CraftingRecipes {
 	public boolean mine()
 	{
 		int IDs[][] = {{1, 1, 1}, 
-					   {1, 0, 1},
-					   {1, 6, 1}};
+				{1, 0, 1},
+				{1, 6, 1}};
 		int numOfItems[][] = {{1, 7}, {6, 1}};
 		return shapedCrafting(IDs, numOfItems, 11, 1);
 	}
 	public boolean blastFurnace()
 	{
 		int IDs[][] = {{1, 0, 1}, 
-					   {1, 0, 1},
-					   {1, 12, 1}};
+				{1, 0, 1},
+				{1, 12, 1}};
 		int numOfItems[][] = {{12, 1}, {1, 7}};
 		return shapedCrafting(IDs, numOfItems, 21, 1);
 	}
-	
+
 	public boolean tier2Crafting()
 	{
 		int IDs[][] = {{22, 22, 22}, 
-					   {22, 23, 22},
-					   {22, 22, 22}};
+				{22, 23, 22},
+				{22, 22, 22}};
 		int numOfItems[][] = {{23, 1}, {22, 8}};
 		return shapedCrafting(IDs, numOfItems, 28, 1);
 	}
-	
-	public boolean anvil()
+
+	public boolean ironPick()
 	{
 		int IDs[][] = {{22, 22, 22, 0}, 
-					   {0, 2, 0, 22},
-					   {0, 2, 0, 0},
-					   {0, 2, 0, 0}};
+				{0, 2, 0, 22},
+				{0, 2, 0, 0},
+				{0, 2, 0, 0}};
 		int numOfItems[][] = {{2, 3}, {22, 4}};
 		return shapedCrafting(IDs, numOfItems, 20, 1);
 	}
-	
-	public boolean ironPick()
+
+	public boolean anvil()
 	{
 		int IDs[][] = {{22, 22, 22}, 
-					   {0, 22, 0},
-					   {22, 22, 22}};
+				{0, 22, 0},
+				{22, 22, 22}};
 		int numOfItems[][] = {{22, 7}};
 		return shapedCrafting(IDs, numOfItems, 29, 1);
 	}
-	
+
 	public boolean copperWires()
 	{
 		int IDs[][] = {{23, 23, 23}};
 		int numOfItems[][] = {{23, 3}};
 		return shapedCrafting(IDs, numOfItems, 31, 10); 
 	}
-	
+
 	public boolean LESU() //LESU stands for lithium energy storage unit
 	{
 		int IDs[][] = {{22, 31, 31, 22}, 
-					   {31, 25, 25, 31},
-					   {31, 25, 25, 31},
-					   {22, 31, 31, 22}};
+				{31, 25, 25, 31},
+				{31, 25, 25, 31},
+				{22, 31, 31, 22}};
 		int numOfItems[][] = {{22, 4}, {31, 8}, {25, 4}};
 		return shapedCrafting(IDs, numOfItems, 30, 1);
 	}
-	
+
 	public boolean coalGenerator()
 	{
 		int IDs[][] =  {{22, 31, 31, 22}, 
-						{31, 22, 22, 31},
-						{31, 22, 22, 31},
-						{22, 31, 31, 22}};
-	int numOfItems[][] = {{22, 8}, {31, 8}};
-	return shapedCrafting(IDs, numOfItems, 32, 1);
+				{31, 22, 22, 31},
+				{31, 22, 22, 31},
+				{22, 31, 31, 22}};
+		int numOfItems[][] = {{22, 8}, {31, 8}};
+		return shapedCrafting(IDs, numOfItems, 32, 1);
 	}
-	
+
 	public boolean refiner()
 	{
 		int IDs[][] =  {{22, 31, 31, 22}, 
-						{31, 24, 24, 31},
-						{31, 24, 24, 31},
-						{22, 31, 31, 22}};
-	int numOfItems[][] = {{22, 4}, {24, 4}, {31, 8}};
-	return shapedCrafting(IDs, numOfItems, 33, 1);
+				{31, 24, 24, 31},
+				{31, 24, 24, 31},
+				{22, 31, 31, 22}};
+		int numOfItems[][] = {{22, 4}, {24, 4}, {31, 8}};
+		return shapedCrafting(IDs, numOfItems, 33, 1);
+	}
+
+	private boolean heatingCoil() {
+		int IDs[][] =  {{31, 22, 22, 0}, 
+				{0, 22, 0, 22},
+				{22, 0, 0, 22},
+				{0, 22, 22, 0}};
+		int numOfItems[][] = {{22, 8}, {31, 1}};
+		return shapedCrafting(IDs, numOfItems, 42, 4);
+	}
+
+	private boolean electricFurnace() {
+		int IDs[][] =  {{22, 31, 31, 22}, 
+				{31, 42, 42, 31},
+				{31, 42, 42, 31},
+				{22, 31, 31, 22}};
+		int numOfItems[][] = {{22, 4}, {31, 1}, {42, 4}};
+		return shapedCrafting(IDs, numOfItems, 41, 1);
 	}
 
 	//Shapeless crafting recipes start here
@@ -187,6 +209,16 @@ public class CraftingRecipes {
 
 	public boolean shapedCrafting(int itemIDs[][], int numPerID[][], int IDToCraft, int numToCraft)
 	{
+		//The "firstItem" variable and the for loop below makes it possible
+		//for the top left slot of any crafting recipe to be an empty slot.
+		byte firstItem = 0;
+		for (byte i = 0; i < itemIDs[0].length; i++) {
+			if (itemIDs[0][i] != 0) {
+				firstItem = i;
+				break;
+			}
+		}
+		
 		boolean correctRecipe = true;
 		boolean enoughItems = true;
 		//Checks for the correct recipe
@@ -196,19 +228,19 @@ public class CraftingRecipes {
 		{
 			for (int i = 0; i < 5; i++)
 			{
-				if (game.craftingBoxes[i][j] == itemIDs[0][0] && !itemSlotUsed[i][j])
+				if (game.craftingBoxes[i][j] == itemIDs[0][0+firstItem] && !itemSlotUsed[i][j])
 				{
 					//System.out.println(itemIDs.length+", "+itemIDs[0].length); //For testing purposes
 					for (int y = 0; y < itemIDs.length; y++)
 					{
 						for (int x = 0; x < itemIDs[0].length; x++)
 						{
-							if ((i+x > 4)||(j+y > 4))
+							if (((i+x-firstItem) > 4)||(j+y > 4))
 							{
 								correctRecipe = false;
 								return false;
 							}
-							if (!(game.craftingBoxes[i+x][j+y] == itemIDs[y][x]))
+							if (!(game.craftingBoxes[i+x-firstItem][j+y] == itemIDs[y][x]))
 							{
 								y = itemIDs.length;
 								x = itemIDs[0].length;
@@ -217,7 +249,7 @@ public class CraftingRecipes {
 							}
 							else
 							{
-								itemSlotUsed[i+x][j+y] = true;
+								itemSlotUsed[i+x-firstItem][j+y] = true;
 							}
 						}
 					}

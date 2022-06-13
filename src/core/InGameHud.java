@@ -103,10 +103,10 @@ public class InGameHud {
 	
 	public void render(Graphics g) {
 		g.setFont(XYPositionFont);
+		g.setColor(Color.black);
 		g.drawString("Position: "+(game.TileX+game.ChunkX*16)+", "+(game.TileY+game.ChunkY*16), 0, (int) ShowXYPosition.getHeight());
 		Color col = new Color(0, 0, 0, 100);
 		g.setColor(col);
-		g.fillRect(10, 10, 10, 10);
 		
 		if (game.Paused) {
 			g.setColor(BackgroundBoxColor);

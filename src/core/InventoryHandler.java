@@ -10,8 +10,9 @@ import java.io.IOException;
 
 import javax.imageio.ImageIO;
 
-import containers.electronics.Electronic;
+import core.playerInput.MouseHandler;
 import items.ItemIDs;
+import processors.electronics.Electronic;
 import tiles.SurfaceTileIDs;
 
 public class InventoryHandler {
@@ -27,7 +28,7 @@ public class InventoryHandler {
 	BufferedImage Gray_Flame;
 	BufferedImage IO_Button;
 	BufferedImage IO_Arrows;
-	
+
 	static Color electronicOutputColor = Color.red;
 	static Color electronicInputColor = Color.blue;
 	static Color electronicIOColor = Color.orange;
@@ -146,22 +147,23 @@ public class InventoryHandler {
 		{
 			spriteSheetXY[0] = 0;
 			spriteSheetXY[1] = 0;
-			//All code for this method goes here
+			for(int j = 0; j < 6; j++) //If you remove enough items from a slot to make it zero, then remove that item from the slot.
+			{
+				for (int i = 0; i < 5; i++)
+				{
+					if (game.Inventory[i][j][1] == 0)
+					{
+						game.Inventory[i][j][0] = 0;
+					}
+				}
+			}
+			if (game.grabbedItem[1] == 0) { //If your grabbed item runs out of items, then remove that item from your grabbed item
+				game.grabbedItem[0] = 0;
+			}
 		}
 		else
 		{
 			game.HighlightedItem = 0;
-		}
-
-		for(int j = 0; j < 6; j++) //If you remove enough items from a slot to make it zero, then remove that item from the slot.
-		{
-			for (int i = 0; i < 5; i++)
-			{
-				if (game.Inventory[i][j][1] == 0)
-				{
-					game.Inventory[i][j][0] = 0;
-				}
-			}
 		}
 	}
 
@@ -256,7 +258,7 @@ public class InventoryHandler {
 						g.fillRect(topLeftCornerX+6*iconSize, topLeftCornerY, iconSize*5, iconSize*5);
 
 						g.drawImage(game.TilesSprite, topLeftCornerX+8*iconSize, topLeftCornerY+2*iconSize, topLeftCornerX+iconSize+8*iconSize, topLeftCornerY+iconSize+2*iconSize, spriteSheetXY[0]*320, spriteSheetXY[1]*320, spriteSheetXY[0]*320+320, spriteSheetXY[1]*320+320, null);
-						
+
 						//Adds the arrows for output sides of a machine
 						Electronic e = (Electronic) game.curentlyOpenedContainer;
 						int spriteX;
@@ -416,6 +418,11 @@ public class InventoryHandler {
 					g.drawString(""+game.Inventory[i][5][1], topLeftCornerX+i*iconSize+iconSize/16,Main_Game.HEIGHT-iconSize/16);
 				}
 			}
+		}
+		if (game.inventoryOpened && game.grabbedItem[0] != 0) {
+			spriteSheetXY = ItemIDs.getSpriteSheet(game.grabbedItem[0]);
+			g.drawImage(InventoryItems, MouseHandler.mouseX-iconSize/2, MouseHandler.mouseY-iconSize/2, MouseHandler.mouseX+iconSize/2, MouseHandler.mouseY+iconSize/2, spriteSheetXY[0]*SpriteSheetWidth, spriteSheetXY[1]*SpriteSheetHeight, spriteSheetXY[0]*SpriteSheetWidth+SpriteSheetWidth, spriteSheetXY[1]*SpriteSheetHeight+SpriteSheetHeight, null);
+			g.drawString(""+game.grabbedItem[1], MouseHandler.mouseX-iconSize/2+iconSize/16, MouseHandler.mouseY+iconSize/2-iconSize/16);
 		}
 	}
 

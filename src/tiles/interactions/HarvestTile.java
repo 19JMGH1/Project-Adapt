@@ -1,11 +1,8 @@
 package tiles.interactions;
 
-import containers.ContainerIDs;
-import containers.ContainerProcessors;
 import core.Identifications;
 import core.InventoryHandler;
 import core.Main_Game;
-import tiles.SurfaceTileIDs;
 
 public class HarvestTile {
 	
@@ -21,6 +18,7 @@ public class HarvestTile {
 	{
 		boolean collected = true;
 		if (game.dimension == 0) { //This else-if runs through all the methods needed to harvest a given tile
+			
 			if (tileValue == 1) //Harvesting boulders
 			{
 				if (inventoryhandler.isPick(game.Inventory[game.SelectedHotbar][5][0]))
@@ -122,10 +120,15 @@ public class HarvestTile {
 			else if (tileValue == 20) {
 				basicContainerHarvest((byte) 40, chunk, tileX, tileY, "Cabinet");
 			}
-			if (ContainerIDs.containerExists(SurfaceTileIDs.values()[tileValue].toString())) { //Removing containers from the processor linked list
-				ContainerProcessors c = game.containerprocesshandler.getProcessor(ContainerIDs.valueOf(SurfaceTileIDs.values()[tileValue].toString()), game.StoredTiles[chunk][tileX][Math.abs(tileY)][1]);
-				c.remove();
+			else if (tileValue == 21) {
+				basicContainerHarvest((byte) 41, chunk, tileX, tileY, "ElectricFurnace");
 			}
+			//The lines of code found below are not done in the basicContainerHarvest method in a slightly different way.
+//			if (ProcessorIDs.containerExists(SurfaceTileIDs.values()[tileValue].toString())) { //Removing containers from the processor linked list
+//				Processors c = game.processhandler.getProcessor(ProcessorIDs.valueOf(SurfaceTileIDs.values()[tileValue].toString()), game.StoredTiles[chunk][tileX][Math.abs(tileY)][1]);
+//				c.remove();
+//				
+//			}
 		}
 		else if (game.dimension == 1) { //Harvesting items in the mining dimension
 			if (tileValue == 1) //Harvesting coal
@@ -252,6 +255,8 @@ public class HarvestTile {
 			game.addDropedItem(invValue, 1);
 			game.files.deleteTextFile("Files/File "+game.CurrentFile+"/Tiles/"+filePrefix+" "+game.StoredTiles[chunk][tileX][Math.abs(tileY)][1]+".txt");
 			game.StoredTiles[chunk][tileX][Math.abs(tileY)][0] = 0;
+			game.processhandler.reloadProcessors();
+			game.daytimecycle.removeLightSource((byte) chunk, (byte) tileX, (byte) tileY);
 		}
 	}
 

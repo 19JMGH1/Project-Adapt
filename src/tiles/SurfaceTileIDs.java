@@ -24,6 +24,7 @@ public enum SurfaceTileIDs {
 	CoalGenerator("Coal Generator"),
 	Refiner(),
 	Cabinet(),
+	ElectricFurnace("Electric Furnace"),
 	ENDOFLIST;
 	
 	private String name;

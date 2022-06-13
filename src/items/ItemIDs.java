@@ -44,6 +44,8 @@ public enum ItemIDs { //An items invID can be obtained by looking at the line of
 	RefinedUraniumOre("Refined Uranium Ore"),
 	RefinedAluminumOre("Refined Aluminum Ore"),
 	Cabinet(),
+	ElectricFurnace("Electric Furnace"),
+	HeatingCoil("Heating Coil"),
 	ENDOFLIST();
 	
 	private String name;

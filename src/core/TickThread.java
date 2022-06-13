@@ -26,8 +26,7 @@ public class TickThread implements Runnable{
 		long now;
 		long updateTime;
 		long wait;
-		final int TARGET_FPS = 30;
-		final long OPTIMAL_TIME = 1000000000 / TARGET_FPS;
+		final long OPTIMAL_TIME = 1000000000 / Main_Game.Target_TPS;
 		while (running) {
 			now = System.nanoTime();
 			game.tick();
@@ -42,7 +41,7 @@ public class TickThread implements Runnable{
 				}
 			}
 			//System.out.println("FPS: "+(1000/wait));
-			//System.out.println(wait);
+			//System.out.println("Tick: "+wait);
 		}
 	}
 }

@@ -1,16 +1,16 @@
 package tiles.interactions;
 
-import containers.BlastFurnace;
-import containers.Cabinet;
-import containers.ContainerProcessHandler;
-import containers.electronics.CoalGenerator;
-import containers.electronics.CopperWire;
-import containers.electronics.ElectronicHandler;
-import containers.electronics.LESU;
-import containers.electronics.Refiner;
-import core.Interactions;
 import core.Main_Game;
 import items.ItemIDs;
+import processors.BlastFurnace;
+import processors.Cabinet;
+import processors.ProcessHandler;
+import processors.electronics.CoalGenerator;
+import processors.electronics.CopperWire;
+import processors.electronics.ElectricFurnace;
+import processors.electronics.ElectronicHandler;
+import processors.electronics.LESU;
+import processors.electronics.Refiner;
 
 public class PlaceTile {
 	
@@ -27,6 +27,7 @@ public class PlaceTile {
 		int y = 5;
 		short invValue = game.Inventory[x][y][0];
 		boolean itemUsed = true;
+		
 		if (invValue == 8) //Placing a wall tile
 		{
 			game.StoredTiles[chunk][tileX][Math.abs(tileY)][0] = 4;
@@ -60,7 +61,7 @@ public class PlaceTile {
 			int chunkX = game.ChunkX+(chunk%3);
 			int chunkY = game.ChunkY+(chunk/3);
 			BlastFurnace bf = new BlastFurnace(game, game.StoredTiles[chunk][tileX][Math.abs(tileY)][1], chunkX, chunkY, tileX, Math.abs(tileY));
-			ContainerProcessHandler.processors.add(bf);
+			ProcessHandler.processors.add(bf);
 		}
 		else if (invValue == 29) //Placing an anvil
 		{
@@ -76,7 +77,7 @@ public class PlaceTile {
 			int chunkX = game.ChunkX+(chunk%3);
 			int chunkY = game.ChunkY+(chunk/3);
 			LESU lesu = new LESU(game, game.StoredTiles[chunk][tileX][Math.abs(tileY)][1], chunkX, chunkY, tileX, Math.abs(tileY));
-			ContainerProcessHandler.processors.add(lesu);
+			ProcessHandler.processors.add(lesu);
 			ElectronicHandler.electronics.add(lesu);
 		}
 		else if (invValue == 31) //Placing a copper wire
@@ -89,7 +90,7 @@ public class PlaceTile {
 			int chunkX = game.ChunkX+(chunk%3);
 			int chunkY = game.ChunkY+(chunk/3);
 			CopperWire cw = new CopperWire(game, game.StoredTiles[chunk][tileX][Math.abs(tileY)][1], chunkX, chunkY,  tileX, Math.abs(tileY));
-			ContainerProcessHandler.processors.add(cw);
+			ProcessHandler.processors.add(cw);
 			ElectronicHandler.electronics.add(cw);
 		}
 		else if (invValue == 32) //Placing a coal generator
@@ -102,7 +103,7 @@ public class PlaceTile {
 			int chunkX = game.ChunkX+(chunk%3);
 			int chunkY = game.ChunkY+(chunk/3);
 			CoalGenerator cg = new CoalGenerator(game, game.StoredTiles[chunk][tileX][Math.abs(tileY)][1], chunkX, chunkY, tileX, Math.abs(tileY));
-			ContainerProcessHandler.processors.add(cg);
+			ProcessHandler.processors.add(cg);
 			ElectronicHandler.electronics.add(cg);
 		}
 		else if (invValue == 33) //Placing a refiner
@@ -114,7 +115,7 @@ public class PlaceTile {
 			int chunkX = game.ChunkX+(chunk%3);
 			int chunkY = game.ChunkY+(chunk/3);
 			Refiner refiner = new Refiner(game, game.StoredTiles[chunk][tileX][Math.abs(tileY)][1], chunkX, chunkY, tileX, Math.abs(tileY));
-			ContainerProcessHandler.processors.add(refiner);
+			ProcessHandler.processors.add(refiner);
 			ElectronicHandler.electronics.add(refiner);
 		}
 		else if (invValue == 40) //Placing a cabinet
@@ -125,7 +126,17 @@ public class PlaceTile {
 			int chunkX = game.ChunkX+(chunk%3);
 			int chunkY = game.ChunkY+(chunk/3);
 			Cabinet c = new Cabinet(game, game.StoredTiles[chunk][tileX][Math.abs(tileY)][1], chunkX, chunkY, tileX, Math.abs(tileY));
-			ContainerProcessHandler.processors.add(c);
+			ProcessHandler.processors.add(c);
+		}
+		else if (invValue == 41) //Placing an electric furnace
+		{
+			short tileID = 21;
+			game.StoredTiles[chunk][tileX][Math.abs(tileY)][0] = tileID;
+			game.StoredTiles[chunk][tileX][Math.abs(tileY)][1] = game.files.getTileFileID(tileID);
+			int chunkX = game.ChunkX+(chunk%3);
+			int chunkY = game.ChunkY+(chunk/3);
+			ElectricFurnace c = new ElectricFurnace(game, game.StoredTiles[chunk][tileX][Math.abs(tileY)][1], chunkX, chunkY, tileX, Math.abs(tileY));
+			ProcessHandler.processors.add(c);
 		}
 		else
 		{

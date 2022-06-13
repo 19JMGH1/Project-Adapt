@@ -1,0 +1,12 @@
+Adding a New Container:  (Note: Some java files may have been moved to other packages)
+
+Design the inventory item for the container by editing Inventory_Items.png in piskel
+Design the tile for the container by editing Tiles.png in piskel
+Add any tile changes that the tile might have by editing Tile Aditions.png in piskel
+Make a class that extends ContainerProcessors (Or Electronic if its an electrical container) that will handle the container
+Add the container's item ID to items.ItemIDs.java
+Add the container's surface tile ID to tiles.SurfaceTileIDs.java
+Add the container's Container ID to containers.ContainerIDs.java
+Make the tile place-able by adding it to the list of else-if statements that starts on line 31 of tiles.interactions.PlaceTile.java
+Make the tile harvest-able by adding it to the list of else-if statements that starts on line 25 of tiles.interactions.HarvestTile.java
+Make the crafting recipe in items.CraftingRecipes.java

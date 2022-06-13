@@ -19,19 +19,25 @@ import java.util.LinkedList;
 
 import javax.imageio.ImageIO;
 
-import containers.ContainerProcessHandler;
-import containers.ContainerProcessors;
-import containers.TileAnimations;
+import core.lighting.DayTimeCycle;
+import core.playerInput.KeyInput;
+import core.playerInput.MouseHandler;
 import tiles.BasicTiles;
 import tiles.MiningTiles;
 import tiles.interactions.HarvestTile;
+import tiles.interactions.Interactions;
 import tiles.interactions.PlaceTile;
 import entities.Handler;
 import entities.ItemDrops;
 import items.CraftingRecipes;
+import items.InventoryManagement;
 import menus.FileMenu;
 import menus.MainMenu;
+import processors.ProcessHandler;
+import processors.Processors;
+import processors.TileAnimations;
 import entities.Character;
+import entities.Collision;
 import entities.DimensionName;
 import entities.EntityIDs;
 
@@ -42,48 +48,54 @@ public class Main_Game extends Canvas implements Runnable{
 	static Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
 	public static int HEIGHT = screenSize.height-screenSize.height/20, WIDTH = screenSize.width-screenSize.width/20;
 
-	public static final int maxStackSize = 50;
-	
-	public static final int BlastFurnaceCookTime = 300; //This number is measured in frames, where there are 30 frames per second
-	public static final int coalBurnTime = 5;
-	
-	public static final int invItemsSpriteWidth = 6; //This is how many items fit horizontally across one row of the items sprite sheet
+	public static final int Target_TPS = 30;
+	public static final int Target_FPS = 30;
+
+	public static final int maxStackSize = 50; //The max number of items allowed in an inventory slot
+
+	public static final int FurnaceCookTime = 300; //This number is measured in tick, where there are the value of Target_TPS ticks in a second
+	public static final int coalBurnTime = 5; //How many times the flame ticks down with coal
+
+	public static final int invItemsSpriteWidth = 7; //This is how many items fit horizontally across one row of the items sprite sheet
 	public static final int surfaceTileSpriteWidth = 5; //This is how many items fit horizontally across one of the rows of the surface tile sprite sheet
 	public static final int coveTileSpriteWidth = 3; //This is how many items fit horizontally across one of the rows of the cove tile sprite sheet
 
-	public Thread thread1;
-	private boolean running = false;
-	public boolean rendering = true;
+	public Thread thread1; //The render thread
+	private boolean running = false; //Is the game running?
 
-	public BufferedImage BackgroundArt;
-	public BufferedImage TilesSprite;
+	public BufferedImage BackgroundArt; //The picture that appears in the background of the menus
+	public BufferedImage TilesSprite; //This variable stores the surface tile sprite sprite sheet
 
-	public int BackgroundArtWidth = WIDTH;
+	public int BackgroundArtWidth = WIDTH; //Used in defining the background art size when it renders to the screen
 	public int BackgroundArtHeight = (int) (WIDTH*1.8125);
 
-	//variable that stores which file is being used
-	public int CurrentFile = 0;
+	public int CurrentFile = 0; //variable that stores which file is opened
 
 	//Variable that store the part of the world that is currently loaded
 	//A 3 by 3 grid of chunks is always loaded
 	//the last 2 dimensions are the size of each loaded chunk, the 9 is because 9 chunks are loaded at one time
-	public short[] [] [] [] StoredTiles = new short [9][16][16][3];
-	//this integer stores the seed for the world
-	public Integer seed = null;
+	public short[] [] [] [] StoredTiles = new short [9][16][16][3]; //Stores what kind of tile is in each spot and this array allows for some tiles to have extra data in them.
+	public byte[] [] [] lightLevels = new byte[9][16][16]; //This array stores the light level on each tile
+
+	public static final byte MAX_LIGHT_LEVEL = 11; //This number is the max light level -1 since 0 is a light level that is included in this list
+	public Integer seed = null; //this integer stores the seed for the world
 	//this array stores all the information about the players inventory
 	public short[] [] []Inventory = new short [5][6][2]; //It's a 5 by 5 inventory, and two values, one is the ID, other is amount of items in the slot.
+	public short[] grabbedItem = new short [2]; //Stores the data about the item that is attached to the mouse
+	//TODO: the grabbed item is rendered to the screen properly, now you just have to re-code the Inventory management to deal with it
+	
 	//The 6th value in the second component of the inventory stores the hotbar
-	
-	public ContainerProcessors curentlyOpenedContainer = null;
+
+	public Processors curentlyOpenedContainer = null; //Points to the object that is the currently opened container
 	public byte highlightedContainerItem = 0;
-	public boolean configuringIO = false;
-	
+	public boolean configuringIO = false; //Stores whether or not an electrical machine's input/output control is being edited
+
 	public byte SelectedHotbar = 0; //Tracks which hotbar slot is currently selected
 	public byte HighlightedItem = 0; //Controls the item that has been selected by the player
-	public boolean inventoryOpened = false;
-	public short craftingBoxes[][] = new short[5][5];
+	public boolean inventoryOpened = false; //Stores whether or not the inventory is opened
+	public short craftingBoxes[][] = new short[5][5]; //Stores the items that are in each slot of the crafting area
 	public byte craftingLevel = 0; //0 for a 2 by 1, 1 for a 2 by 2, 2 for a 3 by 3, 3 for a 4 by 4, 4 for a 5 by 5 
-	public byte tempCraftingLevel = 0;
+	public byte tempCraftingLevel = 0; //Variable that controls an increased crafting level due to standing near a table or anvil or ect.
 
 	//Aspect Ratio is WIDTH = 17 and HEIGHT = 21
 	public int CharacterWidth = Main_Game.WIDTH/20;
@@ -105,6 +117,7 @@ public class Main_Game extends Canvas implements Runnable{
 	public int characterX = (Main_Game.WIDTH/2)-CharacterWidth/2;
 	public int characterY = (Main_Game.HEIGHT/2)-CharacterHeight/2;
 
+	//The red color used for buttons in the menus
 	public Color titleRedColor = new Color(240, 0, 0);
 
 	public boolean resized = true;
@@ -119,14 +132,16 @@ public class Main_Game extends Canvas implements Runnable{
 	public Files files;
 	private WorldGeneration worldgen;
 	private InGameHud ingamehud;
-	private InventoryHandler inventoryhandler;
+	public InventoryHandler inventoryhandler;
 	public Collision collision;
 	private CraftingRecipes craftingrecipes;
-	private Interactions interactions;
-	public ContainerProcessHandler containerprocesshandler;
+	public Interactions interactions;
+	public ProcessHandler processhandler;
 	public HarvestTile harvesttile;
 	public PlaceTile placetile;
 	public TileAnimations tileanimations;
+	public DayTimeCycle daytimecycle;
+	public InventoryManagement inventorymanagment;
 
 	public TickThread tickthread;
 
@@ -139,9 +154,11 @@ public class Main_Game extends Canvas implements Runnable{
 	public boolean APressed = false;
 	public boolean SPressed = false;
 	public boolean DPressed = false;
-	
+
 	//This is stuff for different dimensions
 	public byte dimension = 0; //0 corresponds to the surface, 1 corresponds to the cove
+	
+	public boolean justCrafted = false;
 
 	public Main_Game() { //Initialize all the classes
 		handler = new Handler(this);
@@ -154,13 +171,16 @@ public class Main_Game extends Canvas implements Runnable{
 		collision = new Collision(this);
 		craftingrecipes = new CraftingRecipes(this, inventoryhandler);
 		interactions = new Interactions(this, files);
-		containerprocesshandler = new ContainerProcessHandler(this);
+		processhandler = new ProcessHandler(this);
 		harvesttile = new HarvestTile(this, inventoryhandler);
 		placetile = new PlaceTile(this, interactions);
+		daytimecycle = new DayTimeCycle(this);
+		inventorymanagment = new InventoryManagement(this);
+		
 
 		tickthread = new TickThread(this);
 
-		mousehandler = new MouseHandler(this, mainmenu, filemenu, files, ingamehud, interactions, inventoryhandler, craftingrecipes);
+		mousehandler = new MouseHandler(this, mainmenu, filemenu, files, ingamehud, interactions, craftingrecipes);
 		keyinput = new KeyInput(this, filemenu, craftingrecipes);
 
 		this.addMouseListener(mousehandler);
@@ -194,13 +214,13 @@ public class Main_Game extends Canvas implements Runnable{
 		thread1.start();
 		System.out.println("First thread started");
 		tickthread.start();
-		containerprocesshandler.start();
+		processhandler.start();
 	}
 
 	public void close() {
 		running = false;
 		tickthread.running = false;
-		containerprocesshandler.running = false;
+		processhandler.running = false;
 		window.frame.dispose();
 	}
 
@@ -209,15 +229,12 @@ public class Main_Game extends Canvas implements Runnable{
 		long now;
 		long updateTime;
 		long wait;
-		final int TARGET_FPS = 30;
-		final long OPTIMAL_TIME = 1000000000 / TARGET_FPS;
+		final long OPTIMAL_TIME = 1000000000 / Target_FPS;
 
 		while (running) {
 			now = System.nanoTime();
 			//tick();
-			if (rendering) {
-				render();
-			}
+			render();
 			updateTime = System.nanoTime() - now;
 			wait = (OPTIMAL_TIME - updateTime) / 1000000;
 			if (wait > 0)
@@ -229,15 +246,15 @@ public class Main_Game extends Canvas implements Runnable{
 				}
 			}
 			//System.out.println("FPS: "+(1000/wait));
-			//System.out.println(wait);
+			//System.out.println("Render: "+wait);
 		}
 	}
-	
+
 	public void switchDimension(byte dim) {
 		SaveFile();
 		dimension = dim;
 		loadTiles();
-		containerprocesshandler.reload = true;
+		processhandler.reload = true;
 	}
 
 	public void LoadFile() {
@@ -252,6 +269,7 @@ public class Main_Game extends Canvas implements Runnable{
 			ChunkY = Integer.parseInt(files.ReadLine("Files/File "+CurrentFile+"/Data.txt", 6));
 			craftingLevel = (byte) Integer.parseInt(files.ReadLine("Files/File "+CurrentFile+"/Data.txt", 7));
 			dimension = (byte) Integer.parseInt(files.ReadLine("Files/File "+CurrentFile+"/Data.txt", 8));
+			daytimecycle.time = Integer.parseInt(files.ReadLine("Files/File "+CurrentFile+"/Data.txt", 9));
 			//dimension = 0; //Was used for leaving the mining dimension before leaving it was coded
 			loadTiles();
 			Inventory = files.ReadInventory(CurrentFile);
@@ -261,11 +279,15 @@ public class Main_Game extends Canvas implements Runnable{
 			AddTiles();
 			AddCharacter();
 			AddDims();
-			containerprocesshandler.reload = true;
+			processhandler.reload = true;
+			for (int i = 0; i < grabbedItem.length; i++) {
+				grabbedItem[i] = 0;
+			}
 		}
 	}
-	
+
 	public void loadTiles() {
+		daytimecycle.clearLights();
 		StoredTiles[0] = files.ReadChunk(CurrentFile, ChunkX-1, ChunkY+1, dimension);
 		StoredTiles[1] = files.ReadChunk(CurrentFile, ChunkX, ChunkY+1, dimension);
 		StoredTiles[2] = files.ReadChunk(CurrentFile, ChunkX+1, ChunkY+1, dimension);
@@ -285,9 +307,9 @@ public class Main_Game extends Canvas implements Runnable{
 		x = 0;
 		y = 0;
 		RemoveObjects();
-		containerprocesshandler.removeAllProcessors();
+		processhandler.removeAllProcessors();
 		seed = null;
-		
+		//daytimecycle.resetLists();
 		//This has to stay at the very end
 		tileanimations = null;
 	}
@@ -310,7 +332,8 @@ public class Main_Game extends Canvas implements Runnable{
 		files.WriteInventory(CurrentFile);
 		files.RewriteLine("Files/File "+CurrentFile+"/Data.txt", 7, ""+craftingLevel);
 		files.RewriteLine("Files/File "+CurrentFile+"/Data.txt", 8, ""+dimension);
-		containerprocesshandler.saveAllProcessors();
+		files.RewriteLine("Files/File "+CurrentFile+"/Data.txt", 9, ""+daytimecycle.getTime());
+		processhandler.saveAllProcessors();
 	}
 
 	public void addMessage(String message)
@@ -333,7 +356,7 @@ public class Main_Game extends Canvas implements Runnable{
 	public void GenAboveChunk(int ChunkX, int ChunkY) {
 		worldgen.GenerateAboveChunk(ChunkX, ChunkY);
 	}
-	
+
 	public void GenMiningChunk(int ChunkX, int ChunkY) {
 		worldgen.GenerateMiningChunk(ChunkX, ChunkY);
 	}
@@ -424,6 +447,13 @@ public class Main_Game extends Canvas implements Runnable{
 		if (TileY > 0) {
 			TileY -= 16;
 			ChunkY++;
+			lightLevels[6] = lightLevels[3];
+			lightLevels[7] = lightLevels[4];
+			lightLevels[8] = lightLevels[5];
+			lightLevels[3] = lightLevels[0];
+			lightLevels[4] = lightLevels[1];
+			lightLevels[5] = lightLevels[2];
+			daytimecycle.removeLightSources();
 			files.WriteChunk(CurrentFile, ChunkX-1, ChunkY-2, StoredTiles[6], dimension);
 			files.WriteChunk(CurrentFile, ChunkX, ChunkY-2, StoredTiles[7], dimension);
 			files.WriteChunk(CurrentFile, ChunkX+1, ChunkY-2, StoredTiles[8], dimension);
@@ -436,11 +466,18 @@ public class Main_Game extends Canvas implements Runnable{
 			StoredTiles[0] = files.ReadChunk(CurrentFile, ChunkX-1, ChunkY+1, dimension);
 			StoredTiles[1] = files.ReadChunk(CurrentFile, ChunkX, ChunkY+1, dimension);
 			StoredTiles[2] = files.ReadChunk(CurrentFile, ChunkX+1, ChunkY+1, dimension);
-			containerprocesshandler.reload = true;
+			processhandler.reload = true;
 		}
 		else if (TileY < -15) {
 			TileY += 16;
 			ChunkY--;
+			lightLevels[0] = lightLevels[3];
+			lightLevels[1] = lightLevels[4];
+			lightLevels[2] = lightLevels[5];
+			lightLevels[3] = lightLevels[6];
+			lightLevels[4] = lightLevels[7];
+			lightLevels[5] = lightLevels[8];
+			daytimecycle.removeLightSources();
 			files.WriteChunk(CurrentFile, ChunkX-1, ChunkY+2, StoredTiles[0], dimension);
 			files.WriteChunk(CurrentFile, ChunkX, ChunkY+2, StoredTiles[1], dimension);
 			files.WriteChunk(CurrentFile, ChunkX+1, ChunkY+2, StoredTiles[2], dimension);
@@ -453,11 +490,18 @@ public class Main_Game extends Canvas implements Runnable{
 			StoredTiles[6] = files.ReadChunk(CurrentFile, ChunkX-1, ChunkY-1, dimension);
 			StoredTiles[7] = files.ReadChunk(CurrentFile, ChunkX, ChunkY-1, dimension);
 			StoredTiles[8] = files.ReadChunk(CurrentFile, ChunkX+1, ChunkY-1, dimension);
-			containerprocesshandler.reload = true;
+			processhandler.reload = true;
 		}
 		if (TileX < 0) {
 			TileX += 16;
 			ChunkX--;
+			lightLevels[2] = lightLevels[1];
+			lightLevels[5] = lightLevels[4];
+			lightLevels[8] = lightLevels[7];
+			lightLevels[1] = lightLevels[0];
+			lightLevels[4] = lightLevels[3];
+			lightLevels[7] = lightLevels[6];
+			daytimecycle.removeLightSources();
 			files.WriteChunk(CurrentFile, ChunkX+2, ChunkY+1, StoredTiles[2], dimension);
 			files.WriteChunk(CurrentFile, ChunkX+2, ChunkY, StoredTiles[5], dimension);
 			files.WriteChunk(CurrentFile, ChunkX+2, ChunkY-1, StoredTiles[8], dimension);
@@ -470,11 +514,18 @@ public class Main_Game extends Canvas implements Runnable{
 			StoredTiles[0] = files.ReadChunk(CurrentFile, ChunkX-1, ChunkY+1, dimension);
 			StoredTiles[3] = files.ReadChunk(CurrentFile, ChunkX-1, ChunkY, dimension);
 			StoredTiles[6] = files.ReadChunk(CurrentFile, ChunkX-1, ChunkY-1, dimension);
-			containerprocesshandler.reload = true;
+			processhandler.reload = true;
 		}
 		else if (TileX > 15) {
 			TileX -= 16;
 			ChunkX++;
+			lightLevels[0] = lightLevels[1];
+			lightLevels[3] = lightLevels[4];
+			lightLevels[6] = lightLevels[7];
+			lightLevels[1] = lightLevels[2];
+			lightLevels[4] = lightLevels[5];
+			lightLevels[7] = lightLevels[8];
+			daytimecycle.removeLightSources();
 			files.WriteChunk(CurrentFile, ChunkX-2, ChunkY+1, StoredTiles[0], dimension);
 			files.WriteChunk(CurrentFile, ChunkX-2, ChunkY, StoredTiles[3], dimension);
 			files.WriteChunk(CurrentFile, ChunkX-2, ChunkY-1, StoredTiles[6], dimension);
@@ -487,7 +538,7 @@ public class Main_Game extends Canvas implements Runnable{
 			StoredTiles[2] = files.ReadChunk(CurrentFile, ChunkX+1, ChunkY+1, dimension);
 			StoredTiles[5] = files.ReadChunk(CurrentFile, ChunkX+1, ChunkY, dimension);
 			StoredTiles[8] = files.ReadChunk(CurrentFile, ChunkX+1, ChunkY-1, dimension);
-			containerprocesshandler.reload = true;
+			processhandler.reload = true;
 		}
 	}
 
@@ -574,16 +625,17 @@ public class Main_Game extends Canvas implements Runnable{
 				prevTime = currentTime;
 				SaveFile();
 			}
-			containerprocesshandler.tick();
+			processhandler.tick();
 			inventoryhandler.tick();
 			ingamehud.tick();
 			interactions.tick();
+			daytimecycle.tick();
 		}
 		showMessages();
 		handler.tick();
 		resized = false;
 	}
-	
+
 	public void render() {
 		BufferStrategy bs = this.getBufferStrategy();
 		if (bs == null) {
@@ -605,14 +657,16 @@ public class Main_Game extends Canvas implements Runnable{
 		handler.render(g);
 
 		if (AdaptState == State.InWorld) {
-			containerprocesshandler.render(g);
+			processhandler.render(g);
 			PositionHandler(); //This is not in the tick() method since being in the tick() method caused rendering issues and flashes related to the multi-threading.
+			daytimecycle.render(g);
 			ingamehud.render(g);
 			inventoryhandler.render(g);
 			interactions.render(g);
 		}
 		//Light.render(g); //Use this light class to make small lights once the day/night cycle is introduced
 		renderMessages(g);
+
 		g.dispose();
 		bs.show();
 	}

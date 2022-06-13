@@ -6,8 +6,8 @@ import java.io.IOException;
 
 import javax.imageio.ImageIO;
 
-import core.KeyInput;
 import core.Main_Game;
+import core.playerInput.KeyInput;
 
 public class Character extends EntityObject{
 

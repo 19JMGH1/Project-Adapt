@@ -10,9 +10,9 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.Random;
 
-import containers.ContainerIDs;
-import containers.ContainerProcessors;
-import containers.electronics.Electronic;
+import processors.ProcessorIDs;
+import processors.Processors;
+import processors.electronics.Electronic;
 import tiles.SurfaceTileIDs;
 
 public class Files {
@@ -80,9 +80,11 @@ public class Files {
 			DataTxtWriter.println(0); //Chunk Y
 			DataTxtWriter.println(0); //Crafting Level
 			DataTxtWriter.println(0); //Starting on the surface dimension
+			
 			for (int j = 0; j < 30; j++) //This for loop prints the inventory and makes sure nothing is in it
 			{
-				InvTxtWriter.println(0+" "+0);
+				DataTxtWriter.println(0); //Extra slots in the data file for future needed data
+				InvTxtWriter.println(0+" "+0); //Prints an empty inventory
 			}
 			DataTxtWriter.close();
 			InvTxtWriter.close();
@@ -509,10 +511,10 @@ public class Files {
 		}
 		try {
 			PrintWriter FileWriter = new PrintWriter(file);
-			if (ContainerIDs.valueOf(SurfaceTileIDs.values()[tileValue].toString()).onOff) { //Creates the On/Off boolean on the first line of the text file if that applies to the given container
+			if (ProcessorIDs.valueOf(SurfaceTileIDs.values()[tileValue].toString()).onOff) { //Creates the On/Off boolean on the first line of the text file if that applies to the given container
 				FileWriter.println("0");
 			}
-			if (ContainerIDs.valueOf(SurfaceTileIDs.values()[tileValue].toString()).electronic) {
+			if (ProcessorIDs.valueOf(SurfaceTileIDs.values()[tileValue].toString()).electronic) {
 				FileWriter.println("0");
 				for (int m = 0; m < 4; m++) { //used to store the configuration of input sides
 					FileWriter.println("true");
@@ -534,7 +536,7 @@ public class Files {
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 		}
-		game.containerprocesshandler.reloadProcessors(); //Add the container to the processor list when it's created
+		game.processhandler.reloadProcessors(); //Add the container to the processor list when it's created
 	}
 	
 	public short getTileFileID(short tileValue) { //Gets the unique ID that makes this tile different from all the other tiles of its type
@@ -547,7 +549,7 @@ public class Files {
 		return count;
 	}
 
-	public void saveContainer(ContainerProcessors c)
+	public void saveContainer(Processors c)
 	{
 		File file = new File(c.getFileName());
 		try {

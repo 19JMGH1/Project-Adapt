@@ -6,11 +6,11 @@ import java.io.IOException;
 
 import javax.imageio.ImageIO;
 
-import containers.ContainerIDs;
-import containers.electronics.ElectronicHandler;
 import entities.EntityIDs;
 import entities.EntityObject;
 import entities.Handler;
+import processors.ProcessorIDs;
+import processors.electronics.ElectronicHandler;
 import core.Main_Game;
 
 public class BasicTiles extends EntityObject{
@@ -21,7 +21,7 @@ public class BasicTiles extends EntityObject{
 	private boolean removed = false;
 
 	private BufferedImage WireConnections;
-
+	
 	private final int SpriteSheetWidth = 320;
 	private final int SpriteSheetHeight = 320;
 	//Location of where to get the sprite from
@@ -287,6 +287,9 @@ public class BasicTiles extends EntityObject{
 						//SpriteSheetLocs = Identifications.getSurfaceTileSheet(game.StoredTiles[k][i][j][0]); //OLD way of getting sprites
 						SpriteSheetLocs = SurfaceTileIDs.getSpriteSheet(game.StoredTiles[k][i][j][0]);
 						g.drawImage(game.TilesSprite, x+(game.TileWidth*i)-(game.TileX*game.TileWidth)-(game.TileWidth*16)-game.x+(RelativeChunkX*game.TileWidth*16), y+(game.TileHeight*j)+(game.TileY*game.TileHeight)-(game.TileHeight*16)+game.y+(RelativeChunkY*game.TileHeight*16), x+(game.TileWidth*(i+1))-(game.TileX*game.TileWidth)-(game.TileWidth*16)-game.x+(RelativeChunkX*game.TileWidth*16), y+(game.TileHeight*(j+1))+(game.TileY*game.TileHeight)-(game.TileHeight*16)+game.y+(RelativeChunkY*game.TileHeight*16), SpriteSheetLocs[0]*SpriteSheetWidth, SpriteSheetLocs[1]*SpriteSheetHeight, SpriteSheetLocs[0]*SpriteSheetWidth+SpriteSheetWidth, SpriteSheetLocs[1]*SpriteSheetHeight+SpriteSheetHeight, null);
+						//The two lines below were used for testing the early stages of the lighting system
+						//g.setFont(new Font("Cooper Black", Font.PLAIN, Main_Game.WIDTH/50));
+						//g.drawString(""+game.lightLevels[k][i][j], x+(game.TileWidth*i)-(game.TileX*game.TileWidth)-(game.TileWidth*16)-game.x+(RelativeChunkX*game.TileWidth*16), y+(game.TileHeight*j)+(game.TileY*game.TileHeight)-(game.TileHeight*16)+game.y+(RelativeChunkY*game.TileHeight*16));
 						if (game.StoredTiles[k][i][j][0] == 17) { //Wire connections for the copper wires
 							int[][] adjacents = {	{i, ElectronicHandler.tileYAdjust(j-1), ElectronicHandler.baseChunkAdjust(i, j-1, k)}, //One above
 									{ElectronicHandler.tileXAdjust(i+1), j, ElectronicHandler.baseChunkAdjust(i+1, j, k)}, //One the right
@@ -294,8 +297,8 @@ public class BasicTiles extends EntityObject{
 									{ElectronicHandler.tileXAdjust(i-1), j, ElectronicHandler.baseChunkAdjust(i-1, j, k)}}; //One to the right
 							for (int d = 0; d < 4; d++) {
 								if (adjacents[d][2] >= 0 && adjacents[d][2] <= 8) {
-									if (ContainerIDs.containerExists(SurfaceTileIDs.values()[game.StoredTiles[adjacents[d][2]][adjacents[d][0]][adjacents[d][1]][0]].toString())) {
-										ContainerIDs c = ContainerIDs.valueOf(SurfaceTileIDs.values()[game.StoredTiles[adjacents[d][2]][adjacents[d][0]][adjacents[d][1]][0]].toString());
+									if (ProcessorIDs.containerExists(SurfaceTileIDs.values()[game.StoredTiles[adjacents[d][2]][adjacents[d][0]][adjacents[d][1]][0]].toString())) {
+										ProcessorIDs c = ProcessorIDs.valueOf(SurfaceTileIDs.values()[game.StoredTiles[adjacents[d][2]][adjacents[d][0]][adjacents[d][1]][0]].toString());
 										if (c.electronic) {
 											int x1 = d%2;
 											int y1 = d/2;
