@@ -1,5 +1,6 @@
 package core.playerInput;
 
+import java.awt.event.InputEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionListener;
@@ -267,6 +268,9 @@ public class MouseHandler extends MouseAdapter implements MouseMotionListener, M
 				}
 			}
 		}
+		if (e.getButton() == 2) { //Middle Click
+
+		}
 	}
 
 	public void mouseMoved(MouseEvent e) {
@@ -328,6 +332,11 @@ public class MouseHandler extends MouseAdapter implements MouseMotionListener, M
 						ingamehud.NoMore3D();
 					}
 				}
+				else {
+					if (game.inventoryOpened && ((e.getModifiersEx() & InputEvent.BUTTON3_DOWN_MASK) == InputEvent.BUTTON3_DOWN_MASK)) {
+						game.inventorymanagment.checkCrafting(mx, my, true);
+					}
+				}
 			}
 		}
 	}
@@ -337,7 +346,10 @@ public class MouseHandler extends MouseAdapter implements MouseMotionListener, M
 	}
 
 	public void mouseDragged(MouseEvent e) {
-
+		//When a button is pressed, this method runs instead of the 
+		//mouse moved method, but I still want the mouse moved event to run
+		//whenever it's moved even while a button is being pressed.
+		mouseMoved(e); //So I added this line of code to mouseDragged
 	}
 
 	public void mouseEntered(MouseEvent e) {

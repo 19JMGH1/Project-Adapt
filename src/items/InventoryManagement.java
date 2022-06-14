@@ -1,5 +1,7 @@
 package items;
 
+import java.util.Arrays;
+
 import core.Main_Game;
 import processors.electronics.Electronic;
 
@@ -46,7 +48,7 @@ public class InventoryManagement {
 			return false;
 	}
 
-	private void checkCrafting(int mx, int my, boolean leftClicked)
+	public void checkCrafting(int mx, int my, boolean leftClicked)
 	{
 		for (int j = 0; j < 5; j++)
 		{
@@ -125,7 +127,7 @@ public class InventoryManagement {
 	}
 
 	public void rightClickManage(int mx, int my) {
-		if (game.grabbedItem[0] == 0)
+		if (game.grabbedItem[0] != 0)
 		{
 			//Moving one item out of grabbed items and into the inventory slot that was right clicked
 			for(int j = 0; j < 6; j++)
@@ -134,11 +136,31 @@ public class InventoryManagement {
 				{
 					if (mousePosition(mx, my, game.inventoryhandler.topLeftCornerX+i*game.inventoryhandler.iconSize, (game.inventoryhandler.topLeftCornerY+j*game.inventoryhandler.iconSize)*(1-(j/6))+(j/6)*(Main_Game.HEIGHT-game.inventoryhandler.iconSize), game.inventoryhandler.iconSize, game.inventoryhandler.iconSize))
 					{
-						if ((game.Inventory[i][j][0] == 0) || (game.Inventory[i][j][0] == game.grabbedItem[0]))
+						if (((game.Inventory[i][j][0] == 0) || (game.Inventory[i][j][0] == game.grabbedItem[0])) && (!game.inventoryhandler.unstackable(game.grabbedItem[0])))
 						{
 							game.Inventory[i][j][1]++;
 							game.grabbedItem[1]--;
 							game.Inventory[i][j][0] = game.grabbedItem[0];
+						}
+					}
+				}
+			}
+			//Moving one item from the grabbed items to a container
+			for(int j = 0; j < 5; j++)
+			{
+				for (int i = 0; i < 5; i++)
+				{
+					if (mousePosition(mx, my, game.inventoryhandler.topLeftCornerX+(i+6)*game.inventoryhandler.iconSize, game.inventoryhandler.topLeftCornerY+j*game.inventoryhandler.iconSize, game.inventoryhandler.iconSize, game.inventoryhandler.iconSize))
+					{
+						if (showingContainer()) {
+							if (game.curentlyOpenedContainer.getValidSlots()[j][i]) {
+								if (((game.grabbedItem[0] == game.curentlyOpenedContainer.getContainerSlots()[i][j][0]) || (game.curentlyOpenedContainer.getContainerSlots()[i][j][0] == 0)) && (!game.inventoryhandler.unstackable(game.grabbedItem[0])))
+								{
+									game.curentlyOpenedContainer.getContainerSlots()[i][j][1]++;
+									game.grabbedItem[1]--;
+									game.curentlyOpenedContainer.getContainerSlots()[i][j][0] = game.grabbedItem[0];
+								}
+							}
 						}
 					}
 				}
@@ -162,8 +184,9 @@ public class InventoryManagement {
 	}
 
 	public void middleClickManage(int mx, int my) {
-		if (game.grabbedItem[0] == 0)
+		if (game.grabbedItem[0] != 0)
 		{
+			//Moving half the items in the grabbedItems into an inventory slot
 			for(int j = 0; j < 6; j++)
 			{
 				for (int i = 0; i < 5; i++)
@@ -188,6 +211,36 @@ public class InventoryManagement {
 					}
 				}
 			}
+			//Moving moving half the items from the grabbed items into a container
+			for(int j = 0; j < 5; j++)
+			{
+				for (int i = 0; i < 5; i++)
+				{
+					if (mousePosition(mx, my, game.inventoryhandler.topLeftCornerX+(i+6)*game.inventoryhandler.iconSize, game.inventoryhandler.topLeftCornerY+j*game.inventoryhandler.iconSize, game.inventoryhandler.iconSize, game.inventoryhandler.iconSize))
+					{
+						if (showingContainer()) {
+							if (game.curentlyOpenedContainer.getValidSlots()[j][i]) {
+								if (((game.grabbedItem[0] == game.curentlyOpenedContainer.getContainerSlots()[i][j][0]) || (game.curentlyOpenedContainer.getContainerSlots()[i][j][0] == 0)) && (!game.inventoryhandler.unstackable(game.grabbedItem[0])))
+								{
+									short half = (short) (game.grabbedItem[1]/2);
+									short addedItemCount = (short) (half+game.curentlyOpenedContainer.getContainerSlots()[i][j][1]);
+									if (addedItemCount > Main_Game.maxStackSize) {
+										game.curentlyOpenedContainer.getContainerSlots()[i][j][1] = Main_Game.maxStackSize;
+										game.curentlyOpenedContainer.getContainerSlots()[i][j][0] = game.grabbedItem[0];
+										game.grabbedItem[1] -= half;
+										game.grabbedItem[1] += (addedItemCount-Main_Game.maxStackSize);
+									}
+									else {
+										game.curentlyOpenedContainer.getContainerSlots()[i][j][1] += half;
+										game.curentlyOpenedContainer.getContainerSlots()[i][j][0] = game.grabbedItem[0];
+										game.grabbedItem[1] -= half;
+									}
+								}
+							}
+						}
+					}
+				}
+			}
 		}
 	}
 
@@ -205,11 +258,11 @@ public class InventoryManagement {
 		{
 			for (int i = 0; i < 5; i++)
 			{
-				if (mousePosition(mx, my, game.inventoryhandler.topLeftCornerX+i*game.inventoryhandler.iconSize, (game.inventoryhandler.topLeftCornerY+j*game.inventoryhandler.iconSize), game.inventoryhandler.iconSize, game.inventoryhandler.iconSize))
+				if (mousePosition(mx, my, game.inventoryhandler.topLeftCornerX+i*game.inventoryhandler.iconSize, ((game.inventoryhandler.topLeftCornerY+j*game.inventoryhandler.iconSize)*(1-(j/5)))+((j/5)*(Main_Game.HEIGHT-game.inventoryhandler.iconSize)), game.inventoryhandler.iconSize, game.inventoryhandler.iconSize))
 				{
 					if (game.Inventory[i][j][0] != game.grabbedItem[0] || game.inventoryhandler.unstackable(game.grabbedItem[0]) || game.inventoryhandler.unstackable(game.grabbedItem[0])) { //Swap clicked item with grabbed item if they are different
-						short[] temp = game.grabbedItem;
-						game.grabbedItem = game.Inventory[i][j];
+						short[] temp = Arrays.copyOf(game.grabbedItem, game.grabbedItem.length);
+						game.grabbedItem = Arrays.copyOf(game.Inventory[i][j], game.Inventory[i][j].length);
 						game.Inventory[i][j] = temp;
 					}
 					else { //If items are the same, then combine the stacks
@@ -237,16 +290,16 @@ public class InventoryManagement {
 				{
 					if (showingContainer()) {
 						if (game.curentlyOpenedContainer.getValidSlots()[j][i]) {
-							if ((game.grabbedItem[0] == game.curentlyOpenedContainer.getContainerSlots()[j][i][0]) || (game.grabbedItem[0] == 0) || game.inventoryhandler.unstackable(game.curentlyOpenedContainer.getContainerSlots()[j][i][0]) || game.inventoryhandler.unstackable(game.grabbedItem[0]))
+							if ((game.grabbedItem[0] != game.curentlyOpenedContainer.getContainerSlots()[i][j][0]) || (game.grabbedItem[0] == 0) || game.inventoryhandler.unstackable(game.curentlyOpenedContainer.getContainerSlots()[i][j][0]) || game.inventoryhandler.unstackable(game.grabbedItem[0]))
 							{
-								short[] temp = game.grabbedItem;
-								game.grabbedItem = game.curentlyOpenedContainer.getContainerSlots()[i][j];
-								game.curentlyOpenedContainer.getContainerSlots()[j][i] = temp;
+								short[] temp = Arrays.copyOf(game.grabbedItem, game.grabbedItem.length);
+								game.grabbedItem = Arrays.copyOf(game.curentlyOpenedContainer.getContainerSlots()[i][j], game.curentlyOpenedContainer.getContainerSlots()[i][j].length);
+								game.curentlyOpenedContainer.setContainerSlots(i, j, temp);
 							}
 							else { //If items are the same, then combine the stacks
 								short addedItemCount = (short) (game.curentlyOpenedContainer.getContainerSlots()[i][j][1] + game.grabbedItem[1]);
 								if (addedItemCount > Main_Game.maxStackSize) {
-									game.curentlyOpenedContainer.getContainerSlots()[j][i][1] = Main_Game.maxStackSize;
+									game.curentlyOpenedContainer.getContainerSlots()[i][j][1] = Main_Game.maxStackSize;
 									game.grabbedItem[1] = (short) (addedItemCount - Main_Game.maxStackSize);
 								}
 								else {

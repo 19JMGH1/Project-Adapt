@@ -163,7 +163,13 @@ public class InventoryHandler {
 		}
 		else
 		{
-			game.HighlightedItem = 0;
+			if (game.grabbedItem[0] != 0) {
+				if (addToInv(game.grabbedItem[0], game.grabbedItem[1])) {
+					for (int i = 0; i < game.grabbedItem.length; i++) {
+						game.grabbedItem[i] = 0;
+					}
+				}
+			}
 		}
 	}
 
@@ -172,7 +178,7 @@ public class InventoryHandler {
 		//This chunk of code puts the inventory on the screen if it's currently opened.
 		if (game.inventoryOpened)
 		{
-			if (game.HighlightedItem != 0)
+			if (game.grabbedItem[0] != 0)
 			{
 				g.drawImage(InventoryBox, topLeftCornerX, topLeftCornerY-iconSize, topLeftCornerX+iconSize, topLeftCornerY, 0, 0, SpriteSheetWidth, SpriteSheetHeight, null);
 				g.drawImage(Trash, topLeftCornerX, topLeftCornerY-iconSize, topLeftCornerX+iconSize, topLeftCornerY, 0, 0, SpriteSheetWidth, SpriteSheetHeight, null);
@@ -419,10 +425,13 @@ public class InventoryHandler {
 				}
 			}
 		}
+		//Draws the grabbed item on the screen
 		if (game.inventoryOpened && game.grabbedItem[0] != 0) {
 			spriteSheetXY = ItemIDs.getSpriteSheet(game.grabbedItem[0]);
 			g.drawImage(InventoryItems, MouseHandler.mouseX-iconSize/2, MouseHandler.mouseY-iconSize/2, MouseHandler.mouseX+iconSize/2, MouseHandler.mouseY+iconSize/2, spriteSheetXY[0]*SpriteSheetWidth, spriteSheetXY[1]*SpriteSheetHeight, spriteSheetXY[0]*SpriteSheetWidth+SpriteSheetWidth, spriteSheetXY[1]*SpriteSheetHeight+SpriteSheetHeight, null);
-			g.drawString(""+game.grabbedItem[1], MouseHandler.mouseX-iconSize/2+iconSize/16, MouseHandler.mouseY+iconSize/2-iconSize/16);
+			if (!unstackable(game.grabbedItem[0])) {
+				g.drawString(""+game.grabbedItem[1], MouseHandler.mouseX-iconSize/2+iconSize/16, MouseHandler.mouseY+iconSize/2-iconSize/16);
+			}
 		}
 	}
 

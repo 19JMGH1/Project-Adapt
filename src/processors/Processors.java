@@ -1,6 +1,7 @@
 package processors;
 
 import java.awt.Graphics;
+import java.util.Arrays;
 
 import core.Main_Game;
 import core.lighting.DayTimeCycle;
@@ -16,7 +17,7 @@ public abstract class Processors {
 	protected ProcessorIDs containerID; //The id that tells the type of container
 	protected short ID; //The id that makes the container unique from the others of its kind
 	protected String fileName;
-	protected int[] loc = new int[4]; //Stored the tile Location in the order of (chunkX, chunkY, tileX, tileY
+	protected int[] loc = new int[4]; //Stores the tile Location in the order of (chunkX, chunkY, tileX, tileY
 	protected short[] values; //Used to store various values that the container needs, the first value is always the On/Off state of the container
 	protected boolean[][] validSlots; //Which slots the container actually uses
 	protected short[][][] containerSlots = new short[5][5][2]; //The slots of the container
@@ -86,9 +87,25 @@ public abstract class Processors {
 	public short[][][] getContainerSlots() {
 		return containerSlots;
 	}
-
+	
+	/**
+	 * This method changes all the values of the container slots of a container
+	 * 
+	 * @param containerSlots the data about the new container slots
+	 */
 	public void setContainerSlots(short[][][] containerSlots) {
 		this.containerSlots = containerSlots;
+	}
+	
+	/**
+	 * This method changes a specific slot of a container to some new given item slot information
+	 * 
+	 * @param i the x value of which inventory slot
+	 * @param j the y value of which inventory slot
+	 * @param slot the data for the slot to be changed
+	 */
+	public void setContainerSlots(int i, int j, short[] slot) {
+		this.containerSlots[i][j] = Arrays.copyOf(slot, slot.length);
 	}
 
 	public boolean[][] getValidSlots() {
