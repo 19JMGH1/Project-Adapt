@@ -130,6 +130,7 @@ public class PlaceTile {
 		}
 		else if (invValue == 41) //Placing an electric furnace
 		{
+			System.out.println(ProcessHandler.processors.size());
 			short tileID = 21;
 			game.StoredTiles[chunk][tileX][Math.abs(tileY)][0] = tileID;
 			game.StoredTiles[chunk][tileX][Math.abs(tileY)][1] = game.files.getTileFileID(tileID);
@@ -137,6 +138,7 @@ public class PlaceTile {
 			int chunkY = game.ChunkY+(chunk/3);
 			ElectricFurnace c = new ElectricFurnace(game, game.StoredTiles[chunk][tileX][Math.abs(tileY)][1], chunkX, chunkY, tileX, Math.abs(tileY));
 			ProcessHandler.processors.add(c);
+			ElectronicHandler.electronics.add(c);
 		}
 		else
 		{

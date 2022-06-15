@@ -3,14 +3,13 @@ package core.playerInput;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 
-
 import core.Main_Game;
 import core.Main_Game.State;
 import core.lighting.DayTimeCycle;
 import items.CraftingRecipes;
 import menus.FileMenu;
 
-public class KeyInput extends KeyAdapter{
+public class KeyInput extends KeyAdapter {
 
 	private Main_Game game;
 	private FileMenu filemenu;
@@ -25,7 +24,17 @@ public class KeyInput extends KeyAdapter{
 	public void keyPressed(KeyEvent e) {
 		char c = e.getKeyChar();
 		int k = e.getKeyCode();
-
+		if (k == 122) { //122 represents F11
+			//Go FullScreen when you press F11
+			Main_Game.FULLSCREEN = !Main_Game.FULLSCREEN;
+			if (Main_Game.FULLSCREEN) {
+				game.window.setFullScreen(true);
+			}
+			else {
+				game.window.setFullScreen(false);
+			}
+		}
+		
 		if (game.AdaptState == State.FileMenu) {
 			if (filemenu.FileNaming) {
 				if (c != KeyEvent.CHAR_UNDEFINED && c != KeyEvent.VK_BACK_SPACE && c != KeyEvent.VK_ENTER && filemenu.FileNamingText.length() < 40) {

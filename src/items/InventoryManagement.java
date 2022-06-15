@@ -8,6 +8,19 @@ import processors.electronics.Electronic;
 public class InventoryManagement {
 
 	private Main_Game game;
+	
+	public static boolean inventoryRightDrag[][] = {{false, false, false, false, false},
+													{false, false, false, false, false},
+													{false, false, false, false, false},
+													{false, false, false, false, false},
+													{false, false, false, false, false},
+													{false, false, false, false, false}};
+	
+	public static boolean containerRightDrag[][] = {{false, false, false, false, false},
+													{false, false, false, false, false},
+													{false, false, false, false, false},
+													{false, false, false, false, false},
+													{false, false, false, false, false}};
 
 	public InventoryManagement(Main_Game game) {
 		this.game = game;
@@ -136,8 +149,9 @@ public class InventoryManagement {
 				{
 					if (mousePosition(mx, my, game.inventoryhandler.topLeftCornerX+i*game.inventoryhandler.iconSize, (game.inventoryhandler.topLeftCornerY+j*game.inventoryhandler.iconSize)*(1-(j/6))+(j/6)*(Main_Game.HEIGHT-game.inventoryhandler.iconSize), game.inventoryhandler.iconSize, game.inventoryhandler.iconSize))
 					{
-						if (((game.Inventory[i][j][0] == 0) || (game.Inventory[i][j][0] == game.grabbedItem[0])) && (!game.inventoryhandler.unstackable(game.grabbedItem[0])))
+						if (((game.Inventory[i][j][0] == 0) || (game.Inventory[i][j][0] == game.grabbedItem[0])) && (!game.inventoryhandler.unstackable(game.grabbedItem[0])) && !inventoryRightDrag[j][i])
 						{
+							inventoryRightDrag[j][i] = true;
 							game.Inventory[i][j][1]++;
 							game.grabbedItem[1]--;
 							game.Inventory[i][j][0] = game.grabbedItem[0];
@@ -154,8 +168,9 @@ public class InventoryManagement {
 					{
 						if (showingContainer()) {
 							if (game.curentlyOpenedContainer.getValidSlots()[j][i]) {
-								if (((game.grabbedItem[0] == game.curentlyOpenedContainer.getContainerSlots()[i][j][0]) || (game.curentlyOpenedContainer.getContainerSlots()[i][j][0] == 0)) && (!game.inventoryhandler.unstackable(game.grabbedItem[0])))
+								if (((game.grabbedItem[0] == game.curentlyOpenedContainer.getContainerSlots()[i][j][0]) || (game.curentlyOpenedContainer.getContainerSlots()[i][j][0] == 0)) && (!game.inventoryhandler.unstackable(game.grabbedItem[0])) && !containerRightDrag[j][i])
 								{
+									containerRightDrag[j][i] = true;
 									game.curentlyOpenedContainer.getContainerSlots()[i][j][1]++;
 									game.grabbedItem[1]--;
 									game.curentlyOpenedContainer.getContainerSlots()[i][j][0] = game.grabbedItem[0];

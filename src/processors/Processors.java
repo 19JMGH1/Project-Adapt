@@ -140,7 +140,7 @@ public abstract class Processors {
 		int i = 0;
 		int toBeRemoved = -1;
 		for (LightsData light : DayTimeCycle.lightSources) {
-			if (light.lightName == fileName) {
+			if (light.lightName.equals(fileName)) {
 				toBeRemoved = i;
 				break;
 			}

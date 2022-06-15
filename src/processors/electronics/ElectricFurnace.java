@@ -3,6 +3,7 @@ package processors.electronics;
 import java.awt.Graphics;
 
 import core.Main_Game;
+import core.lighting.DayTimeCycle;
 import core.lighting.Light;
 import processors.BlastFurnace;
 import processors.ProcessorIDs;
@@ -45,6 +46,8 @@ public class ElectricFurnace extends Electronic implements Light{
 				boolean itemsToSmelt = BlastFurnace.smelt(this);
 				if (!itemsToSmelt) {
 					getValues()[0] = 0;
+					removeLight();
+					DayTimeCycle.reloadNeeded = true;
 				}
 			}
 		}
@@ -61,7 +64,7 @@ public class ElectricFurnace extends Electronic implements Light{
 			//System.out.println("x: "+(x+(game.TileWidth*loc[2])-(game.TileX*game.TileWidth)-(game.TileWidth*16)-game.x+((loc[0]-game.ChunkX)*game.TileWidth*16)+", y:"+(y+(game.TileHeight*loc[3])+(game.TileY*game.TileHeight)-(game.TileHeight*16)+game.y+((game.ChunkY-loc[1]+2)*game.TileHeight*16))));
 			byte chunkX = (byte) (loc[0]-game.ChunkX);
 			byte chunkY = (byte) (game.ChunkY-loc[1]+2);
-			addLight(fileName ,lightLevelProduced, game.lightLevels[(chunkX)+(3*(chunkY))][loc[2]][loc[3]+1], chunkX, chunkY, (byte) loc[2], (byte) (-loc[3]-1));
+			addLight(fileName, lightLevelProduced, game.lightLevels[(chunkX)+(3*(chunkY))][loc[2]][loc[3]+1], chunkX, chunkY, (byte) loc[2], (byte) (-loc[3]-1));
 		}
 	}
 

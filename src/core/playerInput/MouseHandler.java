@@ -12,6 +12,7 @@ import core.InGameHud;
 import core.Main_Game;
 import core.Main_Game.State;
 import items.CraftingRecipes;
+import items.InventoryManagement;
 import menus.FileMenu;
 import menus.MainMenu;
 import tiles.interactions.Interactions;
@@ -333,8 +334,11 @@ public class MouseHandler extends MouseAdapter implements MouseMotionListener, M
 					}
 				}
 				else {
-					if (game.inventoryOpened && ((e.getModifiersEx() & InputEvent.BUTTON3_DOWN_MASK) == InputEvent.BUTTON3_DOWN_MASK)) {
-						game.inventorymanagment.checkCrafting(mx, my, true);
+					if (game.inventoryOpened) {
+						if (((e.getModifiersEx() & InputEvent.BUTTON3_DOWN_MASK) == InputEvent.BUTTON3_DOWN_MASK)) {
+							game.inventorymanagment.checkCrafting(mx, my, true);
+							game.inventorymanagment.rightClickManage(mx, my);
+						}
 					}
 				}
 			}
@@ -343,6 +347,17 @@ public class MouseHandler extends MouseAdapter implements MouseMotionListener, M
 
 	public void mouseReleased(MouseEvent e) {
 		Unpressed = true;
+
+		//This sets up the variables for right clicking and dragging to place 1 item in multiple slots when the right click is no longer pressed
+		if (e.getButton() == 3) {
+			for (int i = 0; i < 5; i++) {
+				for (int j = 0; j < 5; j++) {
+					InventoryManagement.inventoryRightDrag[i][j] = false;
+					InventoryManagement.containerRightDrag[i][j] = false;
+				}
+				InventoryManagement.inventoryRightDrag[5][i] = false;
+			}
+		}
 	}
 
 	public void mouseDragged(MouseEvent e) {

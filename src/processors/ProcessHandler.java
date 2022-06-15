@@ -56,7 +56,7 @@ public class ProcessHandler implements Runnable{
 				}
 			}
 			//System.out.println("FPS: "+(1000/wait));
-			//System.out.println("Container processor: "+wait);
+			//System.out.println("Processors: "+wait);
 		}
 		//System.out.println("Third thread is dead");
 	}

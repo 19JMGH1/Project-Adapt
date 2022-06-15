@@ -2,6 +2,8 @@ package core;
 
 import java.awt.Canvas;
 import java.awt.Dimension;
+import java.awt.GraphicsDevice;
+import java.awt.GraphicsEnvironment;
 import java.awt.Insets;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
@@ -14,15 +16,15 @@ import core.Main_Game.State;
 public class Window extends Canvas{
 
 	private static final long serialVersionUID = 9034494958129720942L;
-
+	
+	private static GraphicsDevice device = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice();
+	
 	public JFrame frame;
 	public JTextField textField;
 	
 	public Dimension dims;
 	
 	public Window(int width, int height, String title, Main_Game game) {
-		
-		
 		dims = new Dimension(width, height);
 		frame = new JFrame(title);
 		frame.setPreferredSize(dims);
@@ -33,7 +35,6 @@ public class Window extends Canvas{
 		frame.setResizable(true);
 		frame.setLocationRelativeTo(null);
 		frame.setVisible(true);
-		
 		frame.add(game);
 		
 		//Makes the current file save whenever the window is closed
@@ -49,6 +50,18 @@ public class Window extends Canvas{
 		resize(game);
 		ResizeDetector(game);
 		game.start();
+	}
+	
+	public void setFullScreen(boolean fullScreen) {
+		if (fullScreen) {
+			//frame.setUndecorated(true);
+			device = frame.getGraphicsConfiguration().getDevice();
+			device.setFullScreenWindow(frame);
+		}
+		else {
+			device.setFullScreenWindow(null);
+			//frame.setUndecorated(true);
+		}
 	}
 	
 	public void ResizeDetector(Main_Game game) {

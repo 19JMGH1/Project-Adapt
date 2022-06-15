@@ -3,6 +3,7 @@ package processors;
 import java.awt.Graphics;
 
 import core.Main_Game;
+import core.lighting.DayTimeCycle;
 import core.lighting.Light;
 
 public class BlastFurnace extends Processors implements Light{
@@ -197,21 +198,11 @@ public class BlastFurnace extends Processors implements Light{
 		if (getValues()[0] == 1) { //If the blast furnace is running
 			if (getValues()[2] <= 0) {
 				if (getContainerSlots()[2][3][0] == 12) { //Only coal can be used to smelt
-					//System.out.println("That looks like coal to me!"); //Used for testing
 					getContainerSlots()[2][3][1]--;
 					getValues()[2] = Main_Game.coalBurnTime;
 					if (getContainerSlots()[2][3][1] <= 0) {
 						getContainerSlots()[2][3][0] = 0;
 					}
-
-					//					if (game.containerID == game.StoredTiles[loc[0]][loc[1]][loc[2]][1]) {
-					//						boolean[][] containerSlots = {{true, true, false, true, true},
-					//								{true, true, false, true, true},
-					//								{false, false, false, false, false},
-					//								{false, false, true, false, false},
-					//								{false, false, false, false, false}};
-					//						game.containerSlots = game.files.openContainer(fileName, 3, containerSlots);
-					//					}
 				}
 				else {
 					getValues()[0] = 0;
@@ -232,17 +223,12 @@ public class BlastFurnace extends Processors implements Light{
 						boolean itemsToSmelt = smelt(this);
 						if (!itemsToSmelt) {
 							getValues()[0] = 0;
-							game.daytimecycle.clearLights();
+							removeLight();
+							DayTimeCycle.reloadNeeded = true;
 						}
-
-						//						if (game.containerID == game.StoredTiles[loc[0]][loc[1]][loc[2]][1]) {
-						//							game.containerSlots = game.files.openContainer(fileName, 3, Identifications.getValidContainerSlots(game.containerType));
-						//						}
 					}
 				}
 			}
-			//System.out.println(""+timer);
-			//System.out.println(""+burnTime);
 		}
 		else {
 			values[1] = Main_Game.FurnaceCookTime;

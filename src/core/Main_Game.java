@@ -50,6 +50,8 @@ public class Main_Game extends Canvas implements Runnable{
 
 	public static final int Target_TPS = 30;
 	public static final int Target_FPS = 30;
+	
+	public static boolean FULLSCREEN = false;
 
 	public static final int maxStackSize = 50; //The max number of items allowed in an inventory slot
 
@@ -124,7 +126,7 @@ public class Main_Game extends Canvas implements Runnable{
 	public boolean Paused = false;
 
 	private Handler handler;
-	private Window window;
+	public Window window;
 	private MouseHandler mousehandler;
 	private KeyInput keyinput;
 	private MainMenu mainmenu;

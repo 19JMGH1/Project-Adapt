@@ -3,6 +3,9 @@ package tiles.interactions;
 import core.Identifications;
 import core.InventoryHandler;
 import core.Main_Game;
+import processors.ProcessorIDs;
+import processors.Processors;
+import tiles.SurfaceTileIDs;
 
 public class HarvestTile {
 	
@@ -252,9 +255,18 @@ public class HarvestTile {
 	private void basicContainerHarvest(byte invValue, int chunk, int tileX, int tileY, String filePrefix) {
 		if (inventoryhandler.addToInv(invValue, 1))
 		{
+			Processors container = game.processhandler.getProcessor(ProcessorIDs.valueOf(SurfaceTileIDs.values()[game.StoredTiles[chunk][tileX][Math.abs(tileY)][0]].toString()), game.StoredTiles[chunk][tileX][Math.abs(tileY)][1]);
+			for (int j = 0; j < 5; j++) {
+				for (int i = 0; i < 5; i++) {
+					if (container.getValidSlots()[j][i]) {
+						inventoryhandler.addToInv(container.getContainerSlots()[i][j][0], container.getContainerSlots()[i][j][1]);
+					}
+				}
+			}
 			game.addDropedItem(invValue, 1);
 			game.files.deleteTextFile("Files/File "+game.CurrentFile+"/Tiles/"+filePrefix+" "+game.StoredTiles[chunk][tileX][Math.abs(tileY)][1]+".txt");
 			game.StoredTiles[chunk][tileX][Math.abs(tileY)][0] = 0;
+			game.StoredTiles[chunk][tileX][Math.abs(tileY)][1] = 0;
 			game.processhandler.reloadProcessors();
 			game.daytimecycle.removeLightSource((byte) chunk, (byte) tileX, (byte) tileY);
 		}

@@ -143,25 +143,23 @@ public class InventoryHandler {
 			numberFont = new Font("Cooper Black", Font.BOLD, Main_Game.WIDTH/70);
 		}
 
-		if (game.inventoryOpened)
+		spriteSheetXY[0] = 0;
+		spriteSheetXY[1] = 0;
+		for(int j = 0; j < 6; j++) //If you remove enough items from a slot to make it zero, then remove that item from the slot.
 		{
-			spriteSheetXY[0] = 0;
-			spriteSheetXY[1] = 0;
-			for(int j = 0; j < 6; j++) //If you remove enough items from a slot to make it zero, then remove that item from the slot.
+			for (int i = 0; i < 5; i++)
 			{
-				for (int i = 0; i < 5; i++)
+				if (game.Inventory[i][j][1] == 0)
 				{
-					if (game.Inventory[i][j][1] == 0)
-					{
-						game.Inventory[i][j][0] = 0;
-					}
+					game.Inventory[i][j][0] = 0;
 				}
 			}
-			if (game.grabbedItem[1] == 0) { //If your grabbed item runs out of items, then remove that item from your grabbed item
-				game.grabbedItem[0] = 0;
-			}
 		}
-		else
+		if (game.grabbedItem[1] == 0) { //If your grabbed item runs out of items, then remove that item from your grabbed item
+			game.grabbedItem[0] = 0;
+		}
+
+		if (!game.inventoryOpened)
 		{
 			if (game.grabbedItem[0] != 0) {
 				if (addToInv(game.grabbedItem[0], game.grabbedItem[1])) {
