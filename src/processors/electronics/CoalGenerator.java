@@ -19,7 +19,7 @@ public class CoalGenerator extends Electronic{
 	public static final short flameTickTimer = 100;
 
 	public CoalGenerator(Main_Game game, short id, int chunkX, int chunkY, int tileX, int tileY) {
-		super(game, id, ProcessorIDs.CoalGenerator, validSlots, "Files/File "+game.CurrentFile+"/Tiles/CoalGenerator "+id+".txt", neededValues, chunkX, chunkY, tileX, tileY, baseMaxPower, powerTransfer);
+		super(game, id, ProcessorIDs.CoalGenerator, validSlots, "/CoalGenerator "+id+".txt", neededValues, chunkX, chunkY, tileX, tileY, baseMaxPower, powerTransfer);
 		for (int i = 0; i < neededValues; i++) {
 			getValues()[i] = 0;
 		}
@@ -46,9 +46,9 @@ public class CoalGenerator extends Electronic{
 				}
 				else {
 					getValues()[0] = 0;
-					game.files.RewriteLine(getFileName(), 1, ""+getValues()[0]);
+					game.files.RewriteLine("Files/File "+game.CurrentFile+"/Tiles"+getFileName(), 1, ""+getValues()[0]);
 					getValues()[1] = flameTickTimer;
-					game.files.RewriteLine(getFileName(), 2, ""+getValues()[1]);
+					game.files.RewriteLine("Files/File "+game.CurrentFile+"/Tiles"+getFileName(), 2, ""+getValues()[1]);
 				}
 			}
 			else {

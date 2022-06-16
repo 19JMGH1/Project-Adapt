@@ -17,7 +17,7 @@ public class LESU extends Electronic{
 	public static final short powerTransfer = 300;
 
 	public LESU(Main_Game game, short id, int chunkX, int chunkY, int tileX, int tileY) {
-		super(game, id, ProcessorIDs.LESU, validSlots, "Files/File "+game.CurrentFile+"/Tiles/LESU "+id+".txt", neededValues, chunkX, chunkY, tileX, tileY, baseMaxPower, powerTransfer);
+		super(game, id, ProcessorIDs.LESU, validSlots, "/LESU "+id+".txt", neededValues, chunkX, chunkY, tileX, tileY, baseMaxPower, powerTransfer);
 		
 	}
 

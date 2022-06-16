@@ -22,7 +22,7 @@ public class Refiner extends Electronic{
 	private int tileAnimationCycle = 0;
 
 	public Refiner(Main_Game game, short id, int chunkX, int chunkY, int tileX, int tileY) {
-		super(game, id, ProcessorIDs.Refiner, validSlots, "Files/File "+game.CurrentFile+"/Tiles/Refiner "+id+".txt", neededValues, chunkX, chunkY, tileX, tileY, baseMaxPower, powerTransfer);
+		super(game, id, ProcessorIDs.Refiner, validSlots, "/Refiner "+id+".txt", neededValues, chunkX, chunkY, tileX, tileY, baseMaxPower, powerTransfer);
 		for (int i = 0; i < neededValues; i++) {
 			getValues()[i] = 0;
 		}

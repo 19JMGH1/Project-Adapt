@@ -8,7 +8,7 @@ import core.lighting.DayTimeCycle;
 import processors.electronics.Electronic;
 import processors.electronics.ElectronicHandler;
 
-public class ProcessHandler implements Runnable{
+public class ProcessHandler implements Runnable {
 
 	public static LinkedList<Processors> processors = new LinkedList<Processors>();
 

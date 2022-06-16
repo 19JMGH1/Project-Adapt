@@ -83,10 +83,8 @@ public class Main_Game extends Canvas implements Runnable{
 	public Integer seed = null; //this integer stores the seed for the world
 	//this array stores all the information about the players inventory
 	public short[] [] []Inventory = new short [5][6][2]; //It's a 5 by 5 inventory, and two values, one is the ID, other is amount of items in the slot.
-	public short[] grabbedItem = new short [2]; //Stores the data about the item that is attached to the mouse
-	//TODO: the grabbed item is rendered to the screen properly, now you just have to re-code the Inventory management to deal with it
-	
 	//The 6th value in the second component of the inventory stores the hotbar
+	public short[] grabbedItem = new short [2]; //Stores the data about the item that is attached to the mouse
 
 	public Processors curentlyOpenedContainer = null; //Points to the object that is the currently opened container
 	public byte highlightedContainerItem = 0;

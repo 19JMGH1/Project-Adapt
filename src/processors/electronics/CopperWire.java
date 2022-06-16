@@ -17,7 +17,7 @@ public class CopperWire extends Electronic{
 	public static final short powerTransfer = 200;
 
 	public CopperWire(Main_Game game, short id, int chunkX, int chunkY, int tileX, int tileY) {
-		super(game, id, ProcessorIDs.CopperWire, validSlots, "Files/File "+game.CurrentFile+"/Tiles/CopperWire "+id+".txt", neededValues, chunkX, chunkY, tileX, tileY, baseMaxPower, powerTransfer);
+		super(game, id, ProcessorIDs.CopperWire, validSlots, "/CopperWire "+id+".txt", neededValues, chunkX, chunkY, tileX, tileY, baseMaxPower, powerTransfer);
 	}
 	
 	public CopperWire(Main_Game game, String fileName) {

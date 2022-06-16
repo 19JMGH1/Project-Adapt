@@ -24,7 +24,7 @@ public class ElectricFurnace extends Electronic implements Light{
 	private static final byte lightLevelProduced = 8; //This is the light level that the furnace makes while running
 
 	public ElectricFurnace(Main_Game game, short id, int chunkX, int chunkY, int tileX, int tileY) {
-		super(game, id, ProcessorIDs.ElectricFurnace, validSlots, "Files/File "+game.CurrentFile+"/Tiles/ElectricFurnace "+id+".txt", neededValues, chunkX, chunkY, tileX, tileY, baseMaxPower, powerTransfer);
+		super(game, id, ProcessorIDs.ElectricFurnace, validSlots, "/ElectricFurnace "+id+".txt", neededValues, chunkX, chunkY, tileX, tileY, baseMaxPower, powerTransfer);
 		this.game = game;
 		for (int i = 0; i < neededValues; i++) {
 			getValues()[i] = 0;

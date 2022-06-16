@@ -17,7 +17,7 @@ public class BlastFurnace extends Processors implements Light{
 	private static final byte lightLevelProduced = 8; //This is the light level that the furnace make while running
 
 	public BlastFurnace(Main_Game game, short id, int chunkX, int chunkY, int tileX, int tileY) {
-		super(game, id, ProcessorIDs.BlastFurnace, validSlots, "Files/File "+game.CurrentFile+"/Tiles/BlastFurnace "+id+".txt", neededValues, chunkX, chunkY, tileX, tileY);
+		super(game, id, ProcessorIDs.BlastFurnace, validSlots, "/BlastFurnace "+id+".txt", neededValues, chunkX, chunkY, tileX, tileY);
 		this.game = game;
 		for (int i = 0; i < neededValues; i++) {
 			getValues()[i] = 0;

@@ -60,8 +60,7 @@ public abstract class Processors {
 		//		}
 		
 		//game.files.saveContainer(this);
-		
-		CreateProcessorsFiles.createFile(fileName, this);
+		CreateProcessorsFiles.createFile("Files/File "+game.CurrentFile+"/Tiles"+fileName, this);
 	}
 
 	public void remove() {

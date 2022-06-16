@@ -2,39 +2,105 @@ package tiles;
 
 import core.Main_Game;
 
-public enum SurfaceTileIDs {
-	Blank(), //To get the ID number, look at the line of code for the tile, and subtract 6
-	Bulder(),
-	Pebble(),
-	Tree(),
-	WoodenWall("Wooden Wall"),
-	HorizontalClosedDoor("Door"),
-	VerticalClosedDoor("Door"),
-	HorizontalOpenedDoor("Door"),
-	VerticalOpenedDoor("Door"),
-	StoneTable("Stone Table"),
-	Dirt(),
-	Sand(),
-	Water(),
-	mine(),
-	BlastFurnace("Blast Furnace"),
-	Anvil(),
-	LESU(),
-	CopperWire("Copper Wire"),
-	CoalGenerator("Coal Generator"),
-	Refiner(),
-	Cabinet(),
-	ElectricFurnace("Electric Furnace"),
+public enum SurfaceTileIDs { //The short array tells the game what inventory items you get when you break the tile. Its an array of arrays that stores it as {item id, num of that id to harvest}
+	Blank(null, "Grass", "unbreakable"), //To get the ID number, look at the line of code for the tile, and subtract 6
+	Bulder(new short[][] {{1, 3}},"Bulder", "pickaxe"),
+	Pebble(new short[][] {{1, 1}}),
+	Tree(new short[][] {{2, 3}, {3, 2}}, "Tree", "axe"),
+	WoodenWall(new short[][] {{8, 1}}, "WoodenWall"),
+	HorizontalClosedDoor(new short[][] {{9, 1}}, "Door"),
+	VerticalClosedDoor(new short[][] {{9, 1}}, "Door"),
+	HorizontalOpenedDoor(new short[][] {{9, 1}}, "Door"),
+	VerticalOpenedDoor(new short[][] {{9, 1}}, "Door"),
+	StoneTable(new short[][] {{10, 1}}, "StoneTable"),
+	Dirt(null, "Dirt", "unbreakable"),
+	Sand(null, "Sand", "unbreakable"),
+	Water(null, "Water", "unbreakable"),
+	mine(new short[][] {{11, 1}}),
+	BlastFurnace(new short[][] {{21, 1}}, "BlastFurnace", "none", true, true),
+	Anvil(new short[][] {{29, 1}}),
+	LESU(new short[][] {{30, 1}}, "LESU", "none", true, true),
+	CopperWire(new short[][] {{31, 1}}, "CopperWire", "none", true, true),
+	CoalGenerator(new short[][] {{32, 1}}, "CoalGenerator", "none", true, true),
+	Refiner(new short[][] {{33, 1}}, "Refiner", "none", true, true),
+	Cabinet(new short[][] {{40, 1}}, "Cabinet", "none", true, false),
+	ElectricFurnace(new short[][] {{41, 1}}, "ElectricFurnace", "none", true, true),
 	ENDOFLIST;
 	
 	private String name;
+	private short[][] items; //The items that are dropped from breaking the tile
+	private boolean container;
+	private boolean electronic;
+	private String tool;
 	
-	SurfaceTileIDs() {
+	/**
+	 * 
+	 * @param container whether or not the tile is a container
+	 * @param electronic whether or not the tile is an electronic container
+	 */
+	SurfaceTileIDs(short[][] items, boolean container, boolean electronic) {
+		this.items = items;
 		name = this.toString();
+		setTool("none");
+		this.setContainer(container);
+		this.setElectronic(electronic);
 	}
 	
-	SurfaceTileIDs(String name){
+	/**
+	 * Constructor when there is nothing special about the tile
+	 */
+	SurfaceTileIDs() {
+		name = this.toString();
+		setTool("none");
+		setContainer(false);
+		setElectronic(false);
+	}
+	
+	SurfaceTileIDs(short[][] items) {
+		this.items = items;
+		name = this.toString();
+		setTool("none");
+		setContainer(false);
+		setElectronic(false);
+	}
+	
+	/**
+	 * 
+	 * @param name the name of the tile
+	 */
+	SurfaceTileIDs(short[][] items, String name) {
+		this.items = items;
 		this.name = name;
+		this.setTool("none");
+		setContainer(false);
+		setElectronic(false);
+	}
+	
+	/**
+	 * 
+	 * @param name the name of the tile
+	 * @param tool the type of tool needed to break the tile
+	 */
+	SurfaceTileIDs(short[][] items, String name, String tool) {
+		this.items = items;
+		this.name = name;
+		this.setTool(tool);
+		setContainer(false);
+		setElectronic(false);
+	}
+	
+	/**
+	 * 
+	 * @param name the string for the name of the tile
+	 * @param container whether or not the tile is a container
+	 * @param electronic whether or not the tile is an electronic
+	 */
+	SurfaceTileIDs(short[][] items, String name, String tool, boolean container, boolean electronic){
+		this.items = items;
+		this.name = name;
+		this.setTool(tool);
+		this.setContainer(container);
+		this.setElectronic(electronic);
 	}
 	
 	public String getName() {
@@ -48,5 +114,37 @@ public enum SurfaceTileIDs {
 			spriteXY[1]++;
 		}
 		return spriteXY;
+	}
+
+	public boolean isContainer() {
+		return container;
+	}
+
+	public void setContainer(boolean container) {
+		this.container = container;
+	}
+
+	public boolean isElectronic() {
+		return electronic;
+	}
+
+	public void setElectronic(boolean electronic) {
+		this.electronic = electronic;
+	}
+
+	public String getTool() {
+		return tool;
+	}
+
+	public void setTool(String tool) {
+		this.tool = tool;
+	}
+
+	public short[][] getItems() {
+		return items;
+	}
+
+	public void setItems(short[][] items) {
+		this.items = items;
 	}
 }

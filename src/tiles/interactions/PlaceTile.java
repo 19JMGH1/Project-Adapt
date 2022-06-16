@@ -59,7 +59,10 @@ public class PlaceTile {
 			game.StoredTiles[chunk][tileX][Math.abs(tileY)][0] = tileID;
 			game.StoredTiles[chunk][tileX][Math.abs(tileY)][1] = game.files.getTileFileID(tileID);
 			int chunkX = game.ChunkX+(chunk%3);
-			int chunkY = game.ChunkY+(chunk/3);
+			int chunkY = (game.ChunkY)+(chunk/3);
+			if (chunk <= 2) {
+				chunkY+=2;
+			}
 			BlastFurnace bf = new BlastFurnace(game, game.StoredTiles[chunk][tileX][Math.abs(tileY)][1], chunkX, chunkY, tileX, Math.abs(tileY));
 			ProcessHandler.processors.add(bf);
 		}
