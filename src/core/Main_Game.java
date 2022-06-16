@@ -666,7 +666,18 @@ public class Main_Game extends Canvas implements Runnable{
 		}
 		//Light.render(g); //Use this light class to make small lights once the day/night cycle is introduced
 		renderMessages(g);
-
+		
+		//This makes a light source in the corner to represent a sun
+//		Graphics2D g2d = (Graphics2D) g;
+//		Point2D center = new Point2D.Double(Main_Game.WIDTH, 0);
+//	     float radius = 1000;
+//	     float[] dist = {0.02f, 0.8f};
+//	     Color[] colors = {new Color(150, 150, 220), new Color(0,0,0,0)};
+//	     RadialGradientPaint p =
+//	         new RadialGradientPaint(center, radius, dist, colors);
+//	    g2d.setPaint(p);
+//	    g2d.fillRect((int) (center.getX()-radius), (int) (center.getY()-radius), (int) (radius*4), (int) (radius*4));
+		
 		g.dispose();
 		bs.show();
 	}

@@ -22,10 +22,13 @@ public class HarvestTile {
 	public void collect(short tileValue, int chunk, int tileX, int tileY)
 	{
 		if (game.dimension == 0) { //This else-if runs through all the methods needed to harvest a given tile
-			SurfaceTileIDs tile = SurfaceTileIDs.values()[tileValue];
+			SurfaceTileIDs tile = SurfaceTileIDs.values()[tileValue]; //Save a variable of the tile that was broken for ease of access
 			if (!tile.getTool().equals("unbreakable")) //Harvesting any tile
 			{
-				if (tile.getTool().equals("pickaxe")) {
+				if (tileValue == 13) { //Removes the mine tile in the mining dimension if its surface counterpart is removed
+					game.files.RewriteLine("Files/File "+game.CurrentFile+"/Mine Chunks/Chunk "+((game.ChunkX-1)+(chunk%3))+" "+((game.ChunkY-1)+(chunk/3))+".txt", (Math.abs(tileY)+1+(tileX*16)), "0 0 0");
+				}
+				if (tile.getTool().equals("pickaxe")) { //Makes sure you are holding a pickaxe is the tile needs a pickaxe to be mined
 					if (inventoryhandler.isPick(game.Inventory[game.SelectedHotbar][5][0])) {
 						useHarvestingItem(game.Inventory[game.SelectedHotbar][5][0], game.SelectedHotbar, 5);
 					}
@@ -33,7 +36,7 @@ public class HarvestTile {
 						return;
 					}
 				}
-				if (tile.getTool().equals("axe")) {
+				if (tile.getTool().equals("axe")) { //Makes sure you are holding a axe is the tile needs a axe to be mined
 					if (inventoryhandler.isAxe(game.Inventory[game.SelectedHotbar][5][0])) {
 						useHarvestingItem(game.Inventory[game.SelectedHotbar][5][0], game.SelectedHotbar, 5);
 					}
@@ -41,7 +44,7 @@ public class HarvestTile {
 						return;
 					}
 				}
-				if (!tile.isContainer()) {
+				if (!tile.isContainer()) { //Makes sure the text file for the container is removed if a container is what was removed.
 					for (int j = 0; j < tile.getItems().length; j++) {
 						basicHarvest((byte) tile.getItems()[j][0], tile.getItems()[j][1], chunk, tileX, tileY);
 					}

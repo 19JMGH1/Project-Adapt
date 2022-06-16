@@ -54,7 +54,7 @@ public enum ItemIDs { //An items invID can be obtained by looking at the line of
 		name = this.toString();
 	}
 	
-	ItemIDs(String name){
+	ItemIDs(String name) {
 		this.name = name;
 	}
 	
