@@ -44,7 +44,7 @@ public class HarvestTile {
 						return;
 					}
 				}
-				if (!tile.isContainer()) { //Makes sure the text file for the container is removed if a container is what was removed.
+				if (!tile.isProcessor()) { //Makes sure the text file for the container is removed if a container is what was removed.
 					for (int j = 0; j < tile.getItems().length; j++) {
 						basicHarvest((byte) tile.getItems()[j][0], tile.getItems()[j][1], chunk, tileX, tileY);
 					}

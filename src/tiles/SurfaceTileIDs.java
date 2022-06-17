@@ -29,20 +29,20 @@ public enum SurfaceTileIDs { //The short array tells the game what inventory ite
 	
 	private String name;
 	private short[][] items; //The items that are dropped from breaking the tile
-	private boolean container;
+	private boolean processor;
 	private boolean electronic;
 	private String tool;
 	
 	/**
 	 * 
-	 * @param container whether or not the tile is a container
+	 * @param processor whether or not the tile is a container
 	 * @param electronic whether or not the tile is an electronic container
 	 */
-	SurfaceTileIDs(short[][] items, boolean container, boolean electronic) {
+	SurfaceTileIDs(short[][] items, boolean processor, boolean electronic) {
 		this.items = items;
 		name = this.toString();
 		setTool("none");
-		this.setContainer(container);
+		this.setProcessor(processor);
 		this.setElectronic(electronic);
 	}
 	
@@ -52,7 +52,7 @@ public enum SurfaceTileIDs { //The short array tells the game what inventory ite
 	SurfaceTileIDs() {
 		name = this.toString();
 		setTool("none");
-		setContainer(false);
+		setProcessor(false);
 		setElectronic(false);
 	}
 	
@@ -60,7 +60,7 @@ public enum SurfaceTileIDs { //The short array tells the game what inventory ite
 		this.items = items;
 		name = this.toString();
 		setTool("none");
-		setContainer(false);
+		setProcessor(false);
 		setElectronic(false);
 	}
 	
@@ -72,7 +72,7 @@ public enum SurfaceTileIDs { //The short array tells the game what inventory ite
 		this.items = items;
 		this.name = name;
 		this.setTool("none");
-		setContainer(false);
+		setProcessor(false);
 		setElectronic(false);
 	}
 	
@@ -85,21 +85,21 @@ public enum SurfaceTileIDs { //The short array tells the game what inventory ite
 		this.items = items;
 		this.name = name;
 		this.setTool(tool);
-		setContainer(false);
+		setProcessor(false);
 		setElectronic(false);
 	}
 	
 	/**
 	 * 
 	 * @param name the string for the name of the tile
-	 * @param container whether or not the tile is a container
+	 * @param processor whether or not the tile is a container
 	 * @param electronic whether or not the tile is an electronic
 	 */
-	SurfaceTileIDs(short[][] items, String name, String tool, boolean container, boolean electronic){
+	SurfaceTileIDs(short[][] items, String name, String tool, boolean processor, boolean electronic){
 		this.items = items;
 		this.name = name;
 		this.setTool(tool);
-		this.setContainer(container);
+		this.setProcessor(processor);
 		this.setElectronic(electronic);
 	}
 	
@@ -116,12 +116,12 @@ public enum SurfaceTileIDs { //The short array tells the game what inventory ite
 		return spriteXY;
 	}
 
-	public boolean isContainer() {
-		return container;
+	public boolean isProcessor() {
+		return processor;
 	}
 
-	public void setContainer(boolean container) {
-		this.container = container;
+	public void setProcessor(boolean processor) {
+		this.processor = processor;
 	}
 
 	public boolean isElectronic() {
