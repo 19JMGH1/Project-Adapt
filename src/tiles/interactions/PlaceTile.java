@@ -4,11 +4,11 @@ import java.lang.reflect.InvocationTargetException;
 
 import core.Main_Game;
 import items.ItemIDs;
-import processors.ProcessHandler;
-import processors.ProcessorIDs;
-import processors.Processors;
-import processors.electronics.Electronic;
-import processors.electronics.ElectronicHandler;
+import processors.electronics.management.Electronic;
+import processors.electronics.management.ElectronicHandler;
+import processors.management.ProcessHandler;
+import processors.management.ProcessorIDs;
+import processors.management.Processors;
 import tiles.SurfaceTileIDs;
 
 public class PlaceTile {

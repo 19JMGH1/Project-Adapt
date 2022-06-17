@@ -3,10 +3,10 @@ package tiles.interactions;
 import core.Identifications;
 import core.InventoryHandler;
 import core.Main_Game;
-import processors.ProcessHandler;
-import processors.ProcessorIDs;
-import processors.Processors;
-import processors.electronics.ElectronicHandler;
+import processors.electronics.management.ElectronicHandler;
+import processors.management.ProcessHandler;
+import processors.management.ProcessorIDs;
+import processors.management.Processors;
 import tiles.SurfaceTileIDs;
 
 public class HarvestTile {

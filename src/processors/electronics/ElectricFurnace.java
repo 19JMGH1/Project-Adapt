@@ -6,7 +6,8 @@ import core.Main_Game;
 import core.lighting.DayTimeCycle;
 import core.lighting.Light;
 import processors.BlastFurnace;
-import processors.ProcessorIDs;
+import processors.electronics.management.Electronic;
+import processors.management.ProcessorIDs;
 
 public class ElectricFurnace extends Electronic implements Light{
 

@@ -25,6 +25,7 @@ public enum SurfaceTileIDs { //The short array tells the game what inventory ite
 	Refiner(new short[][] {{33, 1}}, "Refiner", "none", true, true),
 	Cabinet(new short[][] {{40, 1}}, "Cabinet", "none", true, false),
 	ElectricFurnace(new short[][] {{41, 1}}, "ElectricFurnace", "none", true, true),
+	Acorn(new short[][] {{3, 1}}, "Acorn", "none", true, false),
 	ENDOFLIST;
 	
 	private String name;

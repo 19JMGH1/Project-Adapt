@@ -6,7 +6,7 @@ public enum ItemIDs { //An items invID can be obtained by looking at the line of
 	Blank(), //The parameters are string for a name different than the enum name, and what tile is placed if you right click with this item (leave blank if it doesn't place an item).
 	Stone(),
 	Wood(),
-	Accorn(),
+	Accorn((short) 22),
 	SharpStone("Sharp Stone"),
 	Tier1CraftingUpgrade("Tier 1 Crafting Upgrade"),
 	StonePickaxe("Stone Pickaxe"),

@@ -12,7 +12,7 @@ import javax.imageio.ImageIO;
 
 import core.playerInput.MouseHandler;
 import items.ItemIDs;
-import processors.electronics.Electronic;
+import processors.electronics.management.Electronic;
 import tiles.SurfaceTileIDs;
 
 public class InventoryHandler {

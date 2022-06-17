@@ -3,7 +3,8 @@ package processors.electronics;
 import java.awt.Graphics;
 
 import core.Main_Game;
-import processors.ProcessorIDs;
+import processors.electronics.management.Electronic;
+import processors.management.ProcessorIDs;
 
 public class CopperWire extends Electronic{
 

@@ -1,10 +1,10 @@
-package processors.electronics;
+package processors.electronics.management;
 
 import java.util.Arrays;
 
 import core.Main_Game;
-import processors.ProcessorIDs;
-import processors.Processors;
+import processors.management.ProcessorIDs;
+import processors.management.Processors;
 
 public abstract class Electronic extends Processors{ //The energy units that appear in the game will be Joules and Watts (Jules for power stored, watts for power transfer)
 
@@ -15,14 +15,14 @@ public abstract class Electronic extends Processors{ //The energy units that app
 	protected boolean[] inputSides = {true, true, true, true}; //Both of these I/O sides go up, down, left, right
 	protected boolean[] outputSides = {true, true, true, true};
 
-	Electronic(Main_Game game, short id, ProcessorIDs containerID, boolean[][] validSlots, String fileName, byte neededValues, int chunkX, int chunkY, int tileX, int tileY, int maxPower, short powerTransfer) {
+	protected Electronic(Main_Game game, short id, ProcessorIDs containerID, boolean[][] validSlots, String fileName, byte neededValues, int chunkX, int chunkY, int tileX, int tileY, int maxPower, short powerTransfer) {
 		super(game, id, containerID, validSlots, fileName, neededValues, chunkX, chunkY, tileX, tileY); //Needed values does not count the current power stored.
 		powerStored = 0;
 		this.maxPower = maxPower;
 		this.powerTransfer = powerTransfer;
 	}
 
-	Electronic(String fileName) {
+	protected Electronic(String fileName) {
 		super(fileName);
 	}
 

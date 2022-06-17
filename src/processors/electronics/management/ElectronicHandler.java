@@ -1,4 +1,4 @@
-package processors.electronics;
+package processors.electronics.management;
 
 import java.util.LinkedList;
 

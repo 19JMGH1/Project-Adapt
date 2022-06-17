@@ -5,7 +5,7 @@ import java.awt.Graphics;
 import core.Files;
 import core.Identifications;
 import core.Main_Game;
-import processors.ProcessorIDs;
+import processors.management.ProcessorIDs;
 import tiles.SurfaceTileIDs;
 
 public class Interactions {

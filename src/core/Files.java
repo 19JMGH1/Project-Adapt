@@ -10,9 +10,9 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.Random;
 
-import processors.ProcessorIDs;
-import processors.Processors;
-import processors.electronics.Electronic;
+import processors.electronics.management.Electronic;
+import processors.management.ProcessorIDs;
+import processors.management.Processors;
 import tiles.SurfaceTileIDs;
 
 public class Files {

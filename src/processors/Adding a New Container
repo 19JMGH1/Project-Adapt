@@ -7,6 +7,4 @@ Make a class that extends ContainerProcessors (Or Electronic if its an electrica
 Add the container's item ID to items.ItemIDs.java
 Add the container's surface tile ID to tiles.SurfaceTileIDs.java
 Add the container's Container ID to containers.ContainerIDs.java
-Make the tile place-able by adding it to the list of else-if statements that starts on line 31 of tiles.interactions.PlaceTile.java
-Make the tile harvest-able by adding it to the list of else-if statements that starts on line 25 of tiles.interactions.HarvestTile.java
 Make the crafting recipe in items.CraftingRecipes.java

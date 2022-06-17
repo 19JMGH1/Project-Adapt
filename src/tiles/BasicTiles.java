@@ -9,8 +9,8 @@ import javax.imageio.ImageIO;
 import entities.EntityIDs;
 import entities.EntityObject;
 import entities.Handler;
-import processors.ProcessorIDs;
-import processors.electronics.ElectronicHandler;
+import processors.electronics.management.ElectronicHandler;
+import processors.management.ProcessorIDs;
 import core.Main_Game;
 
 public class BasicTiles extends EntityObject{

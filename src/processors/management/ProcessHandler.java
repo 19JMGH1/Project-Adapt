@@ -1,12 +1,12 @@
-package processors;
+package processors.management;
 
 import java.awt.Graphics;
 import java.util.LinkedList;
 
 import core.Main_Game;
 import core.lighting.DayTimeCycle;
-import processors.electronics.Electronic;
-import processors.electronics.ElectronicHandler;
+import processors.electronics.management.Electronic;
+import processors.electronics.management.ElectronicHandler;
 
 public class ProcessHandler implements Runnable {
 

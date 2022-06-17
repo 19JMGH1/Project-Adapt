@@ -5,6 +5,8 @@ import java.awt.Graphics;
 import core.Main_Game;
 import core.lighting.DayTimeCycle;
 import core.lighting.Light;
+import processors.management.ProcessorIDs;
+import processors.management.Processors;
 
 public class BlastFurnace extends Processors implements Light{
 
@@ -29,8 +31,8 @@ public class BlastFurnace extends Processors implements Light{
 		boolean smelted = false;
 		for (int j = 0; j < 2; j++) {
 			for (int i = 0; i < 2; i++) {
-				short inputSlot[] = c.containerSlots[i][j];
-				short outputSlot[] = c.containerSlots[i+3][j];
+				short inputSlot[] = c.getContainerSlots()[i][j];
+				short outputSlot[] = c.getContainerSlots()[i+3][j];
 				//	short inputSlot[] = game.files.getInventorySlot(fileName, i+(j*4)+4); //These were the previous lines used to read the slots, the new way has less file reading
 				//	short outputSlot[] = game.files.getInventorySlot(fileName, i+(j*4)+6);
 				if (inputSlot[0] == 13) {

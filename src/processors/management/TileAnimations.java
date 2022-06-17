@@ -1,4 +1,4 @@
-package processors;
+package processors.management;
 
 import java.awt.image.BufferedImage;
 import java.io.IOException;

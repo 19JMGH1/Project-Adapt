@@ -3,6 +3,8 @@ package processors;
 import java.awt.Graphics;
 
 import core.Main_Game;
+import processors.management.ProcessorIDs;
+import processors.management.Processors;
 
 public class Cabinet extends Processors{
 	

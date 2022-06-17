@@ -1,4 +1,4 @@
-package processors;
+package processors.management;
 
 import tiles.SurfaceTileIDs;
 
@@ -10,7 +10,8 @@ public enum ProcessorIDs {
 	CoalGenerator(SurfaceTileIDs.CoalGenerator, true, true, true),
 	Refiner(SurfaceTileIDs.Refiner, true, true, false),
 	Cabinet(SurfaceTileIDs.Cabinet, false, false, false),
-	ElectricFurnace(SurfaceTileIDs.ElectricFurnace, true, true, false);
+	ElectricFurnace(SurfaceTileIDs.ElectricFurnace, true, true, false),
+	Acorn(SurfaceTileIDs.Acorn, false, false, false);
 	
 	public SurfaceTileIDs tileID;
 	public boolean electronic;

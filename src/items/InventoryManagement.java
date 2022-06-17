@@ -3,7 +3,7 @@ package items;
 import java.util.Arrays;
 
 import core.Main_Game;
-import processors.electronics.Electronic;
+import processors.electronics.management.Electronic;
 
 public class InventoryManagement {
 
