@@ -6,10 +6,10 @@ public abstract class EntityObject {
 
 	protected int x;
 	protected int y;
-	protected EntityIDs id;
+	protected EntityTypes id;
 	protected int velX, velY;
 
-	public EntityObject(int x, int y, EntityIDs id) {
+	public EntityObject(int x, int y, EntityTypes id) {
 		this.x = x;
 		this.y = y;
 		this.id = id;
@@ -30,10 +30,10 @@ public abstract class EntityObject {
 	public int getX() {
 		return x;
 	}
-	public void setId(EntityIDs id) {
+	public void setId(EntityTypes id) {
 		this.id = id;
 	}
-	public EntityIDs getId() {
+	public EntityTypes getId() {
 		return id;
 	}
 	public void setVelX(int velX) {

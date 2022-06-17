@@ -27,7 +27,7 @@ public class Character extends EntityObject{
 	private int SpriteSheetLocY = 0;
 	private int Timer = 1;
 
-	public Character(int x, int y, EntityIDs id, Main_Game game, Handler handler, KeyInput keyinput) {
+	public Character(int x, int y, EntityTypes id, Main_Game game, Handler handler, KeyInput keyinput) {
 		super(x, y, id);
 		this.game = game;
 		this.handler = handler;

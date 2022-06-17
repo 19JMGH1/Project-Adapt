@@ -20,7 +20,7 @@ public class DimensionName extends EntityObject{
 	private Main_Game game;
 	private Handler handler;
 
-	public DimensionName(int x, int y, EntityIDs id, Main_Game game, Handler handler, int dimension) {
+	public DimensionName(int x, int y, EntityTypes id, Main_Game game, Handler handler, int dimension) {
 		super(x, y, id);
 		
 		this.game = game;

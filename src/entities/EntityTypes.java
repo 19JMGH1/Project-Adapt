@@ -1,12 +1,13 @@
 package entities;
 
-public enum EntityIDs {
+public enum EntityTypes {
 	
 	Player(),
+	Passive(),
 	Enemy(),
-	Other(),
 	Projectile(),
 	Tiles(),
-	ItemDrop();
+	ItemDrop(),
+	Other();
 
 }

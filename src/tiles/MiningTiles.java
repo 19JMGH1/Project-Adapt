@@ -6,7 +6,7 @@ import java.io.IOException;
 
 import javax.imageio.ImageIO;
 
-import entities.EntityIDs;
+import entities.EntityTypes;
 import entities.EntityObject;
 import entities.Handler;
 import core.Main_Game;
@@ -25,7 +25,7 @@ public class MiningTiles extends EntityObject{
 
 	private int SpriteSheetLocs[] = new int[2];
 
-	public MiningTiles(int x, int y, EntityIDs id, Main_Game game, Handler handler) {
+	public MiningTiles(int x, int y, EntityTypes id, Main_Game game, Handler handler) {
 		super(x, y, id);
 
 		this.game = game;

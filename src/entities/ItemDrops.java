@@ -26,7 +26,7 @@ public class ItemDrops extends EntityObject{
 	private int[] spriteSheetXY = {0, 0};
 	private boolean motionMode = false; //False means it jumped off the tile where it was collected and is bouncing from the tile. true means that it is getting sucked towards the player
 
-	public ItemDrops(int x, int y, byte itemID, EntityIDs id, Main_Game game, Handler handler) {
+	public ItemDrops(int x, int y, byte itemID, EntityTypes id, Main_Game game, Handler handler) {
 		super(x, y, id);
 
 		this.game = game;

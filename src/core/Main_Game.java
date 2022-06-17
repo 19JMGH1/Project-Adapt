@@ -39,7 +39,7 @@ import processors.management.TileAnimations;
 import entities.Character;
 import entities.Collision;
 import entities.DimensionName;
-import entities.EntityIDs;
+import entities.EntityTypes;
 
 public class Main_Game extends Canvas implements Runnable{
 
@@ -362,23 +362,23 @@ public class Main_Game extends Canvas implements Runnable{
 	}
 
 	public void AddCharacter() {
-		handler.addObject(new Character(100, 100, EntityIDs.Player, this, handler, keyinput));
+		handler.addObject(new Character(100, 100, EntityTypes.Player, this, handler, keyinput));
 	}
 	public void AddTiles() {
 		if (dimension == 0) {
-			handler.addObject(new BasicTiles(0, 0, EntityIDs.Tiles, this, handler));
+			handler.addObject(new BasicTiles(0, 0, EntityTypes.Tiles, this, handler));
 		}
 		else if (dimension == 1) {
-			handler.addObject(new MiningTiles(0, 0, EntityIDs.Tiles, this, handler));
+			handler.addObject(new MiningTiles(0, 0, EntityTypes.Tiles, this, handler));
 		}
 	}
 	public void AddDims() {
-		handler.addObject(new DimensionName(0, 0, EntityIDs.Other, this, handler, dimension));
+		handler.addObject(new DimensionName(0, 0, EntityTypes.Other, this, handler, dimension));
 	}
 
 	public void addDropedItem(byte itemID, int numToDrop) {
 		for (int  i = 0; i < numToDrop; i++) {
-			handler.addObject(new ItemDrops(MouseHandler.mouseX, MouseHandler.mouseY, itemID, EntityIDs.ItemDrop, this, handler));
+			handler.addObject(new ItemDrops(MouseHandler.mouseX, MouseHandler.mouseY, itemID, EntityTypes.ItemDrop, this, handler));
 		}
 	}
 

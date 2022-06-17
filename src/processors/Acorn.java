@@ -4,6 +4,7 @@ import java.awt.Graphics;
 import java.util.Random;
 
 import core.Main_Game;
+import processors.management.ProcessHandler;
 import processors.management.ProcessorIDs;
 import processors.management.Processors;
 
@@ -29,6 +30,7 @@ public class Acorn extends Processors{
 		if (getValues()[1] == getValues()[0]) {
 			game.StoredTiles[(loc[0]-game.ChunkX+1)+(3*(loc[1]-game.ChunkY+1))][loc[2]][loc[3]][0] = 3;
 			game.StoredTiles[(loc[0]-game.ChunkX+1)+(3*(loc[1]-game.ChunkY+1))][loc[2]][loc[3]][1] = 0;
+			ProcessHandler.processors.remove(this);
 			//System.out.println("Files/File "+game.CurrentFile+"/Tiles"+fileName); //Was for testing
 			game.files.deleteTextFile("Files/File "+game.CurrentFile+"/Tiles"+fileName);
 			game.processhandler.reload = true;

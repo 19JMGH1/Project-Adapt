@@ -6,7 +6,7 @@ import java.io.IOException;
 
 import javax.imageio.ImageIO;
 
-import entities.EntityIDs;
+import entities.EntityTypes;
 import entities.EntityObject;
 import entities.Handler;
 import processors.electronics.management.ElectronicHandler;
@@ -27,7 +27,7 @@ public class BasicTiles extends EntityObject{
 	//Location of where to get the sprite from
 	private int SpriteSheetLocs[] = new int[2];
 
-	public BasicTiles(int x, int y, EntityIDs id, Main_Game game, Handler handler) {
+	public BasicTiles(int x, int y, EntityTypes id, Main_Game game, Handler handler) {
 		super(x, y, id);
 
 		removed = false;

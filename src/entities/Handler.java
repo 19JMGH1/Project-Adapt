@@ -39,12 +39,12 @@ public class Handler {
 		EntityObject newTiles = null;
 		for (int i = 0; i < this.object.size(); i++) {
 			EntityObject tempObject = this.object.get(i);
-			if (tempObject.getId() == EntityIDs.Tiles) {
+			if (tempObject.getId() == EntityTypes.Tiles) {
 				if (game.dimension == 0) {
-					newTiles = new BasicTiles(0, 0, EntityIDs.Tiles, game, this);
+					newTiles = new BasicTiles(0, 0, EntityTypes.Tiles, game, this);
 				}
 				else if (game.dimension == 1) {
-					newTiles = new MiningTiles(0, 0, EntityIDs.Tiles, game, this);
+					newTiles = new MiningTiles(0, 0, EntityTypes.Tiles, game, this);
 				}
 				this.object.set(i, newTiles);
 				game.AddDims();

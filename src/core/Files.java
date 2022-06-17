@@ -44,6 +44,7 @@ public class Files {
 		File WorldFile = new File("Files/File "+i);
 		File ChunkFile = new File("Files/File "+i+"/Chunks");
 		File InventoryFile = new File("Files/File "+i+"/Inventory");
+		File Entities = new File(WorldFile+"/Entities");
 		File tilesFile = new File(WorldFile+"/Tiles");
 		File DataTxt = new File(WorldFile+"/Data.txt");
 		File InvTxt = new File(WorldFile+"/Inventory/Inv.txt");
@@ -53,6 +54,7 @@ public class Files {
 			InventoryFile = new File("Files/File "+i+"/Inventory");
 			tilesFile = new File(WorldFile+"/Tiles");
 			DataTxt = new File(WorldFile+"/Data.txt");
+			Entities = new File(WorldFile+"/Entities");
 			InvTxt = new File(WorldFile+"/Inventory/Inv.txt");
 		}
 		game.CurrentFile = i;
@@ -61,6 +63,7 @@ public class Files {
 			CreateDirs(ChunkFile);
 			CreateDirs(InventoryFile);
 			CreateDirs(tilesFile);
+			CreateDirs(Entities);
 			PrintWriter DataTxtWriter = new PrintWriter(DataTxt);
 			PrintWriter InvTxtWriter = new PrintWriter(InvTxt);
 			DataTxtWriter.println(fileName); //File Name
