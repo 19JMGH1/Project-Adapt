@@ -29,6 +29,7 @@ import tiles.interactions.Interactions;
 import tiles.interactions.PlaceTile;
 import entities.Handler;
 import entities.ItemDrops;
+import entities.passive.Pig;
 import items.CraftingRecipes;
 import items.InventoryManagement;
 import menus.FileMenu;
@@ -297,6 +298,17 @@ public class Main_Game extends Canvas implements Runnable{
 		StoredTiles[6] = files.ReadChunk(CurrentFile, ChunkX-1, ChunkY-1, dimension);
 		StoredTiles[7] = files.ReadChunk(CurrentFile, ChunkX, ChunkY-1, dimension);
 		StoredTiles[8] = files.ReadChunk(CurrentFile, ChunkX+1, ChunkY-1, dimension);
+//		for (int k = 0; k < 9; k++) { //Test code used to remove all instances of a specific tile
+//			for (int i = 0; i < 16; i++) {
+//				for (int j = 0; j < 16; j++) {
+//					if (StoredTiles[k][i][j][0] == 22) {
+//						StoredTiles[k][i][j][0] = 0;
+//						StoredTiles[k][i][j][1] = 0;
+//					}
+//					
+//				}
+//			}
+//		}
 	}
 
 	public void CloseFile() {
@@ -363,6 +375,7 @@ public class Main_Game extends Canvas implements Runnable{
 
 	public void AddCharacter() {
 		handler.addObject(new Character(100, 100, EntityTypes.Player, this, handler, keyinput));
+		handler.addCreature(new Pig(this, EntityTypes.Passive, 100, 100, ChunkX, ChunkY, TileX, TileY));
 	}
 	public void AddTiles() {
 		if (dimension == 0) {
@@ -383,7 +396,7 @@ public class Main_Game extends Canvas implements Runnable{
 	}
 
 	public void RemoveObjects() {
-		handler.removeAllObjects();
+		handler.removeAllEntities();
 	}
 
 	private void PositionHandler() {

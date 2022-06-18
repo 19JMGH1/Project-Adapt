@@ -9,7 +9,9 @@ import tiles.MiningTiles;
 
 public class Handler {
 	
-	LinkedList<EntityObject> object = new LinkedList<EntityObject>();
+	LinkedList<EntityObject> objects = new LinkedList<EntityObject>();
+	
+	LinkedList<Creature> creatures = new LinkedList<Creature>();
 	
 	private Main_Game game;
 	
@@ -18,27 +20,41 @@ public class Handler {
 	}
 	
 	public void tick() {
-		for (int i = 0; i < object.size(); i++) {
-			EntityObject tempObject = object.get(i);
+		for (int i = 0; i < objects.size(); i++) {
+			EntityObject tempObject = objects.get(i);
+			tempObject.tick();
+		}
+		for (int i = 0; i < creatures.size(); i++) {
+			Creature tempObject = creatures.get(i);
 			tempObject.tick();
 		}
 	}
 	public void render(Graphics g) {
-		for (int i = 0; i < object.size(); i++) {
-			EntityObject tempObject = object.get(i);
+		for (int i = 0; i < objects.size(); i++) {
+			EntityObject tempObject = objects.get(i);
+			tempObject.render(g);
+		}
+		for (int i = 0; i < creatures.size(); i++) {
+			Creature tempObject = creatures.get(i);
 			tempObject.render(g);
 		}
 	}
 	public void addObject(EntityObject object) {
-		this.object.add(object);
+		this.objects.add(object);
 	}
 	public void removeObject(EntityObject object) {
-		this.object.remove(object);
+		this.objects.remove(object);
+	}
+	public void addCreature(Creature c) {
+		this.creatures.add(c);
+	}
+	public void removeCreature(Creature c) {
+		this.creatures.remove(c);
 	}
 	public void replaceTiles() {
 		EntityObject newTiles = null;
-		for (int i = 0; i < this.object.size(); i++) {
-			EntityObject tempObject = this.object.get(i);
+		for (int i = 0; i < this.objects.size(); i++) {
+			EntityObject tempObject = this.objects.get(i);
 			if (tempObject.getId() == EntityTypes.Tiles) {
 				if (game.dimension == 0) {
 					newTiles = new BasicTiles(0, 0, EntityTypes.Tiles, game, this);
@@ -46,16 +62,21 @@ public class Handler {
 				else if (game.dimension == 1) {
 					newTiles = new MiningTiles(0, 0, EntityTypes.Tiles, game, this);
 				}
-				this.object.set(i, newTiles);
+				this.objects.set(i, newTiles);
 				game.AddDims();
 			}
 		}
 	}
-	public void removeAllObjects() {
-		int CurrentNumberOfObjects = object.size();
+	public void removeAllEntities() {
+		int CurrentNumberOfObjects = objects.size();
 		for (int i = 0; i < CurrentNumberOfObjects; i++) {
-			EntityObject tempObject = object.get(CurrentNumberOfObjects-i-1);
+			EntityObject tempObject = objects.get(CurrentNumberOfObjects-i-1);
 			removeObject(tempObject);
+		}
+		CurrentNumberOfObjects = creatures.size();
+		for (int i = 0; i < creatures.size(); i++) {
+			Creature tempCreature = creatures.get(CurrentNumberOfObjects-i-1);
+			removeCreature(tempCreature);
 		}
 	}
 }

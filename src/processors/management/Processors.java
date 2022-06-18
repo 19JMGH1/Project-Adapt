@@ -118,7 +118,11 @@ public abstract class Processors {
 	public short[] getValues() {
 		return values;
 	}
-
+	
+	public void setValues(int i, short value) {
+		this.values[i] = value;
+	}
+	
 	public void setValues(short[] values) {
 		this.values = values;
 	}
