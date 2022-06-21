@@ -37,8 +37,8 @@ public class BlastFurnace extends Processors implements Light{
 				//	short outputSlot[] = game.files.getInventorySlot(fileName, i+(j*4)+6);
 				if (inputSlot[0] == 13) {
 					if (outputSlot[0] == 0 || outputSlot[0] == 22) { //This is the list of items that can be smelted in a blast furnace
-						if (outputSlot[1] < Main_Game.maxStackSize && inputSlot[1] >= 3) {
-							inputSlot[1] -= 3;
+						if (outputSlot[1] < Main_Game.maxStackSize && inputSlot[1] >= 2) {
+							inputSlot[1] -= 2;
 							if (inputSlot[1] == 0) {
 								inputSlot[0] = 0;
 							}
@@ -50,8 +50,8 @@ public class BlastFurnace extends Processors implements Light{
 				}
 				if (inputSlot[0] == 14) {
 					if (outputSlot[0] == 0 || outputSlot[0] == 23) {
-						if (outputSlot[1] < Main_Game.maxStackSize && inputSlot[1] >= 3) {
-							inputSlot[1] -= 3;
+						if (outputSlot[1] < Main_Game.maxStackSize && inputSlot[1] >= 2) {
+							inputSlot[1] -= 2;
 							if (inputSlot[1] == 0) {
 								inputSlot[0] = 0;
 							}
@@ -63,8 +63,8 @@ public class BlastFurnace extends Processors implements Light{
 				}
 				else if (inputSlot[0] == 15) {
 					if (outputSlot[0] == 0 || outputSlot[0] == 24) {
-						if (outputSlot[1] < Main_Game.maxStackSize && inputSlot[1] >= 3) {
-							inputSlot[1] -= 3;
+						if (outputSlot[1] < Main_Game.maxStackSize && inputSlot[1] >= 2) {
+							inputSlot[1] -= 2;
 							if (inputSlot[1] == 0) {
 								inputSlot[0] = 0;
 							}
@@ -76,8 +76,8 @@ public class BlastFurnace extends Processors implements Light{
 				}
 				else if (inputSlot[0] == 16) {
 					if (outputSlot[0] == 0 || outputSlot[0] == 25) {
-						if (outputSlot[1] < Main_Game.maxStackSize && inputSlot[1] >= 3) {
-							inputSlot[1] -= 3;
+						if (outputSlot[1] < Main_Game.maxStackSize && inputSlot[1] >= 2) {
+							inputSlot[1] -= 2;
 							if (inputSlot[1] == 0) {
 								inputSlot[0] = 0;
 							}
@@ -89,8 +89,8 @@ public class BlastFurnace extends Processors implements Light{
 				}
 				else if (inputSlot[0] == 17) {
 					if (outputSlot[0] == 0 || outputSlot[0] == 26) {
-						if (outputSlot[1] < Main_Game.maxStackSize && inputSlot[1] >= 3) {
-							inputSlot[1] -= 3;
+						if (outputSlot[1] < Main_Game.maxStackSize && inputSlot[1] >= 2) {
+							inputSlot[1] -= 2;
 							if (inputSlot[1] == 0) {
 								inputSlot[0] = 0;
 							}
@@ -102,8 +102,8 @@ public class BlastFurnace extends Processors implements Light{
 				}
 				else if (inputSlot[0] == 18) {
 					if (outputSlot[0] == 0 || outputSlot[0] == 27) {
-						if (outputSlot[1] < Main_Game.maxStackSize && inputSlot[1] >= 3) {
-							inputSlot[1] -= 3;
+						if (outputSlot[1] < Main_Game.maxStackSize && inputSlot[1] >= 2) {
+							inputSlot[1] -= 2;
 							if (inputSlot[1] == 0) {
 								inputSlot[0] = 0;
 							}

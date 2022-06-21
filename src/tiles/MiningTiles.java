@@ -7,8 +7,8 @@ import java.io.IOException;
 import javax.imageio.ImageIO;
 
 import entities.EntityTypes;
-import entities.EntityObject;
-import entities.Handler;
+import entities.management.EntityObject;
+import entities.management.Handler;
 import core.Main_Game;
 
 public class MiningTiles extends EntityObject{

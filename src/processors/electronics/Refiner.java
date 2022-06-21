@@ -34,11 +34,6 @@ public class Refiner extends Electronic{
 		}
 	}
 	
-	public Refiner(Main_Game game, String fileName) {
-		super(fileName);
-		this.game = game;
-	}
-	
 //	@Override
 //	public void saveProcessor() {
 //		CreateContainerFiles.createFile(fileName, this);

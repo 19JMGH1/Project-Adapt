@@ -20,11 +20,6 @@ public class CopperWire extends Electronic{
 	public CopperWire(Main_Game game, short id, int chunkX, int chunkY, int tileX, int tileY) {
 		super(game, id, ProcessorIDs.CopperWire, validSlots, "/CopperWire "+id+".txt", neededValues, chunkX, chunkY, tileX, tileY, baseMaxPower, powerTransfer);
 	}
-	
-	public CopperWire(Main_Game game, String fileName) {
-		super (fileName);
-		this.game = game;
-	}
 
 	public void tick() {
 		energyTransfer();

@@ -7,8 +7,8 @@ import java.io.IOException;
 import javax.imageio.ImageIO;
 
 import entities.EntityTypes;
-import entities.EntityObject;
-import entities.Handler;
+import entities.management.EntityObject;
+import entities.management.Handler;
 import processors.electronics.management.ElectronicHandler;
 import processors.management.ProcessorIDs;
 import core.Main_Game;
@@ -80,16 +80,16 @@ public class BasicTiles extends EntityObject{
 		this.x = (Main_Game.WIDTH/2)-game.CharacterWidth/2;
 		this.y = (Main_Game.HEIGHT/2)-game.CharacterHeight/2;
 
-		//		for (int k = 0; k < 9; k++) { //Loops through each tile to see it the tile needs processing done with it
-		//			for (int i = 0; i <= 15; i++) {
-		//				for (int j = 0; j <= 15; j++) {
-		//					//Hanlding processes for each type of tile
-		//					if (game.StoredTiles[k][i][j][0] == 14) {
-		//						blastFurnace(k, i, j);
-		//					}
-		//				}
-		//			}
-		//		}
+//				for (int k = 0; k < 9; k++) { //Loops through each tile to remove a specified tile (for debugging only)
+//					for (int i = 0; i <= 15; i++) {
+//						for (int j = 0; j <= 15; j++) {
+//							if (game.StoredTiles[k][i][j][0] == 17) {
+//								game.StoredTiles[k][i][j][0] = 0;
+//								game.StoredTiles[k][i][j][0] = 0;
+//							}
+//						}
+//					}
+//				}
 	}
 
 	//	private void blastFurnace(int chunk, int tileX, int tileY) { //Handling the blast furnace

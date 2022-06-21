@@ -149,9 +149,10 @@ public class InventoryHandler {
 		{
 			for (int i = 0; i < 5; i++)
 			{
-				if (game.Inventory[i][j][1] == 0)
+				if (game.Inventory[i][j][1] <= 0)
 				{
 					game.Inventory[i][j][0] = 0;
+					game.Inventory[i][j][1] = 0;
 				}
 			}
 		}

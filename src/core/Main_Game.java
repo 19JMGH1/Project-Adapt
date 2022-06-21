@@ -27,9 +27,11 @@ import tiles.MiningTiles;
 import tiles.interactions.HarvestTile;
 import tiles.interactions.Interactions;
 import tiles.interactions.PlaceTile;
-import entities.Handler;
-import entities.ItemDrops;
-import entities.passive.Pig;
+import entities.management.Character;
+import entities.management.Collision;
+import entities.management.DimensionName;
+import entities.management.Handler;
+import entities.management.ItemDrops;
 import items.CraftingRecipes;
 import items.InventoryManagement;
 import menus.FileMenu;
@@ -37,10 +39,8 @@ import menus.MainMenu;
 import processors.management.ProcessHandler;
 import processors.management.Processors;
 import processors.management.TileAnimations;
-import entities.Character;
-import entities.Collision;
-import entities.DimensionName;
 import entities.EntityTypes;
+import entities.Pig;
 
 public class Main_Game extends Canvas implements Runnable{
 
@@ -375,7 +375,7 @@ public class Main_Game extends Canvas implements Runnable{
 
 	public void AddCharacter() {
 		handler.addObject(new Character(100, 100, EntityTypes.Player, this, handler, keyinput));
-		handler.addCreature(new Pig(this, EntityTypes.Passive, 100, 100, ChunkX, ChunkY, TileX, TileY));
+		handler.addCreature(new Pig(this, EntityTypes.Passive, 0, 0, ChunkX, ChunkY, TileX, TileY));
 	}
 	public void AddTiles() {
 		if (dimension == 0) {
@@ -424,11 +424,11 @@ public class Main_Game extends Canvas implements Runnable{
 		//System.out.println(TileWidth/10);
 		if (!inventoryOpened)
 		{
-			if (collision.checkX(x, y, TileX, TileY, ChunkX, ChunkY, (int) VelX, (int) VelY))
+			if (collision.checkX(x, y, TileX, TileY, ChunkX, ChunkY, (int) VelX))
 			{
 				x += VelX;
 			}
-			if (collision.checkY(x, y, TileX, TileY, ChunkX, ChunkY, (int) VelX, (int) VelY))
+			if (collision.checkY(x, y, TileX, TileY, ChunkX, ChunkY, (int) VelY))
 			{
 				y += VelY;
 			}
@@ -707,6 +707,10 @@ public class Main_Game extends Canvas implements Runnable{
 		//System.out.println("Resizing background");
 	}
 
+	public static int randomNum(int uperBound, int lowerBound) {
+		return (int) Math.floor(Math.random() * (uperBound - lowerBound + 1) + lowerBound);
+	}
+	
 	public static void main(String args[]) {
 		System.setProperty("sun.awt.noerasebackground", "True");
 		System.setProperty("sun.java2d.opengl", "True");
