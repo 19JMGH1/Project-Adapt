@@ -1,6 +1,8 @@
 package entities.management;
 
 import java.awt.Graphics;
+import java.awt.Rectangle;
+import java.awt.geom.Area;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 
@@ -209,6 +211,7 @@ public class Character extends EntityObject{
 	public void render(Graphics g) {
 		//((Graphics2D) g).setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, (float) 0.7)); //Here is how you make an image transparent
 		g.drawImage(CharacterSprite, x, y, x+game.CharacterWidth, y+game.CharacterHeight, SpriteSheetLocX, SpriteSheetLocY, SpriteSheetLocX+SpriteSheetWidth, SpriteSheetLocY+SpriteSheetHeight, null);
+		//g.fillRect(x+game.CharacterWidth/2, y+game.CharacterHeight/2, 2, 2);
 		//((Graphics2D) g).setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, (float) 1));
 		//g.fillRect(game.characterX+game.CharacterWidth/5, game.characterY+game.CharacterHeight/5, game.TileWidth/3, game.TileHeight/3); //Testing where the space is for items to fly towards the player after collection
 	}

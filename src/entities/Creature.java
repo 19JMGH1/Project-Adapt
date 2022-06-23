@@ -15,8 +15,8 @@ public abstract class Creature {
 	protected EntityTypes type;
 	protected int x, y, chunkX, chunkY, tileX, tileY; //Stores the position of the creature
 	protected int velX = 0, velY = 0; //velocities that the creature is moving at.
-	protected int xPos, yPos; //Stores where on the screen to render the Creature using the above position values.
-	protected int width, height; //Stores the size of the creature when it appears on the screen
+	public int xPos, yPos; //Stores where on the screen to render the Creature using the above position values.
+	public int width, height; //Stores the size of the creature when it appears on the screen
 	protected int spriteSheetResolution[] = new int[2]; //Stores the resolution of the sprite sheet
 	protected double aspectRatio; //Is the x resolution divided by the y resolution
 	protected BufferedImage body = null; //Buffered image for the body of the creature
@@ -25,21 +25,25 @@ public abstract class Creature {
 	protected int rotations = 0; //int that stores the angle of the limbs of the creature
 	protected int maxRotation;
 	protected boolean rotationDirection = false; //False is counterclockwise, true is clockwise
+	protected boolean facingRight = false; //Makes the creature face the correct direction and it continues to face the direction after movement has stopped
+	public int HP;
 
-
-
-	public Creature(Main_Game game, EntityTypes type, int x, int y, int chunkX, int chunkY, int tileX, int tileY) {
+	public Creature(Main_Game game, EntityTypes type, int x, int y, int chunkX, int chunkY, int tileX, int tileY, int maxHP) {
 		this.game = game;
 		this.type = type;
 		this.x = x;
 		this.y = y;
-
 		this.chunkX = chunkX;
 		this.chunkY = chunkY;
 		this.tileX = tileX;
 		this.tileY = tileY;
+		HP = maxHP;
 	}
-	public abstract void tick();
+	public void tick() {
+		if (HP <= 0) {
+			game.handler.removeCreature(this);
+		}
+	}
 	public abstract void render(Graphics g);
 
 	protected void renderPos() {
@@ -47,12 +51,12 @@ public abstract class Creature {
 		yPos = (game.y-y)+(game.ChunkY-chunkY)*16*game.TileHeight+(game.TileY-tileY)*game.TileHeight+Main_Game.HEIGHT/2-game.CharacterHeight/2;
 	}
 
-	protected void positionHandler() {
-		if (game.collision.checkX(x, y, tileX, tileY, chunkX, chunkY, (int) velX))
+	protected void positionHandler(int velX, int velY) {
+		if (game.collision.checkX(x, y, tileX, tileY, chunkX-game.ChunkX+1, game.ChunkY-chunkY+1, (int) velX))
 		{
 			x += velX;
 		}
-		if (game.collision.checkY(x, y, tileX, tileY, chunkX, chunkY, (int) velY))
+		if (game.collision.checkY(x, y, tileX, tileY, chunkX-game.ChunkX+1, game.ChunkY-chunkY+1, (int) velY))
 		{
 			y += velY;
 		}
@@ -146,12 +150,12 @@ class WanderingBehaviour {
 	
 	public void randomWander() {
 		if (!wandering) {
-			int rand = Main_Game.randomNum(0, 200);
-			if (rand == 100) {
+			int rand = Main_Game.randomNum(0, 125);
+			if (rand == 75) {
 				wandering = true;
-				wanderingTime = (short) Main_Game.randomNum(2*Main_Game.Target_TPS, 6*Main_Game.Target_TPS);
+				wanderingTime = (short) Main_Game.randomNum(3*Main_Game.Target_TPS, 6*Main_Game.Target_TPS);
 				velX = Main_Game.randomNum(-Main_Game.WIDTH/400, Main_Game.WIDTH/400);
-				velY = Main_Game.randomNum(-Main_Game.WIDTH/400, Main_Game.HEIGHT/400);
+				velY = Main_Game.randomNum(-Main_Game.HEIGHT/400, Main_Game.HEIGHT/400);
 			}
 		}
 		if (wanderingTime > 0) {

@@ -30,6 +30,7 @@ public class Handler {
 			Creature tempObject = creatures.get(i);
 			tempObject.tick();
 		}
+		
 	}
 	public void render(Graphics g) {
 		for (int i = 0; i < objects.size(); i++) {
@@ -75,10 +76,27 @@ public class Handler {
 			EntityObject tempObject = objects.get(CurrentNumberOfObjects-i-1);
 			removeObject(tempObject);
 		}
-		CurrentNumberOfObjects = creatures.size();
-		for (int i = 0; i < creatures.size(); i++) {
+	}
+	public void removeAllCreatures() {
+		int CurrentNumberOfObjects = creatures.size();
+		for (int i = 0; i < CurrentNumberOfObjects; i++) {
 			Creature tempCreature = creatures.get(CurrentNumberOfObjects-i-1);
 			removeCreature(tempCreature);
 		}
+	}
+	
+	public Creature creatureDamaged(int mx, int my) {
+		int topLeftP[] = {game.characterX-game.TileWidth, game.characterY-game.TileHeight};
+		int bottomRightP[] = {game.characterX+2*game.TileWidth, game.characterY+2*game.TileHeight};
+		if (mx >= topLeftP[0] && mx <= bottomRightP[0] && my >= topLeftP[1] && my <= bottomRightP[1]) {
+			for (Creature c : game.handler.creatures) {
+				int creatureTopLeftP[] = {c.xPos, c.yPos};
+				int creatureBottomRightP[] = {c.xPos+c.width, c.yPos+c.height};
+				if (mx >= creatureTopLeftP[0] && mx <= creatureBottomRightP[0] && my >= creatureTopLeftP[1] && my <= creatureBottomRightP[1]) {
+					return c;
+				}
+			}
+		}
+		return null;
 	}
 }

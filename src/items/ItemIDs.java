@@ -9,8 +9,8 @@ public enum ItemIDs { //An items invID can be obtained by looking at the line of
 	Accorn((short) 22),
 	SharpStone("Sharp Stone"),
 	Tier1CraftingUpgrade("Tier 1 Crafting Upgrade"),
-	StonePickaxe("Stone Pickaxe"),
-	StoneAxe("Stone Axe"),
+	StonePickaxe("Stone Pickaxe", 3),
+	StoneAxe("Stone Axe", 4),
 	WoodenWall("Wooden Wall", (short) 4),
 	WoodenDoor("Wooden Door", (short) 5),
 	StoneTable("Stone Table", (short) 9),
@@ -23,7 +23,7 @@ public enum ItemIDs { //An items invID can be obtained by looking at the line of
 	UraniumOre("Uranium Ore"),
 	AluminumOre("Aluminum Ore"),
 	Topaz(),
-	IronPickaxe("Iron Pickaxe"),
+	IronPickaxe("Iron Pickaxe", 4),
 	BlastFurnace("Blast Furnace", (short) 14),
 	IronBar("Iron Bar"),
 	CopperBar("Cooper Bar"),
@@ -50,6 +50,7 @@ public enum ItemIDs { //An items invID can be obtained by looking at the line of
 	
 	private String name;
 	private short tile = 0; //This variable controls what tile gets placed when you right click this item
+	public int damage = 1;
 	
 	ItemIDs() {
 		name = this.toString();
@@ -62,6 +63,11 @@ public enum ItemIDs { //An items invID can be obtained by looking at the line of
 	
 	ItemIDs(String name) {
 		this.name = name;
+	}
+	
+	ItemIDs(String name, int damage) {
+		this.name = name;
+		this.damage = damage;
 	}
 	
 	ItemIDs(String name, short tile) {

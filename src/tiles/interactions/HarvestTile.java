@@ -207,7 +207,7 @@ public class HarvestTile {
 		}
 	}
 
-	private void itemBroken(short itemID, int x, int y) {
+	public void itemBroken(short itemID, int x, int y) {
 		if (Identifications.isDurabilityItem(itemID)) {
 			String fileNameIdentifier = Identifications.getDurabilityFileName(itemID);
 			int durability = Integer.parseInt(game.files.ReadLine("Files/File "+game.CurrentFile+"/Inventory/"+fileNameIdentifier+" "+game.Inventory[x][y][1]+".txt", 1));
@@ -227,7 +227,7 @@ public class HarvestTile {
 
 	private void useHarvestingItem(short itemID, int i, int j)
 	{
-		if (itemID == 4)
+		if (itemID == 4) //4 is the item ID for the sharp stone which gets used up whenever it is used.
 		{
 			game.Inventory[i][j][1]--;
 		}

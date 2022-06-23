@@ -32,6 +32,7 @@ import entities.management.Collision;
 import entities.management.DimensionName;
 import entities.management.Handler;
 import entities.management.ItemDrops;
+import entities.management.SpawnEvent;
 import items.CraftingRecipes;
 import items.InventoryManagement;
 import menus.FileMenu;
@@ -40,7 +41,6 @@ import processors.management.ProcessHandler;
 import processors.management.Processors;
 import processors.management.TileAnimations;
 import entities.EntityTypes;
-import entities.Pig;
 
 public class Main_Game extends Canvas implements Runnable{
 
@@ -124,7 +124,7 @@ public class Main_Game extends Canvas implements Runnable{
 	public boolean resized = true;
 	public boolean Paused = false;
 
-	private Handler handler;
+	public Handler handler;
 	public Window window;
 	private MouseHandler mousehandler;
 	private KeyInput keyinput;
@@ -143,6 +143,7 @@ public class Main_Game extends Canvas implements Runnable{
 	public TileAnimations tileanimations;
 	public DayTimeCycle daytimecycle;
 	public InventoryManagement inventorymanagment;
+	private SpawnEvent spawnevent;
 
 	public TickThread tickthread;
 
@@ -177,6 +178,7 @@ public class Main_Game extends Canvas implements Runnable{
 		placetile = new PlaceTile(this, interactions);
 		daytimecycle = new DayTimeCycle(this);
 		inventorymanagment = new InventoryManagement(this);
+		spawnevent = new SpawnEvent(this);
 		
 
 		tickthread = new TickThread(this);
@@ -319,6 +321,7 @@ public class Main_Game extends Canvas implements Runnable{
 		x = 0;
 		y = 0;
 		RemoveObjects();
+		System.out.println("here");
 		processhandler.removeAllProcessors();
 		seed = null;
 		//daytimecycle.resetLists();
@@ -375,7 +378,7 @@ public class Main_Game extends Canvas implements Runnable{
 
 	public void AddCharacter() {
 		handler.addObject(new Character(100, 100, EntityTypes.Player, this, handler, keyinput));
-		handler.addCreature(new Pig(this, EntityTypes.Passive, 0, 0, ChunkX, ChunkY, TileX, TileY));
+		//handler.addCreature(new Pig(this, EntityTypes.Passive, 0, 0, ChunkX, ChunkY, TileX, TileY));
 	}
 	public void AddTiles() {
 		if (dimension == 0) {
@@ -397,6 +400,7 @@ public class Main_Game extends Canvas implements Runnable{
 
 	public void RemoveObjects() {
 		handler.removeAllEntities();
+		handler.removeAllCreatures();
 	}
 
 	private void PositionHandler() {
@@ -424,11 +428,11 @@ public class Main_Game extends Canvas implements Runnable{
 		//System.out.println(TileWidth/10);
 		if (!inventoryOpened)
 		{
-			if (collision.checkX(x, y, TileX, TileY, ChunkX, ChunkY, (int) VelX))
+			if (collision.checkX(x, y, TileX, TileY, 1, 1, (int) VelX))
 			{
 				x += VelX;
 			}
-			if (collision.checkY(x, y, TileX, TileY, ChunkX, ChunkY, (int) VelY))
+			if (collision.checkY(x, y, TileX, TileY, 1, 1, (int) VelY))
 			{
 				y += VelY;
 			}
@@ -643,6 +647,7 @@ public class Main_Game extends Canvas implements Runnable{
 			ingamehud.tick();
 			interactions.tick();
 			daytimecycle.tick();
+			spawnevent.tick();
 		}
 		showMessages();
 		handler.tick();
@@ -707,8 +712,8 @@ public class Main_Game extends Canvas implements Runnable{
 		//System.out.println("Resizing background");
 	}
 
-	public static int randomNum(int uperBound, int lowerBound) {
-		return (int) Math.floor(Math.random() * (uperBound - lowerBound + 1) + lowerBound);
+	public static int randomNum(int lowerBound, int upperBound) {
+		return (int) Math.floor(Math.random() * (upperBound - lowerBound + 1) + lowerBound);
 	}
 	
 	public static void main(String args[]) {

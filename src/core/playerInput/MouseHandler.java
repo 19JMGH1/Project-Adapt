@@ -11,8 +11,10 @@ import core.Files;
 import core.InGameHud;
 import core.Main_Game;
 import core.Main_Game.State;
+import entities.Creature;
 import items.CraftingRecipes;
 import items.InventoryManagement;
+import items.ItemIDs;
 import menus.FileMenu;
 import menus.MainMenu;
 import tiles.interactions.Interactions;
@@ -160,9 +162,15 @@ public class MouseHandler extends MouseAdapter implements MouseMotionListener, M
 					}
 					else
 					{
+						Creature c = game.handler.creatureDamaged(mx, my); //Get the creature that may have been hit for use later
 						if (game.inventoryOpened)
 						{
 							game.inventorymanagment.leftClickManage(mx, my);
+						}
+						else if (c != null) {
+							ItemIDs item = ItemIDs.values()[game.Inventory[game.SelectedHotbar][5][0]];
+							c.HP -= item.damage;
+							game.harvesttile.itemBroken(game.Inventory[game.SelectedHotbar][5][0], game.SelectedHotbar, 5);
 						}
 						else
 						{

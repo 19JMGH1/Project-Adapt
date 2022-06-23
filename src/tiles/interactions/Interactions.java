@@ -257,6 +257,7 @@ public class Interactions {
 			} //This is the end of opening and closing doors
 			else if (tileValue == 13) //Going into a mine on the surface
 			{
+				game.handler.removeAllCreatures();
 				game.switchDimension((byte) 1);
 				game.StoredTiles[chunk][tileX][Math.abs(tileY)][0] = 9; //The next lines in this else if set the place you enter the mining dimension to a mine and make some blank tiles around it
 				tileY++;

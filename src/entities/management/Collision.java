@@ -14,6 +14,12 @@ public class Collision {
 
 	public boolean checkX(int X, int Y, int tileX, int tileY, int chunkX, int chunkY, int velX)
 	{
+		if (chunkY > 2 || chunkY < 0) {
+			return false;
+		}
+		if (chunkX > 2 || chunkX < 0) {
+			return false;
+		}
 		if (velX == 0)
 		{
 			return true;
@@ -29,16 +35,16 @@ public class Collision {
 				{
 					if (tileX == 15)
 					{
-						if (checkTile(0, tileY, 2, 1))
+						if (checkTile(0, tileY, chunkX+1, chunkY))
 							return false;
-						if (checkTile(0, tileY+1, 2, 1))
+						if (checkTile(0, tileY+1, chunkX+1, chunkY))
 							return false;
 					}
 					else
 					{
-						if (checkTile(tileX+1, tileY, 1, 1))
+						if (checkTile(tileX+1, tileY, chunkX, chunkY))
 							return false;
-						if (checkTile(tileX+1, tileY+1, 1, 1))
+						if (checkTile(tileX+1, tileY+1, chunkX, chunkY))
 							return false;
 					}
 				}
@@ -46,12 +52,12 @@ public class Collision {
 				{
 					if (tileX == 15)
 					{
-						if (checkTile(0, tileY, 2, 1))
+						if (checkTile(0, tileY, chunkX+1, chunkY))
 							return false;
 					}
 					else
 					{
-						if (checkTile(tileX+1, tileY, 1, 1))
+						if (checkTile(tileX+1, tileY, chunkX, chunkY))
 							return false;
 					}
 				}
@@ -65,16 +71,16 @@ public class Collision {
 				{
 					if (tileX == 0)
 					{
-						if (checkTile(15, tileY, 0, 1))
+						if (checkTile(15, tileY, chunkX-1, chunkY))
 							return false;
-						if (checkTile(15, tileY+1, 0, 1))
+						if (checkTile(15, tileY+1, chunkX-1, chunkY))
 							return false;
 					}
 					else
 					{
-						if (checkTile(tileX-1, tileY, 1, 1))
+						if (checkTile(tileX-1, tileY, chunkX, chunkY))
 							return false;
-						if (checkTile(tileX-1, tileY+1, 1, 1))
+						if (checkTile(tileX-1, tileY+1, chunkX, chunkY))
 							return false;
 					}
 				}
@@ -82,12 +88,12 @@ public class Collision {
 				{
 					if (tileX == 0)
 					{
-						if (checkTile(15, tileY, 0, 1))
+						if (checkTile(15, tileY, chunkX-1, chunkY))
 							return false;
 					}
 					else
 					{
-						if (checkTile(tileX-1, tileY, 1, 1))
+						if (checkTile(tileX-1, tileY, chunkX, chunkY))
 							return false;
 					}
 				}
@@ -113,16 +119,16 @@ public class Collision {
 				{
 					if (tileY == 0)
 					{
-						if (checkTile(tileX, -15, 1, 0))
+						if (checkTile(tileX, -15, chunkX, chunkY-1))
 							return false;
-						if (checkTile(tileX+1, -15, 1, 0))
+						if (checkTile(tileX+1, -15, chunkX, chunkY-1))
 							return false;
 					}
 					else
 					{
-						if (checkTile(tileX, tileY+1, 1, 1))
+						if (checkTile(tileX, tileY+1, chunkX, chunkY))
 							return false;
-						if (checkTile(tileX+1, tileY+1, 1, 1))
+						if (checkTile(tileX+1, tileY+1, chunkX, chunkY))
 							return false;
 					}
 				}
@@ -130,12 +136,12 @@ public class Collision {
 				{
 					if (tileY == 0)
 					{
-						if (checkTile(tileX, -15, 1, 0))
+						if (checkTile(tileX, -15, chunkX, chunkY-1))
 							return false;
 					}
 					else
 					{
-						if (checkTile(tileX, tileY+1, 1, 1))
+						if (checkTile(tileX, tileY+1, chunkX, chunkY))
 							return false;
 					}
 				}
@@ -148,16 +154,16 @@ public class Collision {
 				{
 					if (tileY == -15)
 					{
-						if (checkTile(tileX, 0, 1, 2))
+						if (checkTile(tileX, 0, chunkX, chunkY+1))
 							return false;
-						if (checkTile(tileX+1, 0, 1, 2))
+						if (checkTile(tileX+1, 0, chunkX, chunkY+1))
 							return false;
 					}
 					else
 					{
-						if (checkTile(tileX, tileY-1, 1, 1))
+						if (checkTile(tileX, tileY-1, chunkX, chunkY))
 							return false;
-						if (checkTile(tileX+1, tileY-1, 1, 1))
+						if (checkTile(tileX+1, tileY-1, chunkX, chunkY))
 							return false;
 					}
 				}
@@ -165,12 +171,12 @@ public class Collision {
 				{
 					if (tileY == -15)
 					{
-						if (checkTile(tileX, 0, 1, 2))
+						if (checkTile(tileX, 0, chunkX, chunkY+1))
 							return false;
 					}
 					else
 					{
-						if (checkTile(tileX, tileY-1, 1, 1))
+						if (checkTile(tileX, tileY-1, chunkX, chunkY))
 							return false;
 					}
 				}
@@ -199,6 +205,9 @@ public class Collision {
 		{
 			tileY -= 16;
 			chunkY -= 1;
+		}
+		if (chunkX*1+chunkY*3 >= 9 || chunkX*1+chunkY*3 <= 0) {
+			return false;
 		}
 		if (validTile(game.StoredTiles[chunkX*1+chunkY*3][Math.abs(tileX)][Math.abs(tileY)][0]))
 		{

@@ -328,12 +328,12 @@ public class WorldGeneration {
 					}
 					else if (tileBiome >= -40 && tileBiome < -30)
 					{
-						TempChunk[i][Math.abs(j)][2] = 0;
+						TempChunk[i][Math.abs(j)][2] = 2;
 						TempChunk[i][Math.abs(j)][0] = GenerateRocklands(i+(ChunkX*16), (j+ChunkY*16));
 					}
 					else if (tileBiome >= -30 && tileBiome < -20)
 					{
-						TempChunk[i][Math.abs(j)][2] = 0;
+						TempChunk[i][Math.abs(j)][2] = 2;
 						TempChunk[i][Math.abs(j)][0] = GenerateRocklands(i+(ChunkX*16), (j+ChunkY*16));
 					}
 					else if (tileBiome >= -20 && tileBiome < -10)
