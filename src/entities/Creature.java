@@ -1,10 +1,14 @@
 package entities;
 
 import java.awt.Graphics;
+import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.geom.AffineTransform;
 import java.awt.image.AffineTransformOp;
 import java.awt.image.BufferedImage;
+import java.io.IOException;
+
+import javax.imageio.ImageIO;
 
 import core.Main_Game;
 
@@ -21,14 +25,24 @@ public abstract class Creature {
 	protected double aspectRatio; //Is the x resolution divided by the y resolution
 	protected BufferedImage body = null; //Buffered image for the body of the creature
 	protected BufferedImage[] limbs = null; //Buffered image array for all of the limbs of the creature
+	protected int[][] limbLocations = null;
+	protected int numOfLimbs = 0;
 	protected Point[] rotationPoints = null; //The relative points in space that the creatures limbs rotate about
 	protected int rotations = 0; //int that stores the angle of the limbs of the creature
 	protected int maxRotation;
 	protected boolean rotationDirection = false; //False is counterclockwise, true is clockwise
 	protected boolean facingRight = false; //Makes the creature face the correct direction and it continues to face the direction after movement has stopped
+	protected int[] spriteWidthHeight = null; //Stores how many pixels wide and tall the sprite is
 	public int HP;
-
-	public Creature(Main_Game game, EntityTypes type, int x, int y, int chunkX, int chunkY, int tileX, int tileY, int maxHP) {
+	public int[][] drops;
+	public int[] knockbackVel = {0, 0}; //First index is for the x direction, second index is for the y direction.
+	protected double sizeRelativeToTiles = 1.0;
+	
+	protected WanderingBehaviour wanderer = null;
+	
+	public Creature(Main_Game game, EntityTypes type, int x, int y, int chunkX, int chunkY, int tileX, int tileY, 
+			int maxHP, int[][] itemDrops, int[] spriteRes, int numOfLimbs, double sizeRelativeToTiles,
+			int[][] limbLocations, String imageFile, int spriteSheetRows, boolean isAWanderer) {
 		this.game = game;
 		this.type = type;
 		this.x = x;
@@ -38,13 +52,134 @@ public abstract class Creature {
 		this.tileX = tileX;
 		this.tileY = tileY;
 		HP = maxHP;
+		this.sizeRelativeToTiles = sizeRelativeToTiles;
+		this.limbLocations = limbLocations;
+		this.numOfLimbs = numOfLimbs;
+		
+		drops = itemDrops;
+		spriteWidthHeight = new int[] {spriteRes[0]/10, spriteRes[1]/10};
+		maxRotation = 30;
+		spriteSheetResolution[0] = spriteRes[0];
+		spriteSheetResolution[1] = spriteRes[1];
+		rotationPoints = new Point[numOfLimbs];
+		setAspectRatio();
+		this.width = (int) (game.TileWidth*sizeRelativeToTiles);
+		height = (int) (this.width/aspectRatio);
+		for (int i = 0; i < numOfLimbs; i++) {
+			rotationPoints[i] = new Point((int) (x+limbLocations[i][0]*width/spriteWidthHeight[0]), y+limbLocations[i][1]*height/spriteWidthHeight[1]);
+		}
+		BufferedImage SpriteSheet = null;
+		try {
+			SpriteSheet = ImageIO.read(getClass().getResourceAsStream(imageFile));
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		body = SpriteSheet.getSubimage(0, 0, spriteRes[0], spriteRes[1]);
+		setupLimbs(SpriteSheet, spriteSheetRows, numOfLimbs);
+		
+		if (isAWanderer) {
+			wanderer = new WanderingBehaviour();
+		}
 	}
+	
+	protected void setAspectRatio() {
+		aspectRatio = (spriteSheetResolution[0]/(spriteSheetResolution[1]+0.0));
+	}
+	
 	public void tick() {
+		this.width = (int) (game.TileWidth*sizeRelativeToTiles);
+		height = (int) (this.width/aspectRatio);
+		if (chunkX-game.ChunkX+1 > 2 || game.ChunkY-chunkY+1 > 2 || chunkX-game.ChunkX+1 < 0 || game.ChunkY-chunkY+1 < 0) {
+			game.handler.removeCreature(this);
+			return;
+		}
 		if (HP <= 0) {
 			game.handler.removeCreature(this);
 		}
+		if (knockbackVel[0] != 0) {
+			if (knockbackVel[0] > 0) {
+				knockbackVel[0]--;
+			}
+			else {
+				knockbackVel[0]++;
+			}
+		}
+		if (knockbackVel[1] != 0) {
+			if (knockbackVel[1] > 0) {
+				knockbackVel[1]--;
+			}
+			else {
+				knockbackVel[1]++;
+			}
+		}
+		aspectRatio = (spriteSheetResolution[0]/(spriteSheetResolution[1]+0.0));
+		
+		if ((velX+wanderer.velX) != 0 || (velY+wanderer.velY) != 0) {
+			if ((velX+wanderer.velX) > 0) {
+				facingRight = true;
+			}
+			else {
+				facingRight = false;
+			}
+			if (rotationDirection) {
+				rotations+=3;
+				if (rotations >= maxRotation) {
+					rotationDirection = !rotationDirection;
+				}
+			}
+			else {
+				rotations-=3;
+				if (rotations <= -maxRotation) {
+					rotationDirection = !rotationDirection;
+				}
+			}
+		}
+		else {
+			rotations = 0;
+		}
 	}
-	public abstract void render(Graphics g);
+	public void render(Graphics g) {
+		if (wanderer != null) {
+			wanderer.randomWander();
+		}
+		if (game.Paused == false) {
+			positionHandler(velX+wanderer.velX+knockbackVel[0], velY+wanderer.velY+knockbackVel[1]);
+		}
+		renderPos();
+		//System.out.println(xPos+", "+yPos);
+		if (facingRight) {
+			for (int i = 0; i < numOfLimbs; i++) {
+				rotationPoints[i] = new Point((int) (xPos+width-limbLocations[i][0]*width/spriteWidthHeight[0]), yPos+limbLocations[i][1]*height/spriteWidthHeight[1]);
+			}
+		}
+		else {
+			for (int i = 0; i < numOfLimbs; i++) {
+				rotationPoints[i] = new Point((int) (xPos+limbLocations[i][0]*width/spriteWidthHeight[0]), yPos+limbLocations[i][1]*height/spriteWidthHeight[1]);
+			}
+		}
+		//		g.setColor(Color.black);
+		//		g.fillRect(x+width, y, width, height);
+		Graphics2D g2d = (Graphics2D) g;
+		AffineTransform a = g2d.getTransform();
+		if (facingRight) {
+			g.drawImage(body, xPos+width, yPos, -width, height, null);
+		}
+		else {
+			g.drawImage(body, xPos, yPos, width, height, null);
+		}
+		for (int i = 0; i < limbs.length; i++) {
+			//BufferedImage im = rotateImage(limbs[i], (((i%2)*-2*rotations)+rotations), (int) rotationPoints[i].getX(), (int) rotationPoints[i].getY());
+			g2d.rotate((((i%2)*-2*Math.toRadians(rotations))+Math.toRadians(rotations)), (int) rotationPoints[i].getX(), (int) rotationPoints[i].getY());
+			if (facingRight) {
+				g2d.drawImage(limbs[i], xPos+width, yPos-height/21, -width, height, null);
+			}
+			else {
+				g2d.drawImage(limbs[i], xPos, yPos-height/21, width, height, null);
+			}
+			g2d.setTransform(a);
+			//g.fillRect((int) rotationPoints[i].getX(), (int) rotationPoints[i].getY(), 2, 2); //For testing where the rotation points were
+		}
+	}
 
 	protected void renderPos() {
 		xPos = (x-game.x)+(chunkX-game.ChunkX)*16*game.TileWidth+(tileX-game.TileX)*game.TileWidth+Main_Game.WIDTH/2-game.CharacterWidth/2;

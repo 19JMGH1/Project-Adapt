@@ -29,7 +29,9 @@ public class TickThread implements Runnable{
 		final long OPTIMAL_TIME = 1000000000 / Main_Game.Target_TPS;
 		while (running) {
 			now = System.nanoTime();
-			game.tick();
+			if (game.Paused == false) {
+				game.tick();
+			}
 			updateTime = System.nanoTime() - now;
 			wait = (OPTIMAL_TIME - updateTime) / 1000000;
 			if (wait > 0)

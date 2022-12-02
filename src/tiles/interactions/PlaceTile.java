@@ -70,7 +70,6 @@ public class PlaceTile {
 							| InvocationTargetException | SecurityException e1) {
 						e1.printStackTrace();
 					}
-
 					ProcessHandler.processors.add(e);
 					ElectronicHandler.electronics.add(e);
 				}

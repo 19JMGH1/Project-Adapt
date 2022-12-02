@@ -52,6 +52,8 @@ public class Main_Game extends Canvas implements Runnable{
 	public static final int Target_TPS = 30;
 	public static final int Target_FPS = 30;
 	
+	public static boolean rendering = false;
+	
 	public static boolean FULLSCREEN = false;
 
 	public static final int maxStackSize = 50; //The max number of items allowed in an inventory slot
@@ -655,6 +657,7 @@ public class Main_Game extends Canvas implements Runnable{
 	}
 
 	public void render() {
+		rendering = true;
 		BufferStrategy bs = this.getBufferStrategy();
 		if (bs == null) {
 			this.createBufferStrategy(3);
@@ -676,7 +679,9 @@ public class Main_Game extends Canvas implements Runnable{
 
 		if (AdaptState == State.InWorld) {
 			processhandler.render(g);
-			PositionHandler(); //This is not in the tick() method since being in the tick() method caused rendering issues and flashes related to the multi-threading.
+			if (Paused == false) {
+				PositionHandler(); //This is not in the tick() method since being in the tick() method caused rendering issues and flashes related to the multi-threading.
+			}
 			daytimecycle.render(g);
 			ingamehud.render(g);
 			inventoryhandler.render(g);
@@ -698,6 +703,7 @@ public class Main_Game extends Canvas implements Runnable{
 		
 		g.dispose();
 		bs.show();
+		rendering = false;
 	}
 
 	public void resizeBackground() {

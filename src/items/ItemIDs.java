@@ -46,6 +46,7 @@ public enum ItemIDs { //An items invID can be obtained by looking at the line of
 	Cabinet((short) 20),
 	ElectricFurnace("Electric Furnace", (short) 21),
 	HeatingCoil("Heating Coil"),
+	Meat(),
 	ENDOFLIST();
 	
 	private String name;

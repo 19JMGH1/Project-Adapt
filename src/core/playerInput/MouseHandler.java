@@ -46,6 +46,13 @@ public class MouseHandler extends MouseAdapter implements MouseMotionListener, M
 
 	public void mousePressed(MouseEvent e) {
 		if (Unpressed) {
+			while (Main_Game.rendering) {
+				try {
+					Thread.sleep(10);
+				} catch (InterruptedException e1) {
+					e1.printStackTrace();
+				}
+			}
 			int mx = e.getX();
 			int my = e.getY();
 			if (e.getButton() == 1) //Left Click
@@ -168,7 +175,20 @@ public class MouseHandler extends MouseAdapter implements MouseMotionListener, M
 							game.inventorymanagment.leftClickManage(mx, my);
 						}
 						else if (c != null) {
+							double x = (c.xPos+c.width/2)-(game.characterX+game.CharacterWidth/2);
+							double y = (game.characterY+game.CharacterHeight/2)-(c.yPos+c.height/2);
+							//System.out.println(x+", "+y); //Testing
+							c.knockbackVel[0] = (int) Math.ceil((game.TileWidth/10)*(x)/(Math.sqrt((Math.pow(x, 2))+(Math.pow(y, 2)))));
+							c.knockbackVel[1] = (int) Math.ceil((game.TileHeight/10)*(y)/(Math.sqrt((Math.pow(x, 2))+(Math.pow(y, 2)))));
+							//System.out.println(c.knockbackVel[0]+", "+c.knockbackVel[1]); //Testing
 							ItemIDs item = ItemIDs.values()[game.Inventory[game.SelectedHotbar][5][0]];
+							if ((c.HP-item.damage) <= 0) {
+								for (int i = 0 ; i < c.drops.length; i++) {
+									if (game.inventoryhandler.addToInv((short) c.drops[i][0], c.drops[i][1])) {
+										game.addDropedItem((byte) c.drops[i][0], c.drops[i][1]);
+									}
+								}
+							}
 							c.HP -= item.damage;
 							game.harvesttile.itemBroken(game.Inventory[game.SelectedHotbar][5][0], game.SelectedHotbar, 5);
 						}

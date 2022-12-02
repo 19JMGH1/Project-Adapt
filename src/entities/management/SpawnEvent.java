@@ -36,6 +36,7 @@ public class SpawnEvent {
 						}
 						Creature c = null;
 						try {	
+							//c = (Creature) new Pig(game, EntityTypes.Passive, 0, 0, k%3+game.ChunkX-1, k/3+game.ChunkY-1, i, j);
 							c = (Creature) cla.getConstructors()[0].newInstance(game, EntityTypes.Passive, 0, 0, k%3+game.ChunkX-1, k/3+game.ChunkY-1, i, j);
 							//System.out.println("He is spawned at:");
 							//System.out.println(k%3+", "+k/3+", "+i+", "+j);

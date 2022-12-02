@@ -335,6 +335,9 @@ public class Interactions {
 		tileY++;
 		chunk = chunkYAdjust(chunk, tileY);
 		tileY = tileYAdjust(tileY);
+		if (chunk >= 9 || chunk < 0 || tileX >= 16 || tileX < 0 || tileY <= -16 || tileY > 0) {
+			return false;
+		}
 		if (game.StoredTiles[Math.abs(chunk)][Math.abs(tileX)][Math.abs(tileY)][0] == tileWanted)
 		{
 			return true;
@@ -354,7 +357,7 @@ public class Interactions {
 		return false;
 	}
 
-	public boolean checkLeft(byte tileWanted, int chunk, int tileX, int tileY)
+	public boolean checkLeft(short tileWanted, int chunk, int tileX, int tileY)
 	{
 		tileX--;
 		chunk = chunkXAdjust(chunk, tileX);
@@ -373,6 +376,92 @@ public class Interactions {
 		tileX = tileXAdjust(tileX);
 		if (game.StoredTiles[Math.abs(chunk)][Math.abs(tileX)][Math.abs(tileY)][0] == tileWanted)
 		{
+			return true;
+		}
+		return false;
+	}
+
+	public boolean checkAboveLeft(short tileWanted, int chunk, int tileX, int tileY)
+	{
+		tileY++;
+		tileX--;
+		chunk = chunkYAdjust(chunk, tileY);
+		chunk = chunkXAdjust(chunk, tileX);
+		tileY = tileYAdjust(tileY);
+		tileX = tileXAdjust(tileX);
+		if (chunk >= 9 || chunk < 0 || tileX >= 16 || tileX < 0 || tileY <= -16 || tileY > 0) {
+			return false;
+		}
+		if (game.StoredTiles[Math.abs(chunk)][Math.abs(tileX)][Math.abs(tileY)][0] == tileWanted)
+		{
+			return true;
+		}
+		return false;
+	}
+
+	public boolean checkAboveRight(short tileWanted, int chunk, int tileX, int tileY)
+	{
+		tileY++;
+		tileX++;
+		chunk = chunkYAdjust(chunk, tileY);
+		chunk = chunkXAdjust(chunk, tileX);
+		tileY = tileYAdjust(tileY);
+		tileX = tileXAdjust(tileX);
+		if (chunk >= 9 || chunk < 0 || tileX >= 16 || tileX < 0 || tileY <= -16 || tileY > 0) {
+			return false;
+		}
+		if (game.StoredTiles[Math.abs(chunk)][Math.abs(tileX)][Math.abs(tileY)][0] == tileWanted)
+		{
+			return true;
+		}
+		return false;
+	}
+
+	public boolean checkBelowLeft(short tileWanted, int chunk, int tileX, int tileY)
+	{
+		tileY--;
+		tileX--;
+		chunk = chunkYAdjust(chunk, tileY);
+		chunk = chunkXAdjust(chunk, tileX);
+		tileY = tileYAdjust(tileY);
+		tileX = tileXAdjust(tileX);
+		if (chunk >= 9 || chunk < 0 || tileX >= 16 || tileX < 0 || tileY <= -16 || tileY > 0) {
+			return false;
+		}
+		if (game.StoredTiles[Math.abs(chunk)][Math.abs(tileX)][Math.abs(tileY)][0] == tileWanted)
+		{
+			return true;
+		}
+		return false;
+	}
+
+	public boolean checkBelowRight(short tileWanted, int chunk, int tileX, int tileY)
+	{
+		tileY--;
+		tileX++;
+		chunk = chunkYAdjust(chunk, tileY);
+		chunk = chunkXAdjust(chunk, tileX);
+		tileY = tileYAdjust(tileY);
+		tileX = tileXAdjust(tileX);
+		if (chunk >= 9 || chunk < 0 || tileX >= 16 || tileX < 0 || tileY <= -16 || tileY > 0) {
+			return false;
+		}
+		if (game.StoredTiles[Math.abs(chunk)][Math.abs(tileX)][Math.abs(tileY)][0] == tileWanted)
+		{
+			return true;
+		}
+		return false;
+	}
+
+	public boolean checkNearbyTiles(short tileWanted, int chunk, int tileX, int tileY) {
+		if (checkAbove(tileWanted, chunk, tileX, tileY)||
+				checkBelow(tileWanted, chunk, tileX, tileY)||
+				checkLeft(tileWanted, chunk, tileX, tileY)||
+				checkRight(tileWanted, chunk, tileX, tileY)||
+				checkAboveLeft(tileWanted, chunk, tileX, tileY)||
+				checkAboveRight(tileWanted, chunk, tileX, tileY)||
+				checkBelowLeft(tileWanted, chunk, tileX, tileY)||
+				checkBelowRight(tileWanted, chunk, tileX, tileY)) {
 			return true;
 		}
 		return false;
@@ -441,14 +530,16 @@ public class Interactions {
 		{
 
 		}
-		if (checkAbove((byte) 9, 4, game.TileX, game.TileY)||checkBelow((byte) 9, 4, game.TileX, game.TileY)||checkLeft((byte) 9, 4, game.TileX, game.TileY)||checkRight((byte) 9, 4, game.TileX, game.TileY))
-		{
-			game.tempCraftingLevel = 2;
-		}
-		else if (checkAbove((byte) 15, 4, game.TileX, game.TileY)||checkBelow((byte) 15, 4, game.TileX, game.TileY)||checkLeft((byte) 15, 4, game.TileX, game.TileY)||checkRight((byte) 15, 4, game.TileX, game.TileY))
+		//These statements check if there is a stone table or anvil around to increase the players crafting level
+		//It check the anvil and if there is none, it checks for the stone table afterwards
+		if (checkNearbyTiles((short) SurfaceTileIDs.Anvil.ordinal(), 4, game.TileX, game.TileY))
 		{
 			//System.out.println("we got here"); //Just for testing purposes
 			game.tempCraftingLevel = 3;
+		}
+		else if (checkNearbyTiles((short) SurfaceTileIDs.StoneTable.ordinal(), 4, game.TileX, game.TileY))
+		{
+			game.tempCraftingLevel = 2;
 		}
 		else
 		{
