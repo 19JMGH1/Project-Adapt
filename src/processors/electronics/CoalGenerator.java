@@ -4,24 +4,15 @@ import java.awt.Graphics;
 
 import core.Main_Game;
 import processors.electronics.management.Electronic;
-import processors.management.ProcessorIDs;
 
 public class CoalGenerator extends Electronic{
 
-	public static final boolean[][] validSlots =	{{false, false, false, false, false},
-			{false, false, false, false, false},
-			{false, false, false, false, false},
-			{false, false, true, false, false},
-			{false, false, false, false, false}};
-	public static final byte neededValues = 3; //One for On/Off, one value for the flame burn time, another for the amount of time that the flame stays at its level
-	public static final int baseMaxPower = 20000; //20,000 so the coal generator stores 100,000 joules
-	public static final short powerTransfer = 200;
 	public static final short basePowerGenerated = 30;
 	public static final short flameTickTimer = 100;
 
 	public CoalGenerator(Main_Game game, short id, int chunkX, int chunkY, int tileX, int tileY) {
-		super(game, id, ProcessorIDs.CoalGenerator, validSlots, "/CoalGenerator "+id+".txt", neededValues, chunkX, chunkY, tileX, tileY, baseMaxPower, powerTransfer);
-		for (int i = 0; i < neededValues; i++) {
+		super(game, id, "/CoalGenerator "+id+".txt", chunkX, chunkY, tileX, tileY);
+		for (int i = 0; i < containerID.neededValues; i++) {
 			getValues()[i] = 0;
 		}
 		getValues()[1] = flameTickTimer;
@@ -54,12 +45,7 @@ public class CoalGenerator extends Electronic{
 			}
 			else {
 				getValues()[1]--;
-				if (getPowerStored() > getMaxPower()-basePowerGenerated) {
-					setPowerStored(getMaxPower());
-				}
-				else {
-					setPowerStored(getPowerStored()+basePowerGenerated);
-				}
+				energyGen(energyPerTick);
 				if (getValues()[1] <= 0) {
 					getValues()[2]--;
 					getValues()[1] = flameTickTimer;

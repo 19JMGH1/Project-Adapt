@@ -3,6 +3,7 @@ package tiles.interactions;
 import core.Identifications;
 import core.InventoryHandler;
 import core.Main_Game;
+import core.Main_Game.Dimensions;
 import processors.electronics.management.ElectronicHandler;
 import processors.management.ProcessHandler;
 import processors.management.ProcessorIDs;
@@ -21,7 +22,7 @@ public class HarvestTile {
 
 	public void collect(short tileValue, int chunk, int tileX, int tileY)
 	{
-		if (game.dimension == 0) { //This else-if runs through all the methods needed to harvest a given tile
+		if (game.dimension == Dimensions.surface) { //This else-if runs through all the methods needed to harvest a given tile
 			SurfaceTileIDs tile = SurfaceTileIDs.values()[tileValue]; //Save a variable of the tile that was broken for ease of access
 			if (!tile.getTool().equals("unbreakable")) //Harvesting any tile
 			{
@@ -54,7 +55,7 @@ public class HarvestTile {
 				}
 			}
 		}
-		else if (game.dimension == 1) { //Harvesting items in the mining dimension
+		else if (game.dimension == Dimensions.coves) { //Harvesting items in the mining dimension
 			if (tileValue == 1) //Harvesting coal
 			{
 				if (inventoryhandler.comparePickHardness(game.Inventory[game.SelectedHotbar][5][0], 2))

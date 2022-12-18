@@ -5,6 +5,8 @@ import java.awt.Graphics;
 import core.Files;
 import core.Identifications;
 import core.Main_Game;
+import core.Main_Game.Dimensions;
+import items.ItemIDs;
 import processors.management.ProcessorIDs;
 import tiles.SurfaceTileIDs;
 
@@ -33,14 +35,18 @@ public class Interactions {
 			tileX = tileXAdjust(tileX);
 			chunk = chunkYAdjust(chunk, tileY);
 			tileY = tileYAdjust(tileY);
-			collect(game.StoredTiles[chunk][tileX][Math.abs(tileY)][0], chunk, tileX, tileY);
+			synchronized(game.StoredTiles) {
+				collect(game.StoredTiles[chunk][tileX][Math.abs(tileY)][0], chunk, tileX, tileY);
+			}
 		}
 		else if (location == 2)
 		{
 			tileY++;
 			chunk = chunkYAdjust(chunk, tileY);
 			tileY = tileYAdjust(tileY);
-			collect(game.StoredTiles[chunk][tileX][Math.abs(tileY)][0], chunk, tileX, tileY);
+			synchronized(game.StoredTiles) {
+				collect(game.StoredTiles[chunk][tileX][Math.abs(tileY)][0], chunk, tileX, tileY);
+			}
 		}
 		else if (location == 3)
 		{
@@ -50,25 +56,33 @@ public class Interactions {
 			tileX = tileXAdjust(tileX);
 			chunk = chunkYAdjust(chunk, tileY);
 			tileY = tileYAdjust(tileY);
-			collect(game.StoredTiles[chunk][tileX][Math.abs(tileY)][0], chunk, tileX, tileY);
+			synchronized(game.StoredTiles) {
+				collect(game.StoredTiles[chunk][tileX][Math.abs(tileY)][0], chunk, tileX, tileY);
+			}
 		}
 		else if (location == 4)
 		{
 			tileX--;
 			chunk = chunkXAdjust(chunk, tileX);
 			tileX = tileXAdjust(tileX);
-			collect(game.StoredTiles[chunk][tileX][Math.abs(tileY)][0], chunk, tileX, tileY);
+			synchronized(game.StoredTiles) {
+				collect(game.StoredTiles[chunk][tileX][Math.abs(tileY)][0], chunk, tileX, tileY);
+			}
 		}
 		else if (location == 5)
 		{
-			collect(game.StoredTiles[chunk][tileX][Math.abs(tileY)][0], chunk, tileX, tileY);
+			synchronized(game.StoredTiles) {
+				collect(game.StoredTiles[chunk][tileX][Math.abs(tileY)][0], chunk, tileX, tileY);
+			}
 		}
 		else if (location == 6)
 		{
 			tileX++;
 			chunk = chunkXAdjust(chunk, tileX);
 			tileX = tileXAdjust(tileX);
-			collect(game.StoredTiles[chunk][tileX][Math.abs(tileY)][0], chunk, tileX, tileY);
+			synchronized(game.StoredTiles) {
+				collect(game.StoredTiles[chunk][tileX][Math.abs(tileY)][0], chunk, tileX, tileY);
+			}
 		}
 		else if (location == 7)
 		{
@@ -78,14 +92,18 @@ public class Interactions {
 			tileX = tileXAdjust(tileX);
 			chunk = chunkYAdjust(chunk, tileY);
 			tileY = tileYAdjust(tileY);
-			collect(game.StoredTiles[chunk][tileX][Math.abs(tileY)][0], chunk, tileX, tileY);
+			synchronized(game.StoredTiles) {
+				collect(game.StoredTiles[chunk][tileX][Math.abs(tileY)][0], chunk, tileX, tileY);
+			}
 		}
 		else if (location == 8)
 		{
 			tileY--;
 			chunk = chunkYAdjust(chunk, tileY);
 			tileY = tileYAdjust(tileY);
-			collect(game.StoredTiles[chunk][tileX][Math.abs(tileY)][0], chunk, tileX, tileY);
+			synchronized(game.StoredTiles) {
+				collect(game.StoredTiles[chunk][tileX][Math.abs(tileY)][0], chunk, tileX, tileY);
+			}
 		}
 		else if (location == 9)
 		{
@@ -95,87 +113,91 @@ public class Interactions {
 			tileX = tileXAdjust(tileX);
 			chunk = chunkYAdjust(chunk, tileY);
 			tileY = tileYAdjust(tileY);
-			collect(game.StoredTiles[chunk][tileX][Math.abs(tileY)][0], chunk, tileX, tileY);
+			synchronized(game.StoredTiles) {
+				collect(game.StoredTiles[chunk][tileX][Math.abs(tileY)][0], chunk, tileX, tileY);
+			}
 		}
 	}
 
-	public void useCheck(int location)
+	public void useCheck(short location)
 	{
 		//System.out.println("checking tile..."); //For testing purposes
 		int chunk = 4;
 		int tileX = game.TileX;
 		int tileY = game.TileY;
-		if (location == 1)
-		{
-			tileX--;
-			tileY++;
-			chunk = chunkXAdjust(chunk, tileX);
-			tileX = tileXAdjust(tileX);
-			chunk = chunkYAdjust(chunk, tileY);
-			tileY = tileYAdjust(tileY);
-			use(game.StoredTiles[chunk][tileX][Math.abs(tileY)][0], chunk, tileX, tileY);
-		}
-		else if (location == 2)
-		{
-			tileY++;
-			chunk = chunkYAdjust(chunk, tileY);
-			tileY = tileYAdjust(tileY);
-			use(game.StoredTiles[chunk][tileX][Math.abs(tileY)][0], chunk, tileX, tileY);
-		}
-		else if (location == 3)
-		{
-			tileX++;
-			tileY++;
-			chunk = chunkXAdjust(chunk, tileX);
-			tileX = tileXAdjust(tileX);
-			chunk = chunkYAdjust(chunk, tileY);
-			tileY = tileYAdjust(tileY);
-			use(game.StoredTiles[chunk][tileX][Math.abs(tileY)][0], chunk, tileX, tileY);
-		}
-		else if (location == 4)
-		{
-			tileX--;
-			chunk = chunkXAdjust(chunk, tileX);
-			tileX = tileXAdjust(tileX);
-			use(game.StoredTiles[chunk][tileX][Math.abs(tileY)][0], chunk, tileX, tileY);
-		}
-		else if (location == 5)
-		{
-			use(game.StoredTiles[chunk][tileX][Math.abs(tileY)][0], chunk, tileX, tileY);
-		}
-		else if (location == 6)
-		{
-			tileX++;
-			chunk = chunkXAdjust(chunk, tileX);
-			tileX = tileXAdjust(tileX);
-			use(game.StoredTiles[chunk][tileX][Math.abs(tileY)][0], chunk, tileX, tileY);
-		}
-		else if (location == 7)
-		{
-			tileX--;
-			tileY--;
-			chunk = chunkXAdjust(chunk, tileX);
-			tileX = tileXAdjust(tileX);
-			chunk = chunkYAdjust(chunk, tileY);
-			tileY = tileYAdjust(tileY);
-			use(game.StoredTiles[chunk][tileX][Math.abs(tileY)][0], chunk, tileX, tileY);
-		}
-		else if (location == 8)
-		{
-			tileY--;
-			chunk = chunkYAdjust(chunk, tileY);
-			tileY = tileYAdjust(tileY);
-			use(game.StoredTiles[chunk][tileX][Math.abs(tileY)][0], chunk, tileX, tileY);
-		}
-		else if (location == 9)
-		{
-			tileX++;
-			tileY--;
-			chunk = chunkXAdjust(chunk, tileX);
-			tileX = tileXAdjust(tileX);
-			chunk = chunkYAdjust(chunk, tileY);
-			tileY = tileYAdjust(tileY);
-			use(game.StoredTiles[chunk][tileX][Math.abs(tileY)][0], chunk, tileX, tileY);
+		synchronized(game.StoredTiles) {
+			if (location == 1)
+			{
+				tileX--;
+				tileY++;
+				chunk = chunkXAdjust(chunk, tileX);
+				tileX = tileXAdjust(tileX);
+				chunk = chunkYAdjust(chunk, tileY);
+				tileY = tileYAdjust(tileY);
+				use(game.StoredTiles[chunk][tileX][Math.abs(tileY)][0], chunk, tileX, tileY, location);
+			}
+			else if (location == 2)
+			{
+				tileY++;
+				chunk = chunkYAdjust(chunk, tileY);
+				tileY = tileYAdjust(tileY);
+				use(game.StoredTiles[chunk][tileX][Math.abs(tileY)][0], chunk, tileX, tileY, location);
+			}
+			else if (location == 3)
+			{
+				tileX++;
+				tileY++;
+				chunk = chunkXAdjust(chunk, tileX);
+				tileX = tileXAdjust(tileX);
+				chunk = chunkYAdjust(chunk, tileY);
+				tileY = tileYAdjust(tileY);
+				use(game.StoredTiles[chunk][tileX][Math.abs(tileY)][0], chunk, tileX, tileY, location);
+			}
+			else if (location == 4)
+			{
+				tileX--;
+				chunk = chunkXAdjust(chunk, tileX);
+				tileX = tileXAdjust(tileX);
+				use(game.StoredTiles[chunk][tileX][Math.abs(tileY)][0], chunk, tileX, tileY, location);
+			}
+			else if (location == 5)
+			{
+				use(game.StoredTiles[chunk][tileX][Math.abs(tileY)][0], chunk, tileX, tileY, location);
+			}
+			else if (location == 6)
+			{
+				tileX++;
+				chunk = chunkXAdjust(chunk, tileX);
+				tileX = tileXAdjust(tileX);
+				use(game.StoredTiles[chunk][tileX][Math.abs(tileY)][0], chunk, tileX, tileY, location);
+			}
+			else if (location == 7)
+			{
+				tileX--;
+				tileY--;
+				chunk = chunkXAdjust(chunk, tileX);
+				tileX = tileXAdjust(tileX);
+				chunk = chunkYAdjust(chunk, tileY);
+				tileY = tileYAdjust(tileY);
+				use(game.StoredTiles[chunk][tileX][Math.abs(tileY)][0], chunk, tileX, tileY, location);
+			}
+			else if (location == 8)
+			{
+				tileY--;
+				chunk = chunkYAdjust(chunk, tileY);
+				tileY = tileYAdjust(tileY);
+				use(game.StoredTiles[chunk][tileX][Math.abs(tileY)][0], chunk, tileX, tileY, location);
+			}
+			else if (location == 9)
+			{
+				tileX++;
+				tileY--;
+				chunk = chunkXAdjust(chunk, tileX);
+				tileX = tileXAdjust(tileX);
+				chunk = chunkYAdjust(chunk, tileY);
+				tileY = tileYAdjust(tileY);
+				use(game.StoredTiles[chunk][tileX][Math.abs(tileY)][0], chunk, tileX, tileY, location);
+			}
 		}
 	}
 
@@ -231,96 +253,123 @@ public class Interactions {
 		return tileY;
 	}
 
-	private void use(short tileValue, int chunk, int tileX, int tileY)
+	private void use(short tileValue, int chunk, int tileX, int tileY, short location)
 	{
-		if (game.dimension == 0) {
-			if (tileValue == 0)
-			{
-				place(chunk, tileX, tileY);
-			}
-			else if (tileValue == 5) //This is the start of opening and closing doors
-			{
-				game.StoredTiles[chunk][tileX][Math.abs(tileY)][0] = 7;
-			}
-			else if (tileValue == 6)
-			{
-				game.StoredTiles[chunk][tileX][Math.abs(tileY)][0] = 8;
-			}
-			else if (tileValue == 7)
-			{
-				game.StoredTiles[chunk][tileX][Math.abs(tileY)][0] = 5;
-			}
+		if (game.dimension == Dimensions.surface) {
+			synchronized(game.StoredTiles) {
+				if (tileValue == 0)
+				{
+					place(chunk, tileX, tileY);
+				}
+				else if (tileValue == 5) //This is the start of opening and closing doors
+				{
+					game.StoredTiles[chunk][tileX][Math.abs(tileY)][0] = 7;
+				}
+				else if (tileValue == 6)
+				{
+					game.StoredTiles[chunk][tileX][Math.abs(tileY)][0] = 8;
+				}
+				else if (tileValue == 7)
+				{
+					game.StoredTiles[chunk][tileX][Math.abs(tileY)][0] = 5;
+				}
 
-			else if (tileValue == 8)
-			{
-				game.StoredTiles[chunk][tileX][Math.abs(tileY)][0] = 6;
-			} //This is the end of opening and closing doors
-			else if (tileValue == 13) //Going into a mine on the surface
-			{
-				game.handler.removeAllCreatures();
-				game.switchDimension((byte) 1);
-				game.StoredTiles[chunk][tileX][Math.abs(tileY)][0] = 9; //The next lines in this else if set the place you enter the mining dimension to a mine and make some blank tiles around it
-				tileY++;
-				tileX--;
-				chunk = chunkXAdjust(chunk, tileX);
-				tileX = tileXAdjust(tileX);
-				chunk = chunkYAdjust(chunk, tileY);
-				tileY = tileYAdjust(tileY);
-				game.StoredTiles[chunk][tileX][Math.abs(tileY)][0] = 0;
-				tileX++;
-				chunk = chunkXAdjust(chunk, tileX);
-				tileX = tileXAdjust(tileX);
-				chunk = chunkYAdjust(chunk, tileY);
-				tileY = tileYAdjust(tileY);
-				game.StoredTiles[chunk][tileX][Math.abs(tileY)][0] = 0;
-				tileX++;
-				chunk = chunkXAdjust(chunk, tileX);
-				tileX = tileXAdjust(tileX);
-				chunk = chunkYAdjust(chunk, tileY);
-				tileY = tileYAdjust(tileY);
-				game.StoredTiles[chunk][tileX][Math.abs(tileY)][0] = 0;
-				tileY--;
-				tileX -= 2;
-				chunk = chunkXAdjust(chunk, tileX);
-				tileX = tileXAdjust(tileX);
-				chunk = chunkYAdjust(chunk, tileY);
-				tileY = tileYAdjust(tileY);
-				game.StoredTiles[chunk][tileX][Math.abs(tileY)][0] = 0;
-				tileX += 2;
-				chunk = chunkXAdjust(chunk, tileX);
-				tileX = tileXAdjust(tileX);
-				chunk = chunkYAdjust(chunk, tileY);
-				tileY = tileYAdjust(tileY);
-				game.StoredTiles[chunk][tileX][Math.abs(tileY)][0] = 0;
-				tileY--;
-				tileX -= 2;
-				chunk = chunkXAdjust(chunk, tileX);
-				tileX = tileXAdjust(tileX);
-				chunk = chunkYAdjust(chunk, tileY);
-				tileY = tileYAdjust(tileY);
-				game.StoredTiles[chunk][tileX][Math.abs(tileY)][0] = 0;
-				tileX++;
-				chunk = chunkXAdjust(chunk, tileX);
-				tileX = tileXAdjust(tileX);
-				chunk = chunkYAdjust(chunk, tileY);
-				tileY = tileYAdjust(tileY);
-				game.StoredTiles[chunk][tileX][Math.abs(tileY)][0] = 0;
-				tileX++;
-				chunk = chunkXAdjust(chunk, tileX);
-				tileX = tileXAdjust(tileX);
-				chunk = chunkYAdjust(chunk, tileY);
-				tileY = tileYAdjust(tileY);
-				game.StoredTiles[chunk][tileX][Math.abs(tileY)][0] = 0;
-			}
-			else if (ProcessorIDs.containerExists(SurfaceTileIDs.values()[tileValue].toString())) { //Opening Containers
-				game.curentlyOpenedContainer = game.processhandler.getProcessor(ProcessorIDs.valueOf(SurfaceTileIDs.values()[tileValue].toString()), game.StoredTiles[chunk][tileX][Math.abs(tileY)][1]);
-				game.inventoryOpened = true;
+				else if (tileValue == 8)
+				{
+					game.StoredTiles[chunk][tileX][Math.abs(tileY)][0] = 6;
+				} //This is the end of opening and closing doors
+				else if (tileValue == 13) //Going into a mine on the surface
+				{
+					game.handler.removeAllCreatures();
+					game.switchDimension(Dimensions.coves);
+					game.StoredTiles[chunk][tileX][Math.abs(tileY)][0] = 9; //The next lines in this else if set the place you enter the mining dimension to a mine and make some blank tiles around it
+					tileY++;
+					tileX--;
+					chunk = chunkXAdjust(chunk, tileX);
+					tileX = tileXAdjust(tileX);
+					chunk = chunkYAdjust(chunk, tileY);
+					tileY = tileYAdjust(tileY);
+					game.StoredTiles[chunk][tileX][Math.abs(tileY)][0] = 0;
+					tileX++;
+					chunk = chunkXAdjust(chunk, tileX);
+					tileX = tileXAdjust(tileX);
+					chunk = chunkYAdjust(chunk, tileY);
+					tileY = tileYAdjust(tileY);
+					game.StoredTiles[chunk][tileX][Math.abs(tileY)][0] = 0;
+					tileX++;
+					chunk = chunkXAdjust(chunk, tileX);
+					tileX = tileXAdjust(tileX);
+					chunk = chunkYAdjust(chunk, tileY);
+					tileY = tileYAdjust(tileY);
+					game.StoredTiles[chunk][tileX][Math.abs(tileY)][0] = 0;
+					tileY--;
+					tileX -= 2;
+					chunk = chunkXAdjust(chunk, tileX);
+					tileX = tileXAdjust(tileX);
+					chunk = chunkYAdjust(chunk, tileY);
+					tileY = tileYAdjust(tileY);
+					game.StoredTiles[chunk][tileX][Math.abs(tileY)][0] = 0;
+					tileX += 2;
+					chunk = chunkXAdjust(chunk, tileX);
+					tileX = tileXAdjust(tileX);
+					chunk = chunkYAdjust(chunk, tileY);
+					tileY = tileYAdjust(tileY);
+					game.StoredTiles[chunk][tileX][Math.abs(tileY)][0] = 0;
+					tileY--;
+					tileX -= 2;
+					chunk = chunkXAdjust(chunk, tileX);
+					tileX = tileXAdjust(tileX);
+					chunk = chunkYAdjust(chunk, tileY);
+					tileY = tileYAdjust(tileY);
+					game.StoredTiles[chunk][tileX][Math.abs(tileY)][0] = 0;
+					tileX++;
+					chunk = chunkXAdjust(chunk, tileX);
+					tileX = tileXAdjust(tileX);
+					chunk = chunkYAdjust(chunk, tileY);
+					tileY = tileYAdjust(tileY);
+					game.StoredTiles[chunk][tileX][Math.abs(tileY)][0] = 0;
+					tileX++;
+					chunk = chunkXAdjust(chunk, tileX);
+					tileX = tileXAdjust(tileX);
+					chunk = chunkYAdjust(chunk, tileY);
+					tileY = tileYAdjust(tileY);
+					game.StoredTiles[chunk][tileX][Math.abs(tileY)][0] = 0;
+				}
+				else if (tileValue == SurfaceTileIDs.Water.ordinal()) {
+					if(game.Inventory[game.SelectedHotbar][5][0] == ItemIDs.Boat.ordinal()) {
+						int tempLocation = location-1;
+						if (tempLocation/3 == 0) {
+							game.TileY++;
+							game.y = 0;
+						}
+						else if (tempLocation/3 == 2) {
+							game.TileY--;
+							game.y = 0;
+						}
+						if (tempLocation%3 == 0) {
+							game.TileX--;
+							game.x = 0;
+						}
+						else if (tempLocation%3 == 2) {
+							game.TileX++;
+							game.x = 0;
+						}
+						game.inBoat = true;
+						game.Inventory[game.SelectedHotbar][5][1]--;
+					}
+				}
+				else if (ProcessorIDs.containerExists(SurfaceTileIDs.values()[tileValue].toString())) { //Opening Containers
+					game.curentlyOpenedContainer = game.processhandler.getProcessor(ProcessorIDs.valueOf(SurfaceTileIDs.values()[tileValue].toString()), game.StoredTiles[chunk][tileX][Math.abs(tileY)][1]);
+					game.inventoryOpened = true;
+				}
 			}
 		}
-		else if (game.dimension == 1) {
+		else if (game.dimension == Dimensions.coves) {
 			if (tileValue == 9)
 			{
-				game.switchDimension((byte) 0);
+				synchronized(game.StoredTiles) {
+					game.switchDimension(Dimensions.surface);
+				}
 			}
 		}
 	}
@@ -329,7 +378,14 @@ public class Interactions {
 	{
 		game.placetile.place(chunk, tileX, tileY);
 	}
-
+	
+	public boolean checkSurroundingsNot(short tileWanted, int chunk, int tileX, int tileY) {
+		if (!checkAbove(tileWanted, chunk, tileX, tileY) || !checkBelow(tileWanted, chunk, tileX, tileY) || !checkLeft(tileWanted, chunk, tileX, tileY) || !checkRight(tileWanted, chunk, tileX, tileY)) {
+			return true;
+		}
+		return false;
+	}
+	
 	public boolean checkAbove(short tileWanted, int chunk, int tileX, int tileY)
 	{
 		tileY++;

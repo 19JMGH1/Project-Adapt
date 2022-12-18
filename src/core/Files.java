@@ -10,6 +10,7 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.Random;
 
+import core.Main_Game.Dimensions;
 import processors.electronics.management.Electronic;
 import processors.management.ProcessorIDs;
 import processors.management.Processors;
@@ -82,7 +83,7 @@ public class Files {
 			DataTxtWriter.println(0); //Chunk X
 			DataTxtWriter.println(0); //Chunk Y
 			DataTxtWriter.println(0); //Crafting Level
-			DataTxtWriter.println(0); //Starting on the surface dimension
+			DataTxtWriter.println("surface"); //Starting on the surface dimension
 			
 			for (int j = 0; j < 30; j++) //This for loop prints the inventory and makes sure nothing is in it
 			{
@@ -259,15 +260,15 @@ public class Files {
 		}
 	}
 
-	public void WriteChunk(int fileNumber, int chunkX, int chunkY, short[][][] ChunkbyteToWrite, byte dimension) {
+	public void WriteChunk(int fileNumber, int chunkX, int chunkY, short[][][] ChunkbyteToWrite, Dimensions dimension) {
 		File directory = null;
-		if (dimension == 0) {
+		if (dimension == Dimensions.surface) {
 			directory = new File("Files/File "+fileNumber+"/Chunks");
 			if (directory.exists() == false) {
 				directory.mkdirs();
 			}
 		}
-		else if (dimension == 1) {
+		else if (dimension == Dimensions.coves) {
 			directory = new File("Files/File "+fileNumber+"/Mine Chunks");
 			if (directory.exists() == false) {
 				directory.mkdirs();
@@ -296,16 +297,16 @@ public class Files {
 		}
 	}
 
-	public short[][][] ReadChunk(int fileNumber, int chunkX, int chunkY, byte dimension) {
+	public short[][][] ReadChunk(int fileNumber, int chunkX, int chunkY, Dimensions dimension) {
 		short[][][] TempByte = new short[16][16][3];
 		File directory = null;
-		if (dimension == 0) {
+		if (dimension == Dimensions.surface) {
 			directory = new File("Files/File "+fileNumber+"/Chunks"+"/Chunk "+chunkX+" "+chunkY+".txt");
 			if (!directory.exists()) {
 				game.GenAboveChunk(chunkX, chunkY);
 			}
 		}
-		else if (dimension == 1) {
+		else if (dimension == Dimensions.coves) {
 			directory = new File("Files/File "+fileNumber+"/Mine Chunks"+"/Chunk "+chunkX+" "+chunkY+".txt");
 			if (!directory.exists()) {
 				game.GenMiningChunk(chunkX, chunkY);

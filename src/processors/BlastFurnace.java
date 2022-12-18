@@ -5,23 +5,16 @@ import java.awt.Graphics;
 import core.Main_Game;
 import core.lighting.DayTimeCycle;
 import core.lighting.Light;
-import processors.management.ProcessorIDs;
 import processors.management.Processors;
 
 public class BlastFurnace extends Processors implements Light{
 
-	public static final boolean[][] validSlots ={{true, true, false, true, true},
-			{true, true, false, true, true},
-			{false, false, false, false, false},
-			{false, false, true, false, false},
-			{false, false, false, false, false}};
-	public static final byte neededValues = 3;
 	private static final byte lightLevelProduced = 8; //This is the light level that the furnace make while running
 
 	public BlastFurnace(Main_Game game, short id, int chunkX, int chunkY, int tileX, int tileY) {
-		super(game, id, ProcessorIDs.BlastFurnace, validSlots, "/BlastFurnace "+id+".txt", neededValues, chunkX, chunkY, tileX, tileY);
+		super(game, id, "/BlastFurnace "+id+".txt", chunkX, chunkY, tileX, tileY);
 		this.game = game;
-		for (int i = 0; i < neededValues; i++) {
+		for (int i = 0; i < containerID.neededValues; i++) {
 			getValues()[i] = 0;
 		}
 		getValues()[1] = Main_Game.FurnaceCookTime;

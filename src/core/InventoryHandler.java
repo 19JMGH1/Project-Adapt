@@ -217,181 +217,183 @@ public class InventoryHandler {
 
 			//Puts a container on the screen if one is opened
 			if (game.curentlyOpenedContainer != null) {
-				if (!game.configuringIO) {
-					for (int j = 0; j < 5; j++) {
-						for (int i = 0; i < 5; i++) {
-							if (game.curentlyOpenedContainer.getValidSlots()[j][i]) {
-								//spriteSheetXY = Identifications.getInventoryItemsSheet(game.containerSlots[i][j][0]);
-								spriteSheetXY = ItemIDs.getSpriteSheet(game.curentlyOpenedContainer.getContainerSlots()[i][j][0]);
-								g.drawImage(InventoryBox, topLeftCornerX+(i+6)*iconSize, topLeftCornerY+j*iconSize, topLeftCornerX+iconSize+(i+6)*iconSize, topLeftCornerY+iconSize+j*iconSize, 0, 0, SpriteSheetWidth, SpriteSheetHeight, null);
-								g.drawImage(InventoryItems, topLeftCornerX+(i+6)*iconSize, topLeftCornerY+j*iconSize, topLeftCornerX+iconSize+(i+6)*iconSize, topLeftCornerY+iconSize+j*iconSize, spriteSheetXY[0]*SpriteSheetWidth, spriteSheetXY[1]*SpriteSheetHeight, spriteSheetXY[0]*SpriteSheetWidth+SpriteSheetWidth, spriteSheetXY[1]*SpriteSheetHeight+SpriteSheetHeight, null);
-								if (!unstackable(game.curentlyOpenedContainer.getContainerSlots()[i][j][0]))
-								{
-									if (game.curentlyOpenedContainer.getContainerSlots()[i][j][0] != 0)
+				synchronized(game.curentlyOpenedContainer) {
+					if (!game.configuringIO) {
+						for (int j = 0; j < 5; j++) {
+							for (int i = 0; i < 5; i++) {
+								if (game.curentlyOpenedContainer.getValidSlots()[j][i]) {
+									//spriteSheetXY = Identifications.getInventoryItemsSheet(game.containerSlots[i][j][0]);
+									spriteSheetXY = ItemIDs.getSpriteSheet(game.curentlyOpenedContainer.getContainerSlots()[i][j][0]);
+									g.drawImage(InventoryBox, topLeftCornerX+(i+6)*iconSize, topLeftCornerY+j*iconSize, topLeftCornerX+iconSize+(i+6)*iconSize, topLeftCornerY+iconSize+j*iconSize, 0, 0, SpriteSheetWidth, SpriteSheetHeight, null);
+									g.drawImage(InventoryItems, topLeftCornerX+(i+6)*iconSize, topLeftCornerY+j*iconSize, topLeftCornerX+iconSize+(i+6)*iconSize, topLeftCornerY+iconSize+j*iconSize, spriteSheetXY[0]*SpriteSheetWidth, spriteSheetXY[1]*SpriteSheetHeight, spriteSheetXY[0]*SpriteSheetWidth+SpriteSheetWidth, spriteSheetXY[1]*SpriteSheetHeight+SpriteSheetHeight, null);
+									if (!unstackable(game.curentlyOpenedContainer.getContainerSlots()[i][j][0]))
 									{
-										g.drawString(""+game.curentlyOpenedContainer.getContainerSlots()[i][j][1], topLeftCornerX+(i+6)*iconSize+iconSize/16, topLeftCornerY+(j+1)*iconSize-iconSize/16);
-									}
-									if (game.highlightedContainerItem == i*1+j*5+1)
-									{
-										g.setColor(highilghtedItemColor);
-										g.fillRect(topLeftCornerX+(i+6)*iconSize, topLeftCornerY+j*iconSize, iconSize, iconSize);
-										g.setColor(Color.white);
+										if (game.curentlyOpenedContainer.getContainerSlots()[i][j][0] != 0)
+										{
+											g.drawString(""+game.curentlyOpenedContainer.getContainerSlots()[i][j][1], topLeftCornerX+(i+6)*iconSize+iconSize/16, topLeftCornerY+(j+1)*iconSize-iconSize/16);
+										}
+										if (game.highlightedContainerItem == i*1+j*5+1)
+										{
+											g.setColor(highilghtedItemColor);
+											g.fillRect(topLeftCornerX+(i+6)*iconSize, topLeftCornerY+j*iconSize, iconSize, iconSize);
+											g.setColor(Color.white);
+										}
 									}
 								}
 							}
 						}
-					}
-					if (game.curentlyOpenedContainer.getContainerID().hasFlame) { //Draws the flame on any container that has the flame to denote fueling
-						//Renders the flame to indicate the amount of burn time in a blast furnace
-						//g.fillRect(topLeftCornerX+(8)*iconSize+iconSize/6, topLeftCornerY+2*iconSize, 4*iconSize/6, iconSize);
-						g.drawImage(Gray_Flame, topLeftCornerX+(8)*iconSize, topLeftCornerY+2*iconSize, iconSize, iconSize, null);
-						double height = 0;
-						try {
-							height = game.curentlyOpenedContainer.getValues()[2]/(Main_Game.coalBurnTime+0.0);
-						} catch(NumberFormatException e) {
+						if (game.curentlyOpenedContainer.getContainerID().hasFlame) { //Draws the flame on any container that has the flame to denote fueling
+							//Renders the flame to indicate the amount of burn time in a blast furnace
+							//g.fillRect(topLeftCornerX+(8)*iconSize+iconSize/6, topLeftCornerY+2*iconSize, 4*iconSize/6, iconSize);
+							g.drawImage(Gray_Flame, topLeftCornerX+(8)*iconSize, topLeftCornerY+2*iconSize, iconSize, iconSize, null);
+							double height = 0;
+							try {
+								height = game.curentlyOpenedContainer.getValues()[2]/(Main_Game.coalBurnTime+0.0);
+							} catch(NumberFormatException e) {
 
+							}
+							//g2d.fill(new Rectangle(topLeftCornerX+(8)*iconSize+iconSize/6, (int) (topLeftCornerY+3*iconSize-height*iconSize), 4*iconSize/6, (int) (iconSize*height)));
+							//g.drawImage(Flame, topLeftCornerX+(8)*iconSize, (int) (topLeftCornerY+2*iconSize), iconSize, (int) (iconSize), null);
+							g.drawImage(Flame, topLeftCornerX+(8)*iconSize, (int) (topLeftCornerY+2*iconSize+(1-height)*iconSize), topLeftCornerX+(9)*iconSize, (int) (topLeftCornerY+3*iconSize), 0, (int) ((1-height)*SpriteSheetHeight), SpriteSheetWidth, SpriteSheetHeight, null);
 						}
-						//g2d.fill(new Rectangle(topLeftCornerX+(8)*iconSize+iconSize/6, (int) (topLeftCornerY+3*iconSize-height*iconSize), 4*iconSize/6, (int) (iconSize*height)));
-						//g.drawImage(Flame, topLeftCornerX+(8)*iconSize, (int) (topLeftCornerY+2*iconSize), iconSize, (int) (iconSize), null);
-						g.drawImage(Flame, topLeftCornerX+(8)*iconSize, (int) (topLeftCornerY+2*iconSize+(1-height)*iconSize), topLeftCornerX+(9)*iconSize, (int) (topLeftCornerY+3*iconSize), 0, (int) ((1-height)*SpriteSheetHeight), SpriteSheetWidth, SpriteSheetHeight, null);
 					}
-				}
-				else {
+					else {
+						if (game.curentlyOpenedContainer.getContainerID().electronic) {
+							spriteSheetXY = SurfaceTileIDs.getSpriteSheet((short) SurfaceTileIDs.valueOf(game.curentlyOpenedContainer.getContainerID().toString()).ordinal());
+							g.setColor(new Color(50, 50, 50, 180));
+							g.fillRect(topLeftCornerX+6*iconSize, topLeftCornerY, iconSize*5, iconSize*5);
+
+							g.drawImage(game.TilesSprite, topLeftCornerX+8*iconSize, topLeftCornerY+2*iconSize, topLeftCornerX+iconSize+8*iconSize, topLeftCornerY+iconSize+2*iconSize, spriteSheetXY[0]*320, spriteSheetXY[1]*320, spriteSheetXY[0]*320+320, spriteSheetXY[1]*320+320, null);
+
+							//Adds the arrows for output sides of a machine
+							Electronic e = (Electronic) game.curentlyOpenedContainer;
+							int spriteX;
+							int spriteY;
+							int i;
+							int x;
+							int y;
+							//Up
+							i = 0;
+							x = 8;
+							y = 1;
+							if (e.getInputSides()[i] && e.getOutputSides()[i]) {
+								g.setColor(electronicIOColor);
+								g.fillRect(topLeftCornerX+x*iconSize, topLeftCornerY+y*iconSize, iconSize, iconSize);
+								spriteX = 0;
+								spriteY = 1;
+								g.drawImage(IO_Arrows, topLeftCornerX+x*iconSize, topLeftCornerY+y*iconSize, topLeftCornerX+iconSize+x*iconSize, topLeftCornerY+iconSize+y*iconSize, spriteX*SpriteSheetWidth, spriteY*SpriteSheetHeight, spriteX*SpriteSheetWidth+SpriteSheetWidth, spriteY*SpriteSheetHeight+SpriteSheetHeight, null);
+							}
+							else if (e.getInputSides()[i]) {
+								g.setColor(electronicInputColor);
+								g.fillRect(topLeftCornerX+x*iconSize, topLeftCornerY+y*iconSize, iconSize, iconSize);
+								spriteX = 0;
+								spriteY = 0;
+								g.drawImage(IO_Arrows, topLeftCornerX+x*iconSize, topLeftCornerY+y*iconSize, topLeftCornerX+iconSize+x*iconSize, topLeftCornerY+iconSize+y*iconSize, spriteX*SpriteSheetWidth, spriteY*SpriteSheetHeight, spriteX*SpriteSheetWidth+SpriteSheetWidth, spriteY*SpriteSheetHeight+SpriteSheetHeight, null);
+							}
+							else if (e.getOutputSides()[i]) {
+								g.setColor(electronicOutputColor);
+								g.fillRect(topLeftCornerX+x*iconSize, topLeftCornerY+y*iconSize, iconSize, iconSize);
+								spriteX = 1;
+								spriteY = 0;
+								g.drawImage(IO_Arrows, topLeftCornerX+x*iconSize, topLeftCornerY+y*iconSize, topLeftCornerX+iconSize+x*iconSize, topLeftCornerY+iconSize+y*iconSize, spriteX*SpriteSheetWidth, spriteY*SpriteSheetHeight, spriteX*SpriteSheetWidth+SpriteSheetWidth, spriteY*SpriteSheetHeight+SpriteSheetHeight, null);
+							}
+							//down
+							i = 1;
+							x = 8;
+							y = 3;
+							if (e.getInputSides()[i] && e.getOutputSides()[i]) {
+								g.setColor(electronicIOColor);
+								g.fillRect(topLeftCornerX+x*iconSize, topLeftCornerY+y*iconSize, iconSize, iconSize);
+								spriteX = 0;
+								spriteY = 1;
+								g.drawImage(IO_Arrows, topLeftCornerX+x*iconSize, topLeftCornerY+y*iconSize, topLeftCornerX+iconSize+x*iconSize, topLeftCornerY+iconSize+y*iconSize, spriteX*SpriteSheetWidth, spriteY*SpriteSheetHeight, spriteX*SpriteSheetWidth+SpriteSheetWidth, spriteY*SpriteSheetHeight+SpriteSheetHeight, null);
+							}
+							else if (e.getInputSides()[i]) {
+								g.setColor(electronicInputColor);
+								g.fillRect(topLeftCornerX+x*iconSize, topLeftCornerY+y*iconSize, iconSize, iconSize);
+								spriteX = 1;
+								spriteY = 0;
+								g.drawImage(IO_Arrows, topLeftCornerX+x*iconSize, topLeftCornerY+y*iconSize, topLeftCornerX+iconSize+x*iconSize, topLeftCornerY+iconSize+y*iconSize, spriteX*SpriteSheetWidth, spriteY*SpriteSheetHeight, spriteX*SpriteSheetWidth+SpriteSheetWidth, spriteY*SpriteSheetHeight+SpriteSheetHeight, null);
+							}
+							else if (e.getOutputSides()[i]) {
+								g.setColor(electronicOutputColor);
+								g.fillRect(topLeftCornerX+x*iconSize, topLeftCornerY+y*iconSize, iconSize, iconSize);
+								spriteX = 0;
+								spriteY = 0;
+								g.drawImage(IO_Arrows, topLeftCornerX+x*iconSize, topLeftCornerY+y*iconSize, topLeftCornerX+iconSize+x*iconSize, topLeftCornerY+iconSize+y*iconSize, spriteX*SpriteSheetWidth, spriteY*SpriteSheetHeight, spriteX*SpriteSheetWidth+SpriteSheetWidth, spriteY*SpriteSheetHeight+SpriteSheetHeight, null);
+							}
+							//left
+							i = 2;
+							x = 7;
+							y = 2;
+							if (e.getInputSides()[i] && e.getOutputSides()[i]) {
+								g.setColor(electronicIOColor);
+								g.fillRect(topLeftCornerX+x*iconSize, topLeftCornerY+y*iconSize, iconSize, iconSize);
+								spriteX = 1;
+								spriteY = 2;
+								g.drawImage(IO_Arrows, topLeftCornerX+x*iconSize, topLeftCornerY+y*iconSize, topLeftCornerX+iconSize+x*iconSize, topLeftCornerY+iconSize+y*iconSize, spriteX*SpriteSheetWidth, spriteY*SpriteSheetHeight, spriteX*SpriteSheetWidth+SpriteSheetWidth, spriteY*SpriteSheetHeight+SpriteSheetHeight, null);
+							}
+							else if (e.getInputSides()[i]) {
+								g.setColor(electronicInputColor);
+								g.fillRect(topLeftCornerX+x*iconSize, topLeftCornerY+y*iconSize, iconSize, iconSize);
+								spriteX = 0;
+								spriteY = 2;
+								g.drawImage(IO_Arrows, topLeftCornerX+x*iconSize, topLeftCornerY+y*iconSize, topLeftCornerX+iconSize+x*iconSize, topLeftCornerY+iconSize+y*iconSize, spriteX*SpriteSheetWidth, spriteY*SpriteSheetHeight, spriteX*SpriteSheetWidth+SpriteSheetWidth, spriteY*SpriteSheetHeight+SpriteSheetHeight, null);
+							}
+							else if (e.getOutputSides()[i]) {
+								g.setColor(electronicOutputColor);
+								g.fillRect(topLeftCornerX+x*iconSize, topLeftCornerY+y*iconSize, iconSize, iconSize);
+								spriteX = 1;
+								spriteY = 1;
+								g.drawImage(IO_Arrows, topLeftCornerX+x*iconSize, topLeftCornerY+y*iconSize, topLeftCornerX+iconSize+x*iconSize, topLeftCornerY+iconSize+y*iconSize, spriteX*SpriteSheetWidth, spriteY*SpriteSheetHeight, spriteX*SpriteSheetWidth+SpriteSheetWidth, spriteY*SpriteSheetHeight+SpriteSheetHeight, null);
+							}
+							//right
+							i = 3;
+							x = 9;
+							y = 2;
+							if (e.getInputSides()[i] && e.getOutputSides()[i]) {
+								g.setColor(electronicIOColor);
+								g.fillRect(topLeftCornerX+x*iconSize, topLeftCornerY+y*iconSize, iconSize, iconSize);
+								spriteX = 1;
+								spriteY = 2;
+								g.drawImage(IO_Arrows, topLeftCornerX+x*iconSize, topLeftCornerY+y*iconSize, topLeftCornerX+iconSize+x*iconSize, topLeftCornerY+iconSize+y*iconSize, spriteX*SpriteSheetWidth, spriteY*SpriteSheetHeight, spriteX*SpriteSheetWidth+SpriteSheetWidth, spriteY*SpriteSheetHeight+SpriteSheetHeight, null);
+							}
+							else if (e.getInputSides()[i]) {
+								g.setColor(electronicInputColor);
+								g.fillRect(topLeftCornerX+x*iconSize, topLeftCornerY+y*iconSize, iconSize, iconSize);
+								spriteX = 1;
+								spriteY = 1;
+								g.drawImage(IO_Arrows, topLeftCornerX+x*iconSize, topLeftCornerY+y*iconSize, topLeftCornerX+iconSize+x*iconSize, topLeftCornerY+iconSize+y*iconSize, spriteX*SpriteSheetWidth, spriteY*SpriteSheetHeight, spriteX*SpriteSheetWidth+SpriteSheetWidth, spriteY*SpriteSheetHeight+SpriteSheetHeight, null);
+							}
+							else if (e.getOutputSides()[i]) {
+								g.setColor(electronicOutputColor);
+								g.fillRect(topLeftCornerX+x*iconSize, topLeftCornerY+y*iconSize, iconSize, iconSize);
+								spriteX = 0;
+								spriteY = 2;
+								g.drawImage(IO_Arrows, topLeftCornerX+x*iconSize, topLeftCornerY+y*iconSize, topLeftCornerX+iconSize+x*iconSize, topLeftCornerY+iconSize+y*iconSize, spriteX*SpriteSheetWidth, spriteY*SpriteSheetHeight, spriteX*SpriteSheetWidth+SpriteSheetWidth, spriteY*SpriteSheetHeight+SpriteSheetHeight, null);
+							}
+						}
+					}
 					if (game.curentlyOpenedContainer.getContainerID().electronic) {
-						spriteSheetXY = SurfaceTileIDs.getSpriteSheet((short) SurfaceTileIDs.valueOf(game.curentlyOpenedContainer.getContainerID().toString()).ordinal());
-						g.setColor(new Color(50, 50, 50, 180));
-						g.fillRect(topLeftCornerX+6*iconSize, topLeftCornerY, iconSize*5, iconSize*5);
+						//Adds the IO button to the inventory screen for electronics that can have their outputs configured
+						g.drawImage(IO_Button, topLeftCornerX+(8)*iconSize, topLeftCornerY+6*iconSize, iconSize, iconSize, null);
 
-						g.drawImage(game.TilesSprite, topLeftCornerX+8*iconSize, topLeftCornerY+2*iconSize, topLeftCornerX+iconSize+8*iconSize, topLeftCornerY+iconSize+2*iconSize, spriteSheetXY[0]*320, spriteSheetXY[1]*320, spriteSheetXY[0]*320+320, spriteSheetXY[1]*320+320, null);
-
-						//Adds the arrows for output sides of a machine
-						Electronic e = (Electronic) game.curentlyOpenedContainer;
-						int spriteX;
-						int spriteY;
-						int i;
-						int x;
-						int y;
-						//Up
-						i = 0;
-						x = 8;
-						y = 1;
-						if (e.getInputSides()[i] && e.getOutputSides()[i]) {
-							g.setColor(electronicIOColor);
-							g.fillRect(topLeftCornerX+x*iconSize, topLeftCornerY+y*iconSize, iconSize, iconSize);
-							spriteX = 0;
-							spriteY = 1;
-							g.drawImage(IO_Arrows, topLeftCornerX+x*iconSize, topLeftCornerY+y*iconSize, topLeftCornerX+iconSize+x*iconSize, topLeftCornerY+iconSize+y*iconSize, spriteX*SpriteSheetWidth, spriteY*SpriteSheetHeight, spriteX*SpriteSheetWidth+SpriteSheetWidth, spriteY*SpriteSheetHeight+SpriteSheetHeight, null);
-						}
-						else if (e.getInputSides()[i]) {
-							g.setColor(electronicInputColor);
-							g.fillRect(topLeftCornerX+x*iconSize, topLeftCornerY+y*iconSize, iconSize, iconSize);
-							spriteX = 0;
-							spriteY = 0;
-							g.drawImage(IO_Arrows, topLeftCornerX+x*iconSize, topLeftCornerY+y*iconSize, topLeftCornerX+iconSize+x*iconSize, topLeftCornerY+iconSize+y*iconSize, spriteX*SpriteSheetWidth, spriteY*SpriteSheetHeight, spriteX*SpriteSheetWidth+SpriteSheetWidth, spriteY*SpriteSheetHeight+SpriteSheetHeight, null);
-						}
-						else if (e.getOutputSides()[i]) {
-							g.setColor(electronicOutputColor);
-							g.fillRect(topLeftCornerX+x*iconSize, topLeftCornerY+y*iconSize, iconSize, iconSize);
-							spriteX = 1;
-							spriteY = 0;
-							g.drawImage(IO_Arrows, topLeftCornerX+x*iconSize, topLeftCornerY+y*iconSize, topLeftCornerX+iconSize+x*iconSize, topLeftCornerY+iconSize+y*iconSize, spriteX*SpriteSheetWidth, spriteY*SpriteSheetHeight, spriteX*SpriteSheetWidth+SpriteSheetWidth, spriteY*SpriteSheetHeight+SpriteSheetHeight, null);
-						}
-						//down
-						i = 1;
-						x = 8;
-						y = 3;
-						if (e.getInputSides()[i] && e.getOutputSides()[i]) {
-							g.setColor(electronicIOColor);
-							g.fillRect(topLeftCornerX+x*iconSize, topLeftCornerY+y*iconSize, iconSize, iconSize);
-							spriteX = 0;
-							spriteY = 1;
-							g.drawImage(IO_Arrows, topLeftCornerX+x*iconSize, topLeftCornerY+y*iconSize, topLeftCornerX+iconSize+x*iconSize, topLeftCornerY+iconSize+y*iconSize, spriteX*SpriteSheetWidth, spriteY*SpriteSheetHeight, spriteX*SpriteSheetWidth+SpriteSheetWidth, spriteY*SpriteSheetHeight+SpriteSheetHeight, null);
-						}
-						else if (e.getInputSides()[i]) {
-							g.setColor(electronicInputColor);
-							g.fillRect(topLeftCornerX+x*iconSize, topLeftCornerY+y*iconSize, iconSize, iconSize);
-							spriteX = 1;
-							spriteY = 0;
-							g.drawImage(IO_Arrows, topLeftCornerX+x*iconSize, topLeftCornerY+y*iconSize, topLeftCornerX+iconSize+x*iconSize, topLeftCornerY+iconSize+y*iconSize, spriteX*SpriteSheetWidth, spriteY*SpriteSheetHeight, spriteX*SpriteSheetWidth+SpriteSheetWidth, spriteY*SpriteSheetHeight+SpriteSheetHeight, null);
-						}
-						else if (e.getOutputSides()[i]) {
-							g.setColor(electronicOutputColor);
-							g.fillRect(topLeftCornerX+x*iconSize, topLeftCornerY+y*iconSize, iconSize, iconSize);
-							spriteX = 0;
-							spriteY = 0;
-							g.drawImage(IO_Arrows, topLeftCornerX+x*iconSize, topLeftCornerY+y*iconSize, topLeftCornerX+iconSize+x*iconSize, topLeftCornerY+iconSize+y*iconSize, spriteX*SpriteSheetWidth, spriteY*SpriteSheetHeight, spriteX*SpriteSheetWidth+SpriteSheetWidth, spriteY*SpriteSheetHeight+SpriteSheetHeight, null);
-						}
-						//left
-						i = 2;
-						x = 7;
-						y = 2;
-						if (e.getInputSides()[i] && e.getOutputSides()[i]) {
-							g.setColor(electronicIOColor);
-							g.fillRect(topLeftCornerX+x*iconSize, topLeftCornerY+y*iconSize, iconSize, iconSize);
-							spriteX = 1;
-							spriteY = 2;
-							g.drawImage(IO_Arrows, topLeftCornerX+x*iconSize, topLeftCornerY+y*iconSize, topLeftCornerX+iconSize+x*iconSize, topLeftCornerY+iconSize+y*iconSize, spriteX*SpriteSheetWidth, spriteY*SpriteSheetHeight, spriteX*SpriteSheetWidth+SpriteSheetWidth, spriteY*SpriteSheetHeight+SpriteSheetHeight, null);
-						}
-						else if (e.getInputSides()[i]) {
-							g.setColor(electronicInputColor);
-							g.fillRect(topLeftCornerX+x*iconSize, topLeftCornerY+y*iconSize, iconSize, iconSize);
-							spriteX = 0;
-							spriteY = 2;
-							g.drawImage(IO_Arrows, topLeftCornerX+x*iconSize, topLeftCornerY+y*iconSize, topLeftCornerX+iconSize+x*iconSize, topLeftCornerY+iconSize+y*iconSize, spriteX*SpriteSheetWidth, spriteY*SpriteSheetHeight, spriteX*SpriteSheetWidth+SpriteSheetWidth, spriteY*SpriteSheetHeight+SpriteSheetHeight, null);
-						}
-						else if (e.getOutputSides()[i]) {
-							g.setColor(electronicOutputColor);
-							g.fillRect(topLeftCornerX+x*iconSize, topLeftCornerY+y*iconSize, iconSize, iconSize);
-							spriteX = 1;
-							spriteY = 1;
-							g.drawImage(IO_Arrows, topLeftCornerX+x*iconSize, topLeftCornerY+y*iconSize, topLeftCornerX+iconSize+x*iconSize, topLeftCornerY+iconSize+y*iconSize, spriteX*SpriteSheetWidth, spriteY*SpriteSheetHeight, spriteX*SpriteSheetWidth+SpriteSheetWidth, spriteY*SpriteSheetHeight+SpriteSheetHeight, null);
-						}
-						//right
-						i = 3;
-						x = 9;
-						y = 2;
-						if (e.getInputSides()[i] && e.getOutputSides()[i]) {
-							g.setColor(electronicIOColor);
-							g.fillRect(topLeftCornerX+x*iconSize, topLeftCornerY+y*iconSize, iconSize, iconSize);
-							spriteX = 1;
-							spriteY = 2;
-							g.drawImage(IO_Arrows, topLeftCornerX+x*iconSize, topLeftCornerY+y*iconSize, topLeftCornerX+iconSize+x*iconSize, topLeftCornerY+iconSize+y*iconSize, spriteX*SpriteSheetWidth, spriteY*SpriteSheetHeight, spriteX*SpriteSheetWidth+SpriteSheetWidth, spriteY*SpriteSheetHeight+SpriteSheetHeight, null);
-						}
-						else if (e.getInputSides()[i]) {
-							g.setColor(electronicInputColor);
-							g.fillRect(topLeftCornerX+x*iconSize, topLeftCornerY+y*iconSize, iconSize, iconSize);
-							spriteX = 1;
-							spriteY = 1;
-							g.drawImage(IO_Arrows, topLeftCornerX+x*iconSize, topLeftCornerY+y*iconSize, topLeftCornerX+iconSize+x*iconSize, topLeftCornerY+iconSize+y*iconSize, spriteX*SpriteSheetWidth, spriteY*SpriteSheetHeight, spriteX*SpriteSheetWidth+SpriteSheetWidth, spriteY*SpriteSheetHeight+SpriteSheetHeight, null);
-						}
-						else if (e.getOutputSides()[i]) {
-							g.setColor(electronicOutputColor);
-							g.fillRect(topLeftCornerX+x*iconSize, topLeftCornerY+y*iconSize, iconSize, iconSize);
-							spriteX = 0;
-							spriteY = 2;
-							g.drawImage(IO_Arrows, topLeftCornerX+x*iconSize, topLeftCornerY+y*iconSize, topLeftCornerX+iconSize+x*iconSize, topLeftCornerY+iconSize+y*iconSize, spriteX*SpriteSheetWidth, spriteY*SpriteSheetHeight, spriteX*SpriteSheetWidth+SpriteSheetWidth, spriteY*SpriteSheetHeight+SpriteSheetHeight, null);
-						}
+						//This block but the energy bar on the screen for the electronic
+						Electronic elecContainer = (Electronic) game.curentlyOpenedContainer;
+						double widthModifier = elecContainer.getPowerStored()/(elecContainer.getMaxPower()+0.0);
+						Graphics2D g2d = (Graphics2D) g;
+						float x1 = topLeftCornerX+(6)*iconSize;
+						float y1 = topLeftCornerY+11*iconSize/2;
+						Color col1 = new Color(90, 10, 10);
+						float x2 = topLeftCornerX+(11)*iconSize;
+						float y2 = y1;
+						Color col2 = new Color(255, 30, 30);
+						GradientPaint p = new GradientPaint(x1, y1, col1, x2, y2, col2);
+						g2d.setColor(Color.LIGHT_GRAY);
+						g2d.fillRect((int) (x1), (int) y1-iconSize/2, (int) iconSize*5, (int) iconSize);
+						g2d.setPaint(p);
+						g2d.fillRect((int) (x1), (int) y1-iconSize/2, (int) (iconSize*5*widthModifier), (int) iconSize);
 					}
-				}
-				if (game.curentlyOpenedContainer.getContainerID().electronic) {
-					//Adds the IO button to the inventory screen for electronics that can have their outputs configured
-					g.drawImage(IO_Button, topLeftCornerX+(8)*iconSize, topLeftCornerY+6*iconSize, iconSize, iconSize, null);
-
-					//This block but the energy bar on the screen for the electronic
-					Electronic elecContainer = (Electronic) game.curentlyOpenedContainer;
-					double widthModifier = elecContainer.getPowerStored()/(elecContainer.getMaxPower()+0.0);
-					Graphics2D g2d = (Graphics2D) g;
-					float x1 = topLeftCornerX+(6)*iconSize;
-					float y1 = topLeftCornerY+11*iconSize/2;
-					Color col1 = new Color(90, 10, 10);
-					float x2 = topLeftCornerX+(11)*iconSize;
-					float y2 = y1;
-					Color col2 = new Color(255, 30, 30);
-					GradientPaint p = new GradientPaint(x1, y1, col1, x2, y2, col2);
-					g2d.setColor(Color.LIGHT_GRAY);
-					g2d.fillRect((int) (x1), (int) y1-iconSize/2, (int) iconSize*5, (int) iconSize);
-					g2d.setPaint(p);
-					g2d.fillRect((int) (x1), (int) y1-iconSize/2, (int) (iconSize*5*widthModifier), (int) iconSize);
 				}
 			}
 		}

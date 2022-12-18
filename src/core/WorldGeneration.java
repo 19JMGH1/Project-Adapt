@@ -2,6 +2,8 @@ package core;
 
 import java.util.Random;
 
+import core.Main_Game.Dimensions;
+
 
 public class WorldGeneration {
 
@@ -189,7 +191,7 @@ public class WorldGeneration {
 	}
 
 	public void spawnChunk() {
-		short tempChunk[][][] = files.ReadChunk(game.CurrentFile, 0, 0, (byte) 0);
+		short tempChunk[][][] = files.ReadChunk(game.CurrentFile, 0, 0, Dimensions.surface);
 		for (int i = 7; i <= 9; i++) {
 			for (int j = -7; j >= -9; j--) {
 				tempChunk[i][Math.abs(j)][0] = GenerateMeadow(i, j);
@@ -204,7 +206,7 @@ public class WorldGeneration {
 		tempChunk[6][Math.abs(-8)][2] = 0;
 		tempChunk[10][Math.abs(-8)][0] = GenerateMeadow(10, -8);
 		tempChunk[10][Math.abs(-8)][2] = 0;
-		files.WriteChunk(game.CurrentFile, 0, 0, tempChunk, (byte) 0);
+		files.WriteChunk(game.CurrentFile, 0, 0, tempChunk, Dimensions.surface);
 	}
 
 	public byte GenerateMeadow(int x, int y) { //3% chance of a small stone, 1% chance of a boulder, 3% chance of a tree, 93% chance of grass
@@ -423,7 +425,7 @@ public class WorldGeneration {
 				TempChunk[i][Math.abs(j)][1] = 0;
 			}
 		} 
-		files.WriteChunk(game.CurrentFile, ChunkX, ChunkY, TempChunk, (byte) 0);
+		files.WriteChunk(game.CurrentFile, ChunkX, ChunkY, TempChunk, Dimensions.surface);
 	}
 
 	private short miningTile(int x, int y) {
@@ -471,6 +473,6 @@ public class WorldGeneration {
 				TempChunk[i][Math.abs(j)][0] = miningTile(i+(ChunkX*16), j+(ChunkY*16));
 			} 
 		}
-		files.WriteChunk(game.CurrentFile, ChunkX, ChunkY, TempChunk, (byte) 1);
+		files.WriteChunk(game.CurrentFile, ChunkX, ChunkY, TempChunk, Dimensions.coves);
 	}
 }

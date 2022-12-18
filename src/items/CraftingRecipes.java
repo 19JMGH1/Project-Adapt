@@ -35,6 +35,9 @@ public class CraftingRecipes {
 		else if (refiner()) {}
 		else if (heatingCoil()) {}
 		else if (electricFurnace()) {}
+		else if (assembler()) {}
+		else if (solarPanel()) {}
+		else if (boat()) {}
 
 		//Shapeless crafting recipes go at the bottom to take less priority
 		else if (sharpStone()) {}
@@ -188,8 +191,33 @@ public class CraftingRecipes {
 				{31, 42, 42, 31},
 				{31, 42, 42, 31},
 				{22, 31, 31, 22}};
-		int numOfItems[][] = {{22, 4}, {31, 1}, {42, 4}};
+		int numOfItems[][] = {{22, 4}, {31, 8}, {42, 4}};
 		return shapedCrafting(IDs, numOfItems, 41, 1);
+	}
+	
+	private boolean assembler() {
+		int IDs[][] =  {{24, 31, 31, 24}, 
+				{31, 27, 27, 31},
+				{31, 27, 27, 31},
+				{24, 31, 31, 24}};
+		int numOfItems[][] = {{24, 4}, {31, 8}, {27, 4}};
+		return shapedCrafting(IDs, numOfItems, 44, 1);
+	}
+	
+	private boolean solarPanel() {
+		int IDs[][] =  {{22, 31, 31, 22}, 
+				{31, 47, 47, 31},
+				{31, 47, 47, 31},
+				{22, 31, 31, 22}};
+		int numOfItems[][] = {{22, 4}, {31, 8}, {47, 4}};
+		return shapedCrafting(IDs, numOfItems, ItemIDs.SolarPanel.ordinal(), 1);
+	}
+	
+	private boolean boat() {
+		int IDs[][] =  {{2, 0, 2},
+						{2, 2, 2}};
+		int numOfItems[][] = {{2, 6}};
+		return shapedCrafting(IDs, numOfItems, ItemIDs.Boat.ordinal(), 1);
 	}
 
 	//Shapeless crafting recipes start here

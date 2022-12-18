@@ -247,31 +247,31 @@ public class MouseHandler extends MouseAdapter implements MouseMotionListener, M
 						else
 						{ //Right clicking tiles around the player
 							if (mousePosition(mx, my, game.characterX-game.x-game.TileWidth, game.characterY+game.y-game.TileHeight, game.TileWidth, game.TileHeight)) {
-								interactions.useCheck(1);
+								interactions.useCheck((short) 1);
 							}
 							else if (mousePosition(mx, my, game.characterX-game.x, game.characterY+game.y-game.TileHeight, game.TileWidth, game.TileHeight)) {
-								interactions.useCheck(2);
+								interactions.useCheck((short) 2);
 							}
 							else if (mousePosition(mx, my, game.characterX-game.x+game.TileWidth, game.characterY+game.y-game.TileHeight, game.TileWidth, game.TileHeight)) {
-								interactions.useCheck(3);
+								interactions.useCheck((short) 3);
 							}
 							else if (mousePosition(mx, my, game.characterX-game.x-game.TileWidth, game.characterY+game.y, game.TileWidth, game.TileHeight)) {
-								interactions.useCheck(4);
+								interactions.useCheck((short) 4);
 							}
 							else if (mousePosition(mx, my, game.characterX-game.x, game.characterY+game.y, game.TileWidth, game.TileHeight)) {
-								interactions.useCheck(5);
+								interactions.useCheck((short) 5);
 							}
 							else if (mousePosition(mx, my, game.characterX-game.x+game.TileWidth, game.characterY+game.y, game.TileWidth, game.TileHeight)) {
-								interactions.useCheck(6);
+								interactions.useCheck((short) 6);
 							}
 							else if (mousePosition(mx, my, game.characterX-game.x-game.TileWidth, game.characterY+game.y+game.TileHeight, game.TileWidth, game.TileHeight)) {
-								interactions.useCheck(7);
+								interactions.useCheck((short) 7);
 							}
 							else if (mousePosition(mx, my, game.characterX-game.x, game.characterY+game.y+game.TileHeight, game.TileWidth, game.TileHeight)) {
-								interactions.useCheck(8);
+								interactions.useCheck((short) 8);
 							}
 							else if (mousePosition(mx, my, game.characterX-game.x+game.TileWidth, game.characterY+game.y+game.TileHeight, game.TileWidth, game.TileHeight)) {
-								interactions.useCheck(9);
+								interactions.useCheck((short) 9);
 							}
 						}
 					}

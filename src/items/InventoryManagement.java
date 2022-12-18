@@ -8,19 +8,19 @@ import processors.electronics.management.Electronic;
 public class InventoryManagement {
 
 	private Main_Game game;
-	
+
 	public static boolean inventoryRightDrag[][] = {{false, false, false, false, false},
-													{false, false, false, false, false},
-													{false, false, false, false, false},
-													{false, false, false, false, false},
-													{false, false, false, false, false},
-													{false, false, false, false, false}};
-	
+			{false, false, false, false, false},
+			{false, false, false, false, false},
+			{false, false, false, false, false},
+			{false, false, false, false, false},
+			{false, false, false, false, false}};
+
 	public static boolean containerRightDrag[][] = {{false, false, false, false, false},
-													{false, false, false, false, false},
-													{false, false, false, false, false},
-													{false, false, false, false, false},
-													{false, false, false, false, false}};
+			{false, false, false, false, false},
+			{false, false, false, false, false},
+			{false, false, false, false, false},
+			{false, false, false, false, false}};
 
 	public InventoryManagement(Main_Game game) {
 		this.game = game;
@@ -341,17 +341,19 @@ public class InventoryManagement {
 				}
 
 				//Switch the up IO configuration
-				else if (mousePosition(mx, my, game.inventoryhandler.topLeftCornerX+8*game.inventoryhandler.iconSize, game.inventoryhandler.topLeftCornerY+1*game.inventoryhandler.iconSize, game.inventoryhandler.iconSize, game.inventoryhandler.iconSize)) {
-					swapIO(0);
-				}
-				else if (mousePosition(mx, my, game.inventoryhandler.topLeftCornerX+8*game.inventoryhandler.iconSize, game.inventoryhandler.topLeftCornerY+3*game.inventoryhandler.iconSize, game.inventoryhandler.iconSize, game.inventoryhandler.iconSize)) {
-					swapIO(1);
-				}
-				else if (mousePosition(mx, my, game.inventoryhandler.topLeftCornerX+7*game.inventoryhandler.iconSize, game.inventoryhandler.topLeftCornerY+2*game.inventoryhandler.iconSize, game.inventoryhandler.iconSize, game.inventoryhandler.iconSize)) {
-					swapIO(2);
-				}
-				else if (mousePosition(mx, my, game.inventoryhandler.topLeftCornerX+9*game.inventoryhandler.iconSize, game.inventoryhandler.topLeftCornerY+2*game.inventoryhandler.iconSize, game.inventoryhandler.iconSize, game.inventoryhandler.iconSize)) {
-					swapIO(3);
+				if (game.configuringIO) {
+					if (mousePosition(mx, my, game.inventoryhandler.topLeftCornerX+8*game.inventoryhandler.iconSize, game.inventoryhandler.topLeftCornerY+1*game.inventoryhandler.iconSize, game.inventoryhandler.iconSize, game.inventoryhandler.iconSize)) {
+						swapIO(0);
+					}
+					else if (mousePosition(mx, my, game.inventoryhandler.topLeftCornerX+8*game.inventoryhandler.iconSize, game.inventoryhandler.topLeftCornerY+3*game.inventoryhandler.iconSize, game.inventoryhandler.iconSize, game.inventoryhandler.iconSize)) {
+						swapIO(1);
+					}
+					else if (mousePosition(mx, my, game.inventoryhandler.topLeftCornerX+7*game.inventoryhandler.iconSize, game.inventoryhandler.topLeftCornerY+2*game.inventoryhandler.iconSize, game.inventoryhandler.iconSize, game.inventoryhandler.iconSize)) {
+						swapIO(2);
+					}
+					else if (mousePosition(mx, my, game.inventoryhandler.topLeftCornerX+9*game.inventoryhandler.iconSize, game.inventoryhandler.topLeftCornerY+2*game.inventoryhandler.iconSize, game.inventoryhandler.iconSize, game.inventoryhandler.iconSize)) {
+						swapIO(3);
+					}
 				}
 			}
 		}

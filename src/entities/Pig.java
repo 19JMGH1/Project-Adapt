@@ -5,7 +5,7 @@ import java.awt.Graphics;
 import core.Main_Game;
 import items.ItemIDs;
 
-public class Pig extends Creature{
+public class Pig extends Creature {
 
 	private static final int numOfLimbs = 4;
 	private static final int[][] limbLocations = {{6,13}, {8, 15}, {20, 13}, {22, 15}};

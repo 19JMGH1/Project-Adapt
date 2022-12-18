@@ -4,10 +4,13 @@ import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 
 import core.Main_Game;
+import core.Main_Game.Dimensions;
 import core.Main_Game.State;
 import core.lighting.DayTimeCycle;
 import items.CraftingRecipes;
+import items.ItemIDs;
 import menus.FileMenu;
+import tiles.SurfaceTileIDs;
 
 public class KeyInput extends KeyAdapter {
 
@@ -28,13 +31,24 @@ public class KeyInput extends KeyAdapter {
 			//Go FullScreen when you press F11
 			Main_Game.FULLSCREEN = !Main_Game.FULLSCREEN;
 			if (Main_Game.FULLSCREEN) {
+				try {
+					Thread.sleep(250); //Sleeping stops a weird rendering big related to going in and out of fullscreen too quickly
+				} catch (InterruptedException e1) {
+					e1.printStackTrace();
+				}
 				game.window.setFullScreen(true);
 			}
 			else {
+				try {
+					Thread.sleep(250); //Sleeping stops a weird rendering big related to going in and out of fullscreen too quickly
+				} catch (InterruptedException e1) {
+					e1.printStackTrace();
+				}
 				game.window.setFullScreen(false);
 			}
 		}
-		
+
+		//Key input for if a player is in the File Menu
 		if (game.AdaptState == State.FileMenu) {
 			if (filemenu.FileNaming) {
 				if (c != KeyEvent.CHAR_UNDEFINED && c != KeyEvent.VK_BACK_SPACE && c != KeyEvent.VK_ENTER && filemenu.FileNamingText.length() < 40) {
@@ -92,6 +106,8 @@ public class KeyInput extends KeyAdapter {
 				}
 			}
 		}
+		
+		//Key input for if the player is in a world
 		if (game.AdaptState == State.InWorld) {
 			if (k == KeyEvent.VK_ESCAPE) {
 				if (game.inventoryOpened)
@@ -103,6 +119,10 @@ public class KeyInput extends KeyAdapter {
 						for (int i = 0; i < 5; i++)
 						{
 							game.craftingBoxes[i][j] = 0;
+						}
+					}
+					if (game.curentlyOpenedContainer != null) {
+						synchronized(game.curentlyOpenedContainer) {
 							game.curentlyOpenedContainer = null;
 						}
 					}
@@ -113,7 +133,35 @@ public class KeyInput extends KeyAdapter {
 				}
 			}
 			if (!game.Paused) {
-				if (k == KeyEvent.VK_W) {
+				if (k == KeyEvent.VK_SHIFT) {
+					if (game.inBoat && game.dimension == Dimensions.surface) {
+						if (!game.interactions.checkAbove((short) SurfaceTileIDs.Water.ordinal(), 4, game.TileX, game.TileY) && game.collision.checkY(game.x, game.y, game.TileX, game.TileY, 1, 1, game.TileHeight, false)) {
+							game.TileY++;
+							game.y = 0;
+							game.inBoat = false;
+							game.inventoryhandler.addToInv((short) ItemIDs.Boat.ordinal(), 1);
+						}
+						else if (!game.interactions.checkBelow((short) SurfaceTileIDs.Water.ordinal(), 4, game.TileX, game.TileY) && game.collision.checkY(game.x, game.y, game.TileX, game.TileY, 1, 1, -game.TileHeight, false)) {
+							game.TileY--;
+							game.y = 0;
+							game.inBoat = false;
+							game.inventoryhandler.addToInv((short) ItemIDs.Boat.ordinal(), 1);
+						}
+						else if (!game.interactions.checkLeft((short) SurfaceTileIDs.Water.ordinal(), 4, game.TileX, game.TileY) && game.collision.checkX(game.x, game.y, game.TileX, game.TileY, 1, 1, -game.TileHeight, false)) {
+							game.TileX--;
+							game.x = 0;
+							game.inBoat = false;
+							game.inventoryhandler.addToInv((short) ItemIDs.Boat.ordinal(), 1);
+						}
+						else if (!game.interactions.checkRight((short) SurfaceTileIDs.Water.ordinal(), 4, game.TileX, game.TileY) && game.collision.checkX(game.x, game.y, game.TileX, game.TileY, 1, 1, game.TileHeight, false)) {
+							game.TileX++;
+							game.x = 0;
+							game.inBoat = false;
+							game.inventoryhandler.addToInv((short) ItemIDs.Boat.ordinal(), 1);
+						}
+					}
+				}
+				else if (k == KeyEvent.VK_W) {
 					game.WPressed = true;
 				}
 				else if (k == KeyEvent.VK_A) {
@@ -126,6 +174,7 @@ public class KeyInput extends KeyAdapter {
 					game.DPressed = true;
 				}
 				else if (k == KeyEvent.VK_E) {
+
 					game.inventoryOpened = !game.inventoryOpened;
 					game.configuringIO = false;
 					for (int j = 0; j < 5; j++)
@@ -133,6 +182,10 @@ public class KeyInput extends KeyAdapter {
 						for (int i = 0; i < 5; i++)
 						{
 							game.craftingBoxes[i][j] = 0;
+						}
+					}
+					if (game.curentlyOpenedContainer != null) {
+						synchronized(game.curentlyOpenedContainer) {
 							game.curentlyOpenedContainer = null;
 						}
 					}

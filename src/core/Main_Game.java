@@ -24,6 +24,7 @@ import core.playerInput.KeyInput;
 import core.playerInput.MouseHandler;
 import tiles.BasicTiles;
 import tiles.MiningTiles;
+import tiles.SurfaceTileIDs;
 import tiles.interactions.HarvestTile;
 import tiles.interactions.Interactions;
 import tiles.interactions.PlaceTile;
@@ -51,9 +52,9 @@ public class Main_Game extends Canvas implements Runnable{
 
 	public static final int Target_TPS = 30;
 	public static final int Target_FPS = 30;
-	
+
 	public static boolean rendering = false;
-	
+
 	public static boolean FULLSCREEN = false;
 
 	public static final int maxStackSize = 50; //The max number of items allowed in an inventory slot
@@ -64,6 +65,9 @@ public class Main_Game extends Canvas implements Runnable{
 	public static final int invItemsSpriteWidth = 7; //This is how many items fit horizontally across one row of the items sprite sheet
 	public static final int surfaceTileSpriteWidth = 5; //This is how many items fit horizontally across one of the rows of the surface tile sprite sheet
 	public static final int coveTileSpriteWidth = 3; //This is how many items fit horizontally across one of the rows of the cove tile sprite sheet
+
+	public static final int tileAditionsSpriteWidth = 3;
+	public static final short tileAditionsSpriteDims = 320;
 
 	public Thread thread1; //The render thread
 	private boolean running = false; //Is the game running?
@@ -88,6 +92,8 @@ public class Main_Game extends Canvas implements Runnable{
 	public short[] [] []Inventory = new short [5][6][2]; //It's a 5 by 5 inventory, and two values, one is the ID, other is amount of items in the slot.
 	//The 6th value in the second component of the inventory stores the hotbar
 	public short[] grabbedItem = new short [2]; //Stores the data about the item that is attached to the mouse
+
+	public boolean inBoat = false;
 
 	public Processors curentlyOpenedContainer = null; //Points to the object that is the currently opened container
 	public byte highlightedContainerItem = 0;
@@ -160,11 +166,17 @@ public class Main_Game extends Canvas implements Runnable{
 	public boolean DPressed = false;
 
 	//This is stuff for different dimensions
-	public byte dimension = 0; //0 corresponds to the surface, 1 corresponds to the cove
-	
+	public Dimensions dimension = Dimensions.surface; //0 corresponds to the surface, 1 corresponds to the cove
+	public enum Dimensions{
+		surface,
+		coves
+	};
+
+
 	public boolean justCrafted = false;
 
 	public Main_Game() { //Initialize all the classes
+
 		handler = new Handler(this);
 		mainmenu = new MainMenu(this);
 		files = new Files(this);
@@ -181,7 +193,7 @@ public class Main_Game extends Canvas implements Runnable{
 		daytimecycle = new DayTimeCycle(this);
 		inventorymanagment = new InventoryManagement(this);
 		spawnevent = new SpawnEvent(this);
-		
+
 
 		tickthread = new TickThread(this);
 
@@ -193,6 +205,8 @@ public class Main_Game extends Canvas implements Runnable{
 		this.addMouseWheelListener(mousehandler);
 		this.addKeyListener(keyinput);
 
+		window = new Window(WIDTH, HEIGHT, "Project Adapt", this);
+
 		try {
 			BackgroundArt = ImageIO.read(getClass().getResourceAsStream("/First_Background.png"));
 			TilesSprite = ImageIO.read(getClass().getResourceAsStream("/Tiles.png"));
@@ -200,7 +214,6 @@ public class Main_Game extends Canvas implements Runnable{
 			e.printStackTrace();
 		}
 
-		window = new Window(WIDTH, HEIGHT, "Project Adapt", this);
 	}
 
 	public enum State {
@@ -255,7 +268,7 @@ public class Main_Game extends Canvas implements Runnable{
 		}
 	}
 
-	public void switchDimension(byte dim) {
+	public void switchDimension(Dimensions dim) {
 		SaveFile();
 		dimension = dim;
 		loadTiles();
@@ -273,10 +286,14 @@ public class Main_Game extends Canvas implements Runnable{
 			ChunkX = Integer.parseInt(files.ReadLine("Files/File "+CurrentFile+"/Data.txt", 5));
 			ChunkY = Integer.parseInt(files.ReadLine("Files/File "+CurrentFile+"/Data.txt", 6));
 			craftingLevel = (byte) Integer.parseInt(files.ReadLine("Files/File "+CurrentFile+"/Data.txt", 7));
-			dimension = (byte) Integer.parseInt(files.ReadLine("Files/File "+CurrentFile+"/Data.txt", 8));
+			dimension = Dimensions.valueOf(files.ReadLine("Files/File "+CurrentFile+"/Data.txt", 8));
 			daytimecycle.time = Integer.parseInt(files.ReadLine("Files/File "+CurrentFile+"/Data.txt", 9));
 			//dimension = 0; //Was used for leaving the mining dimension before leaving it was coded
 			loadTiles();
+			if (StoredTiles[4][TileX][Math.abs(TileY)][0] == SurfaceTileIDs.Water.ordinal()) {
+				inBoat = true;
+			}
+			System.out.println(inBoat);
 			Inventory = files.ReadInventory(CurrentFile);
 			inventoryhandler.setupCrafting();
 			//Inventory[0][0][0] = 11; //Used for putting a mine in the inventory for initial debugging of the mining dimension on new worlds.
@@ -293,26 +310,28 @@ public class Main_Game extends Canvas implements Runnable{
 
 	public void loadTiles() {
 		daytimecycle.clearLights();
-		StoredTiles[0] = files.ReadChunk(CurrentFile, ChunkX-1, ChunkY+1, dimension);
-		StoredTiles[1] = files.ReadChunk(CurrentFile, ChunkX, ChunkY+1, dimension);
-		StoredTiles[2] = files.ReadChunk(CurrentFile, ChunkX+1, ChunkY+1, dimension);
-		StoredTiles[3] = files.ReadChunk(CurrentFile, ChunkX-1, ChunkY, dimension);
-		StoredTiles[4] = files.ReadChunk(CurrentFile, ChunkX, ChunkY, dimension);
-		StoredTiles[5] = files.ReadChunk(CurrentFile, ChunkX+1, ChunkY, dimension);
-		StoredTiles[6] = files.ReadChunk(CurrentFile, ChunkX-1, ChunkY-1, dimension);
-		StoredTiles[7] = files.ReadChunk(CurrentFile, ChunkX, ChunkY-1, dimension);
-		StoredTiles[8] = files.ReadChunk(CurrentFile, ChunkX+1, ChunkY-1, dimension);
-//		for (int k = 0; k < 9; k++) { //Test code used to remove all instances of a specific tile
-//			for (int i = 0; i < 16; i++) {
-//				for (int j = 0; j < 16; j++) {
-//					if (StoredTiles[k][i][j][0] == 22) {
-//						StoredTiles[k][i][j][0] = 0;
-//						StoredTiles[k][i][j][1] = 0;
-//					}
-//					
-//				}
-//			}
-//		}
+		synchronized(StoredTiles) {
+			StoredTiles[0] = files.ReadChunk(CurrentFile, ChunkX-1, ChunkY+1, dimension);
+			StoredTiles[1] = files.ReadChunk(CurrentFile, ChunkX, ChunkY+1, dimension);
+			StoredTiles[2] = files.ReadChunk(CurrentFile, ChunkX+1, ChunkY+1, dimension);
+			StoredTiles[3] = files.ReadChunk(CurrentFile, ChunkX-1, ChunkY, dimension);
+			StoredTiles[4] = files.ReadChunk(CurrentFile, ChunkX, ChunkY, dimension);
+			StoredTiles[5] = files.ReadChunk(CurrentFile, ChunkX+1, ChunkY, dimension);
+			StoredTiles[6] = files.ReadChunk(CurrentFile, ChunkX-1, ChunkY-1, dimension);
+			StoredTiles[7] = files.ReadChunk(CurrentFile, ChunkX, ChunkY-1, dimension);
+			StoredTiles[8] = files.ReadChunk(CurrentFile, ChunkX+1, ChunkY-1, dimension);
+		}
+		//		for (int k = 0; k < 9; k++) { //Test code used to remove all instances of a specific tile
+		//			for (int i = 0; i < 16; i++) {
+		//				for (int j = 0; j < 16; j++) {
+		//					if (StoredTiles[k][i][j][0] == 22) {
+		//						StoredTiles[k][i][j][0] = 0;
+		//						StoredTiles[k][i][j][1] = 0;
+		//					}
+		//					
+		//				}
+		//			}
+		//		}
 	}
 
 	public void CloseFile() {
@@ -323,24 +342,26 @@ public class Main_Game extends Canvas implements Runnable{
 		x = 0;
 		y = 0;
 		RemoveObjects();
-		System.out.println("here");
 		processhandler.removeAllProcessors();
 		seed = null;
 		//daytimecycle.resetLists();
 		//This has to stay at the very end
 		tileanimations = null;
+		inBoat = false;
 	}
 
 	public void SaveFile() {
-		files.WriteChunk(CurrentFile, ChunkX-1, ChunkY+1, StoredTiles[0], dimension);
-		files.WriteChunk(CurrentFile, ChunkX, ChunkY+1, StoredTiles[1], dimension);
-		files.WriteChunk(CurrentFile, ChunkX+1, ChunkY+1, StoredTiles[2], dimension);
-		files.WriteChunk(CurrentFile, ChunkX-1, ChunkY, StoredTiles[3], dimension);
-		files.WriteChunk(CurrentFile, ChunkX, ChunkY, StoredTiles[4], dimension);
-		files.WriteChunk(CurrentFile, ChunkX+1, ChunkY, StoredTiles[5], dimension);
-		files.WriteChunk(CurrentFile, ChunkX-1, ChunkY-1, StoredTiles[6], dimension);
-		files.WriteChunk(CurrentFile, ChunkX, ChunkY-1, StoredTiles[7], dimension);
-		files.WriteChunk(CurrentFile, ChunkX+1, ChunkY-1, StoredTiles[8], dimension);
+		synchronized(StoredTiles) {
+			files.WriteChunk(CurrentFile, ChunkX-1, ChunkY+1, StoredTiles[0], dimension);
+			files.WriteChunk(CurrentFile, ChunkX, ChunkY+1, StoredTiles[1], dimension);
+			files.WriteChunk(CurrentFile, ChunkX+1, ChunkY+1, StoredTiles[2], dimension);
+			files.WriteChunk(CurrentFile, ChunkX-1, ChunkY, StoredTiles[3], dimension);
+			files.WriteChunk(CurrentFile, ChunkX, ChunkY, StoredTiles[4], dimension);
+			files.WriteChunk(CurrentFile, ChunkX+1, ChunkY, StoredTiles[5], dimension);
+			files.WriteChunk(CurrentFile, ChunkX-1, ChunkY-1, StoredTiles[6], dimension);
+			files.WriteChunk(CurrentFile, ChunkX, ChunkY-1, StoredTiles[7], dimension);
+			files.WriteChunk(CurrentFile, ChunkX+1, ChunkY-1, StoredTiles[8], dimension);
+		}
 		files.RewriteLine("Files/File "+CurrentFile+"/Data.txt", 2, ""+seed);
 		files.RewriteLine("Files/File "+CurrentFile+"/Data.txt", 3, ""+TileX);
 		files.RewriteLine("Files/File "+CurrentFile+"/Data.txt", 4, ""+TileY);
@@ -353,7 +374,7 @@ public class Main_Game extends Canvas implements Runnable{
 		processhandler.saveAllProcessors();
 	}
 
-	public void addMessage(String message)
+	public synchronized void addMessage(String message)
 	{
 		if (messageString.size() >= 10)
 		{
@@ -383,10 +404,10 @@ public class Main_Game extends Canvas implements Runnable{
 		//handler.addCreature(new Pig(this, EntityTypes.Passive, 0, 0, ChunkX, ChunkY, TileX, TileY));
 	}
 	public void AddTiles() {
-		if (dimension == 0) {
+		if (dimension == Dimensions.surface) {
 			handler.addObject(new BasicTiles(0, 0, EntityTypes.Tiles, this, handler));
 		}
-		else if (dimension == 1) {
+		else if (dimension == Dimensions.coves) {
 			handler.addObject(new MiningTiles(0, 0, EntityTypes.Tiles, this, handler));
 		}
 	}
@@ -426,19 +447,21 @@ public class Main_Game extends Canvas implements Runnable{
 			VelX = 0;
 		}
 
-		//System.out.println(VelX+", "+VelY+", "+x+", "+y+", "+TileX+", "+TileY); //For testing purposes
-		//System.out.println(TileWidth/10);
 		if (!inventoryOpened)
 		{
-			if (collision.checkX(x, y, TileX, TileY, 1, 1, (int) VelX))
+			if (collision.checkX(x, y, TileX, TileY, 1, 1, (int) VelX, inBoat))
 			{
 				x += VelX;
 			}
-			if (collision.checkY(x, y, TileX, TileY, 1, 1, (int) VelY))
+			if (collision.checkY(x, y, TileX, TileY, 1, 1, (int) VelY, inBoat))
 			{
 				y += VelY;
 			}
 		}
+
+		//System.out.println(VelX+", "+VelY+", "+x+", "+y+", "+TileX+", "+TileY); //For testing purposes
+		//System.out.println(TileWidth/10);
+
 		//Changes the player's tile position on the every time crosses a tile border
 		if (x < 0) {
 			TileX--;
@@ -473,18 +496,20 @@ public class Main_Game extends Canvas implements Runnable{
 			lightLevels[4] = lightLevels[1];
 			lightLevels[5] = lightLevels[2];
 			daytimecycle.removeLightSources();
-			files.WriteChunk(CurrentFile, ChunkX-1, ChunkY-2, StoredTiles[6], dimension);
-			files.WriteChunk(CurrentFile, ChunkX, ChunkY-2, StoredTiles[7], dimension);
-			files.WriteChunk(CurrentFile, ChunkX+1, ChunkY-2, StoredTiles[8], dimension);
-			StoredTiles[6] = StoredTiles[3];
-			StoredTiles[7] = StoredTiles[4];
-			StoredTiles[8] = StoredTiles[5];
-			StoredTiles[3] = StoredTiles[0];
-			StoredTiles[4] = StoredTiles[1];
-			StoredTiles[5] = StoredTiles[2];
-			StoredTiles[0] = files.ReadChunk(CurrentFile, ChunkX-1, ChunkY+1, dimension);
-			StoredTiles[1] = files.ReadChunk(CurrentFile, ChunkX, ChunkY+1, dimension);
-			StoredTiles[2] = files.ReadChunk(CurrentFile, ChunkX+1, ChunkY+1, dimension);
+			synchronized(StoredTiles) {
+				files.WriteChunk(CurrentFile, ChunkX-1, ChunkY-2, StoredTiles[6], dimension);
+				files.WriteChunk(CurrentFile, ChunkX, ChunkY-2, StoredTiles[7], dimension);
+				files.WriteChunk(CurrentFile, ChunkX+1, ChunkY-2, StoredTiles[8], dimension);
+				StoredTiles[6] = StoredTiles[3];
+				StoredTiles[7] = StoredTiles[4];
+				StoredTiles[8] = StoredTiles[5];
+				StoredTiles[3] = StoredTiles[0];
+				StoredTiles[4] = StoredTiles[1];
+				StoredTiles[5] = StoredTiles[2];
+				StoredTiles[0] = files.ReadChunk(CurrentFile, ChunkX-1, ChunkY+1, dimension);
+				StoredTiles[1] = files.ReadChunk(CurrentFile, ChunkX, ChunkY+1, dimension);
+				StoredTiles[2] = files.ReadChunk(CurrentFile, ChunkX+1, ChunkY+1, dimension);
+			}
 			processhandler.reload = true;
 		}
 		else if (TileY < -15) {
@@ -497,18 +522,20 @@ public class Main_Game extends Canvas implements Runnable{
 			lightLevels[4] = lightLevels[7];
 			lightLevels[5] = lightLevels[8];
 			daytimecycle.removeLightSources();
-			files.WriteChunk(CurrentFile, ChunkX-1, ChunkY+2, StoredTiles[0], dimension);
-			files.WriteChunk(CurrentFile, ChunkX, ChunkY+2, StoredTiles[1], dimension);
-			files.WriteChunk(CurrentFile, ChunkX+1, ChunkY+2, StoredTiles[2], dimension);
-			StoredTiles[0] = StoredTiles[3];
-			StoredTiles[1] = StoredTiles[4];
-			StoredTiles[2] = StoredTiles[5];
-			StoredTiles[3] = StoredTiles[6];
-			StoredTiles[4] = StoredTiles[7];
-			StoredTiles[5] = StoredTiles[8];
-			StoredTiles[6] = files.ReadChunk(CurrentFile, ChunkX-1, ChunkY-1, dimension);
-			StoredTiles[7] = files.ReadChunk(CurrentFile, ChunkX, ChunkY-1, dimension);
-			StoredTiles[8] = files.ReadChunk(CurrentFile, ChunkX+1, ChunkY-1, dimension);
+			synchronized(StoredTiles) {
+				files.WriteChunk(CurrentFile, ChunkX-1, ChunkY+2, StoredTiles[0], dimension);
+				files.WriteChunk(CurrentFile, ChunkX, ChunkY+2, StoredTiles[1], dimension);
+				files.WriteChunk(CurrentFile, ChunkX+1, ChunkY+2, StoredTiles[2], dimension);
+				StoredTiles[0] = StoredTiles[3];
+				StoredTiles[1] = StoredTiles[4];
+				StoredTiles[2] = StoredTiles[5];
+				StoredTiles[3] = StoredTiles[6];
+				StoredTiles[4] = StoredTiles[7];
+				StoredTiles[5] = StoredTiles[8];
+				StoredTiles[6] = files.ReadChunk(CurrentFile, ChunkX-1, ChunkY-1, dimension);
+				StoredTiles[7] = files.ReadChunk(CurrentFile, ChunkX, ChunkY-1, dimension);
+				StoredTiles[8] = files.ReadChunk(CurrentFile, ChunkX+1, ChunkY-1, dimension);
+			}
 			processhandler.reload = true;
 		}
 		if (TileX < 0) {
@@ -521,18 +548,20 @@ public class Main_Game extends Canvas implements Runnable{
 			lightLevels[4] = lightLevels[3];
 			lightLevels[7] = lightLevels[6];
 			daytimecycle.removeLightSources();
-			files.WriteChunk(CurrentFile, ChunkX+2, ChunkY+1, StoredTiles[2], dimension);
-			files.WriteChunk(CurrentFile, ChunkX+2, ChunkY, StoredTiles[5], dimension);
-			files.WriteChunk(CurrentFile, ChunkX+2, ChunkY-1, StoredTiles[8], dimension);
-			StoredTiles[2] = StoredTiles[1];
-			StoredTiles[5] = StoredTiles[4];
-			StoredTiles[8] = StoredTiles[7];
-			StoredTiles[1] = StoredTiles[0];
-			StoredTiles[4] = StoredTiles[3];
-			StoredTiles[7] = StoredTiles[6];
-			StoredTiles[0] = files.ReadChunk(CurrentFile, ChunkX-1, ChunkY+1, dimension);
-			StoredTiles[3] = files.ReadChunk(CurrentFile, ChunkX-1, ChunkY, dimension);
-			StoredTiles[6] = files.ReadChunk(CurrentFile, ChunkX-1, ChunkY-1, dimension);
+			synchronized(StoredTiles) {
+				files.WriteChunk(CurrentFile, ChunkX+2, ChunkY+1, StoredTiles[2], dimension);
+				files.WriteChunk(CurrentFile, ChunkX+2, ChunkY, StoredTiles[5], dimension);
+				files.WriteChunk(CurrentFile, ChunkX+2, ChunkY-1, StoredTiles[8], dimension);
+				StoredTiles[2] = StoredTiles[1];
+				StoredTiles[5] = StoredTiles[4];
+				StoredTiles[8] = StoredTiles[7];
+				StoredTiles[1] = StoredTiles[0];
+				StoredTiles[4] = StoredTiles[3];
+				StoredTiles[7] = StoredTiles[6];
+				StoredTiles[0] = files.ReadChunk(CurrentFile, ChunkX-1, ChunkY+1, dimension);
+				StoredTiles[3] = files.ReadChunk(CurrentFile, ChunkX-1, ChunkY, dimension);
+				StoredTiles[6] = files.ReadChunk(CurrentFile, ChunkX-1, ChunkY-1, dimension);
+			}
 			processhandler.reload = true;
 		}
 		else if (TileX > 15) {
@@ -545,23 +574,25 @@ public class Main_Game extends Canvas implements Runnable{
 			lightLevels[4] = lightLevels[5];
 			lightLevels[7] = lightLevels[8];
 			daytimecycle.removeLightSources();
-			files.WriteChunk(CurrentFile, ChunkX-2, ChunkY+1, StoredTiles[0], dimension);
-			files.WriteChunk(CurrentFile, ChunkX-2, ChunkY, StoredTiles[3], dimension);
-			files.WriteChunk(CurrentFile, ChunkX-2, ChunkY-1, StoredTiles[6], dimension);
-			StoredTiles[0] = StoredTiles[1];
-			StoredTiles[3] = StoredTiles[4];
-			StoredTiles[6] = StoredTiles[7];
-			StoredTiles[1] = StoredTiles[2];
-			StoredTiles[4] = StoredTiles[5];
-			StoredTiles[7] = StoredTiles[8];
-			StoredTiles[2] = files.ReadChunk(CurrentFile, ChunkX+1, ChunkY+1, dimension);
-			StoredTiles[5] = files.ReadChunk(CurrentFile, ChunkX+1, ChunkY, dimension);
-			StoredTiles[8] = files.ReadChunk(CurrentFile, ChunkX+1, ChunkY-1, dimension);
+			synchronized(StoredTiles) {
+				files.WriteChunk(CurrentFile, ChunkX-2, ChunkY+1, StoredTiles[0], dimension);
+				files.WriteChunk(CurrentFile, ChunkX-2, ChunkY, StoredTiles[3], dimension);
+				files.WriteChunk(CurrentFile, ChunkX-2, ChunkY-1, StoredTiles[6], dimension);
+				StoredTiles[0] = StoredTiles[1];
+				StoredTiles[3] = StoredTiles[4];
+				StoredTiles[6] = StoredTiles[7];
+				StoredTiles[1] = StoredTiles[2];
+				StoredTiles[4] = StoredTiles[5];
+				StoredTiles[7] = StoredTiles[8];
+				StoredTiles[2] = files.ReadChunk(CurrentFile, ChunkX+1, ChunkY+1, dimension);
+				StoredTiles[5] = files.ReadChunk(CurrentFile, ChunkX+1, ChunkY, dimension);
+				StoredTiles[8] = files.ReadChunk(CurrentFile, ChunkX+1, ChunkY-1, dimension);
+			}
 			processhandler.reload = true;
 		}
 	}
 
-	private void showMessages()
+	private synchronized void showMessages()
 	{
 		for (int i = 0; i < messageString.size(); i++)
 		{
@@ -678,6 +709,7 @@ public class Main_Game extends Canvas implements Runnable{
 		handler.render(g);
 
 		if (AdaptState == State.InWorld) {
+
 			processhandler.render(g);
 			if (Paused == false) {
 				PositionHandler(); //This is not in the tick() method since being in the tick() method caused rendering issues and flashes related to the multi-threading.
@@ -689,18 +721,18 @@ public class Main_Game extends Canvas implements Runnable{
 		}
 		//Light.render(g); //Use this light class to make small lights once the day/night cycle is introduced
 		renderMessages(g);
-		
+
 		//This makes a light source in the corner to represent a sun
-//		Graphics2D g2d = (Graphics2D) g;
-//		Point2D center = new Point2D.Double(Main_Game.WIDTH, 0);
-//	     float radius = 1000;
-//	     float[] dist = {0.02f, 0.8f};
-//	     Color[] colors = {new Color(150, 150, 220), new Color(0,0,0,0)};
-//	     RadialGradientPaint p =
-//	         new RadialGradientPaint(center, radius, dist, colors);
-//	    g2d.setPaint(p);
-//	    g2d.fillRect((int) (center.getX()-radius), (int) (center.getY()-radius), (int) (radius*4), (int) (radius*4));
-		
+		//		Graphics2D g2d = (Graphics2D) g;
+		//		Point2D center = new Point2D.Double(Main_Game.WIDTH, 0);
+		//	     float radius = 1000;
+		//	     float[] dist = {0.02f, 0.8f};
+		//	     Color[] colors = {new Color(150, 150, 220), new Color(0,0,0,0)};
+		//	     RadialGradientPaint p =
+		//	         new RadialGradientPaint(center, radius, dist, colors);
+		//	    g2d.setPaint(p);
+		//	    g2d.fillRect((int) (center.getX()-radius), (int) (center.getY()-radius), (int) (radius*4), (int) (radius*4));
+
 		g.dispose();
 		bs.show();
 		rendering = false;
@@ -721,7 +753,7 @@ public class Main_Game extends Canvas implements Runnable{
 	public static int randomNum(int lowerBound, int upperBound) {
 		return (int) Math.floor(Math.random() * (upperBound - lowerBound + 1) + lowerBound);
 	}
-	
+
 	public static void main(String args[]) {
 		System.setProperty("sun.awt.noerasebackground", "True");
 		System.setProperty("sun.java2d.opengl", "True");

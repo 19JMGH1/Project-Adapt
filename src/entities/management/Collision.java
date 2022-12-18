@@ -2,6 +2,8 @@ package entities.management;
 import java.lang.Math;
 
 import core.Main_Game;
+import core.Main_Game.Dimensions;
+import tiles.SurfaceTileIDs;
 
 public class Collision {
 
@@ -12,7 +14,7 @@ public class Collision {
 		this.game = game;
 	}
 
-	public boolean checkX(int X, int Y, int tileX, int tileY, int chunkX, int chunkY, int velX)
+	public boolean checkX(int X, int Y, int tileX, int tileY, int chunkX, int chunkY, int velX, boolean inBoat) //The inBoat parameter controls if we are checking collision for entities in boats or out of boats.
 	{
 		if (chunkY > 2 || chunkY < 0) {
 			return false;
@@ -35,16 +37,16 @@ public class Collision {
 				{
 					if (tileX == 15)
 					{
-						if (checkTile(0, tileY, chunkX+1, chunkY))
+						if (checkTile(0, tileY, chunkX+1, chunkY, inBoat))
 							return false;
-						if (checkTile(0, tileY+1, chunkX+1, chunkY))
+						if (checkTile(0, tileY+1, chunkX+1, chunkY, inBoat))
 							return false;
 					}
 					else
 					{
-						if (checkTile(tileX+1, tileY, chunkX, chunkY))
+						if (checkTile(tileX+1, tileY, chunkX, chunkY, inBoat))
 							return false;
-						if (checkTile(tileX+1, tileY+1, chunkX, chunkY))
+						if (checkTile(tileX+1, tileY+1, chunkX, chunkY, inBoat))
 							return false;
 					}
 				}
@@ -52,12 +54,12 @@ public class Collision {
 				{
 					if (tileX == 15)
 					{
-						if (checkTile(0, tileY, chunkX+1, chunkY))
+						if (checkTile(0, tileY, chunkX+1, chunkY, inBoat))
 							return false;
 					}
 					else
 					{
-						if (checkTile(tileX+1, tileY, chunkX, chunkY))
+						if (checkTile(tileX+1, tileY, chunkX, chunkY, inBoat))
 							return false;
 					}
 				}
@@ -71,16 +73,16 @@ public class Collision {
 				{
 					if (tileX == 0)
 					{
-						if (checkTile(15, tileY, chunkX-1, chunkY))
+						if (checkTile(15, tileY, chunkX-1, chunkY, inBoat))
 							return false;
-						if (checkTile(15, tileY+1, chunkX-1, chunkY))
+						if (checkTile(15, tileY+1, chunkX-1, chunkY, inBoat))
 							return false;
 					}
 					else
 					{
-						if (checkTile(tileX-1, tileY, chunkX, chunkY))
+						if (checkTile(tileX-1, tileY, chunkX, chunkY, inBoat))
 							return false;
-						if (checkTile(tileX-1, tileY+1, chunkX, chunkY))
+						if (checkTile(tileX-1, tileY+1, chunkX, chunkY, inBoat))
 							return false;
 					}
 				}
@@ -88,12 +90,12 @@ public class Collision {
 				{
 					if (tileX == 0)
 					{
-						if (checkTile(15, tileY, chunkX-1, chunkY))
+						if (checkTile(15, tileY, chunkX-1, chunkY, inBoat))
 							return false;
 					}
 					else
 					{
-						if (checkTile(tileX-1, tileY, chunkX, chunkY))
+						if (checkTile(tileX-1, tileY, chunkX, chunkY, inBoat))
 							return false;
 					}
 				}
@@ -102,7 +104,7 @@ public class Collision {
 		return true;
 	}
 
-	public boolean checkY(int X, int Y, int tileX, int tileY, int chunkX, int chunkY, int velY)
+	public boolean checkY(int X, int Y, int tileX, int tileY, int chunkX, int chunkY, int velY, boolean inBoat) //The inBoat parameter controls if we are checking collision for entities in boats or out of boats.
 	{
 		if (velY == 0)
 		{
@@ -119,16 +121,16 @@ public class Collision {
 				{
 					if (tileY == 0)
 					{
-						if (checkTile(tileX, -15, chunkX, chunkY-1))
+						if (checkTile(tileX, -15, chunkX, chunkY-1, inBoat))
 							return false;
-						if (checkTile(tileX+1, -15, chunkX, chunkY-1))
+						if (checkTile(tileX+1, -15, chunkX, chunkY-1, inBoat))
 							return false;
 					}
 					else
 					{
-						if (checkTile(tileX, tileY+1, chunkX, chunkY))
+						if (checkTile(tileX, tileY+1, chunkX, chunkY, inBoat))
 							return false;
-						if (checkTile(tileX+1, tileY+1, chunkX, chunkY))
+						if (checkTile(tileX+1, tileY+1, chunkX, chunkY, inBoat))
 							return false;
 					}
 				}
@@ -136,12 +138,12 @@ public class Collision {
 				{
 					if (tileY == 0)
 					{
-						if (checkTile(tileX, -15, chunkX, chunkY-1))
+						if (checkTile(tileX, -15, chunkX, chunkY-1, inBoat))
 							return false;
 					}
 					else
 					{
-						if (checkTile(tileX, tileY+1, chunkX, chunkY))
+						if (checkTile(tileX, tileY+1, chunkX, chunkY, inBoat))
 							return false;
 					}
 				}
@@ -154,16 +156,16 @@ public class Collision {
 				{
 					if (tileY == -15)
 					{
-						if (checkTile(tileX, 0, chunkX, chunkY+1))
+						if (checkTile(tileX, 0, chunkX, chunkY+1, inBoat))
 							return false;
-						if (checkTile(tileX+1, 0, chunkX, chunkY+1))
+						if (checkTile(tileX+1, 0, chunkX, chunkY+1, inBoat))
 							return false;
 					}
 					else
 					{
-						if (checkTile(tileX, tileY-1, chunkX, chunkY))
+						if (checkTile(tileX, tileY-1, chunkX, chunkY, inBoat))
 							return false;
-						if (checkTile(tileX+1, tileY-1, chunkX, chunkY))
+						if (checkTile(tileX+1, tileY-1, chunkX, chunkY, inBoat))
 							return false;
 					}
 				}
@@ -171,12 +173,12 @@ public class Collision {
 				{
 					if (tileY == -15)
 					{
-						if (checkTile(tileX, 0, chunkX, chunkY+1))
+						if (checkTile(tileX, 0, chunkX, chunkY+1, inBoat))
 							return false;
 					}
 					else
 					{
-						if (checkTile(tileX, tileY-1, chunkX, chunkY))
+						if (checkTile(tileX, tileY-1, chunkX, chunkY, inBoat))
 							return false;
 					}
 				}
@@ -184,7 +186,7 @@ public class Collision {
 		return true;
 	}
 
-	private boolean checkTile(int tileX, int tileY, int chunkX, int chunkY) 
+	private boolean checkTile(int tileX, int tileY, int chunkX, int chunkY, boolean inBoat) //The inBoat parameter controls if we are checking collision for entities in boats or out of boats.
 	{
 		if (tileX == 16)
 		{
@@ -209,24 +211,24 @@ public class Collision {
 		if (chunkX*1+chunkY*3 >= 9 || chunkX*1+chunkY*3 <= 0) {
 			return false;
 		}
-		if (validTile(game.StoredTiles[chunkX*1+chunkY*3][Math.abs(tileX)][Math.abs(tileY)][0]))
+		if (validTile(game.StoredTiles[chunkX*1+chunkY*3][Math.abs(tileX)][Math.abs(tileY)][0], inBoat))
 		{
 			return false;
 		}
 		return true;
 	}
 
-	private boolean validTile(short tile)
+	private boolean validTile(short tile, boolean inBoat) //The inBoat parameter controls if we are checking collision for entities in boats or out of boats.
 	{
-		if (game.dimension == 0) {
-			if ((tile == 1)||(tile == 3)||(tile == 4)||(tile == 5)||(tile == 6)||(tile == 9)||(tile == 12)||(tile == 14)||(tile == 15)||(tile == 16)||(tile == 18)||(tile == 19)
-					||(tile == 20)||(tile == 21))
+		//System.out.println(inBoat);
+		if (game.dimension == Dimensions.surface) {
+			if ((SurfaceTileIDs.values()[tile].isCollides() && !inBoat) || (inBoat && (SurfaceTileIDs.values()[tile] != SurfaceTileIDs.Water)))
 				//The above if statement contains all the numbers corresponding to tiles that need collision detection on the surface.
 			{
 				return false;
 			}
 		}
-		else if (game.dimension == 1) {
+		else if (game.dimension == Dimensions.coves) {
 			if ((tile == 1)||(tile == 2)||(tile == 3)||(tile == 4)||(tile == 5)||(tile == 6)||(tile == 7)) {
 				//The above if statement contains all the numbers corresponding to tiles that need collision detection in the cove.
 				return false;

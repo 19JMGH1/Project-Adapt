@@ -5,6 +5,7 @@ import java.awt.Graphics;
 import java.util.LinkedList;
 
 import core.Main_Game;
+import core.Main_Game.Dimensions;
 
 public class DayTimeCycle {
 
@@ -19,7 +20,7 @@ public class DayTimeCycle {
 	private final int darkSpeed = 5; //how quickly the darkness if night comes through (lower numbers mean quicker time)
 	private final int maxDarkness = 100; //How dark does it get at night (value can be between 1 and 150)
 	public int time = 0; //Determines the current time
-	public int transparency = 0; //Holds the value for how transparent the box of darkness is
+	public int transparency = 0; //Holds the value for how transparent the box of darkness is. 0 means its day, higher numbers mean it's darker.
 
 	public DayTimeCycle(Main_Game game) {
 		this.game = game;
@@ -61,13 +62,7 @@ public class DayTimeCycle {
 	 */
 	public void clearLights() {
 		lightSources.clear();
-		for (int k = 0; k < 9; k++) {
-			for (int j = 0; j < 16; j++) {
-				for (int i = 0; i < 16; i++) {
-					game.lightLevels[k][i][j] = 0;
-				}
-			}
-		}
+		clearLightLevels();
 	}
 
 	/**
@@ -99,8 +94,8 @@ public class DayTimeCycle {
 
 		time++;
 		transparency = getTransparency(time);
-		if (transparency >= maxDarkness) {
-			transparency = maxDarkness;
+		if (transparency >= getMaxDarkness()) {
+			transparency = getMaxDarkness();
 		}
 		//Adjusts the color for each light level
 		for (int i = 0; i < lightLevelsColors.length; i++) {
@@ -119,15 +114,15 @@ public class DayTimeCycle {
 				this.time = 0;
 				return 0;
 			}
-			return (maxDarkness-(time-Main_Game.Target_TPS*dayTime*2)/darkSpeed);
+			return (getMaxDarkness()-(time-Main_Game.Target_TPS*dayTime*2)/darkSpeed);
 		}
-		else if (transparency >= maxDarkness) {
-			return maxDarkness;
+		else if (transparency >= getMaxDarkness()) {
+			return getMaxDarkness();
 		}
 		else if (time > Main_Game.Target_TPS*dayTime) {
 			return ((time-Main_Game.Target_TPS*dayTime)/darkSpeed);
 		}
-		return (maxDarkness - time);
+		return (getMaxDarkness() - time);
 	}
 
 	/**
@@ -246,7 +241,7 @@ public class DayTimeCycle {
 		int x = (Main_Game.WIDTH/2)-game.CharacterWidth/2;
 		int y = (Main_Game.HEIGHT/2)-game.CharacterHeight/2;
 
-		if (game.dimension == 0) { //Lower light levels only appear in the surface dimension
+		if (game.dimension == Dimensions.surface) { //Lower light levels only appear in the surface dimension
 			for (int k = 0; k < 9; k++) {
 				int relativeChunkX = k%3;
 				int relativeChunkY = k/3;
@@ -259,6 +254,10 @@ public class DayTimeCycle {
 			}
 		}
 		//g2d.fill(darkness);
+	}
+
+	public int getMaxDarkness() {
+		return maxDarkness;
 	}
 
 }

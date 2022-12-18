@@ -132,6 +132,10 @@ public class ProcessHandler implements Runnable {
 					}
 				}
 			}
+			if (game.curentlyOpenedContainer != null) {
+				System.out.println("Testing");
+				game.curentlyOpenedContainer = game.processhandler.getProcessor(game.curentlyOpenedContainer.containerID, game.StoredTiles[4+((game.curentlyOpenedContainer.loc[0]-game.ChunkX)+(game.ChunkY-game.curentlyOpenedContainer.loc[1])*3)][game.curentlyOpenedContainer.loc[2]][Math.abs(game.curentlyOpenedContainer.loc[3])][1]);
+			}
 			DayTimeCycle.reloadNeeded = true;
 			reloading = false;
 		}

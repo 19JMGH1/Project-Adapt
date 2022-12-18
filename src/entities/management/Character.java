@@ -16,6 +16,7 @@ public class Character extends EntityObject{
 	private Handler handler;
 
 	private BufferedImage CharacterSprite;
+	private BufferedImage CharacterBoatSprite;
 
 	//this integer controls which sprite on the sheet is being used.
 	//each number reads the sprite left to right and at the end of the row, goes to the next column and continues
@@ -32,12 +33,13 @@ public class Character extends EntityObject{
 		super(x, y, id);
 		this.game = game;
 		this.handler = handler;
-		
+
 		game.CharacterWidth = Main_Game.WIDTH/20;
 		game.CharacterHeight = (game.CharacterWidth*(21/17));
 
 		try {
 			CharacterSprite = ImageIO.read(getClass().getResourceAsStream("/Character_Sprite_Sheet.png"));
+			CharacterBoatSprite = ImageIO.read(getClass().getResourceAsStream("/Character_Boat.png"));
 		}catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -46,22 +48,92 @@ public class Character extends EntityObject{
 	//The sprite can go from 0 to 27 since we have 28 sprites
 	public void ChangeSprite(int Sprite) {
 		//System.out.println(Sprite);
-		if (Sprite != CurrentSprite) {
-			CurrentSprite = Sprite;
-			int SpriteRow = 0;
-			int SpriteColumn;
+		if (!game.inBoat) {
+			if (Sprite != CurrentSprite) {
+				CurrentSprite = Sprite;
+				int SpriteRow = 0;
+				int SpriteColumn;
 
-			while (Sprite > 5) {
-				SpriteRow++;
-				Sprite-=6;
+				while (Sprite > 5) {
+					SpriteRow++;
+					Sprite-=6;
+				}
+				SpriteColumn = Sprite;
+
+				SpriteSheetLocX = SpriteSheetWidth*SpriteColumn;
+				SpriteSheetLocY = SpriteSheetHeight*SpriteRow;
 			}
-			SpriteColumn = Sprite;
-
-			SpriteSheetLocX = SpriteSheetWidth*SpriteColumn;
-			SpriteSheetLocY = SpriteSheetHeight*SpriteRow;
+		}
+		else {
+				CurrentSprite = Sprite;
+				int SpriteRow = 0;
+				int SpriteColumn = 0;
+				if (Sprite == 0) {
+					if (Timer >= 1 && Timer <= 15) {
+						SpriteColumn = 3;
+					}
+					else if (Timer >= 16 && Timer <= 30) {
+						SpriteColumn = 0;
+						SpriteRow = 1;
+					}
+					else if (Timer >= 31 && Timer <= 45){
+						SpriteColumn = 1;
+						SpriteRow = 1;
+					}
+					else if (Timer >= 46 && Timer <= 60) {
+						SpriteColumn = 0;
+						SpriteRow = 1;
+					}
+				}
+				else {
+					if (Sprite == 1) { //Moving up boat sprites
+						Sprite = 0;
+					}
+					else if (Sprite == 2 || Sprite == 4) {
+						Sprite = 1;
+					}
+					else if (Sprite == 3) {
+						Sprite = 2;
+					}
+					else if (Sprite == 5) { //Moving down boat sprites
+						Sprite = 3;
+					}
+					else if (Sprite == 6 || Sprite == 8) {
+						Sprite = 4;
+					}
+					else if (Sprite == 7) {
+						Sprite = 5;
+					}
+					else if (Sprite == 9 || Sprite == 10 || Sprite == 11) { //Moving left boat sprites
+						Sprite = 6;
+					}
+					else if (Sprite == 12 || Sprite == 13 || Sprite == 17 || Sprite == 18) {
+						Sprite = 7;
+					}
+					else if (Sprite == 14 || Sprite == 15 || Sprite == 16) {
+						Sprite = 8;
+					}
+					else if (Sprite == 19 || Sprite == 20 || Sprite == 21) { //Moving right boat sprites
+						Sprite = 9;
+					}
+					else if (Sprite == 22 || Sprite == 23 || Sprite == 27 || Sprite == 28) {
+						Sprite = 10;
+					}
+					else if (Sprite == 24 || Sprite == 25 || Sprite == 26) {
+						Sprite = 11;
+					}
+					
+					while (Sprite > 3) {
+						SpriteRow++;
+						Sprite-=4;
+					}
+					SpriteColumn = Sprite;
+				}
+				SpriteSheetLocX = SpriteSheetWidth*SpriteColumn;
+				SpriteSheetLocY = SpriteSheetHeight*SpriteRow;
 		}
 	}
-	
+
 	public void ControlSprite() {
 		if (Timer >= 60) {
 			Timer = 1;
@@ -183,8 +255,8 @@ public class Character extends EntityObject{
 			}
 		}
 		else {
+			Timer++;
 			ChangeSprite(0);
-			Timer = 1;
 		}
 	}
 
@@ -208,7 +280,12 @@ public class Character extends EntityObject{
 
 	public void render(Graphics g) {
 		//((Graphics2D) g).setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, (float) 0.7)); //Here is how you make an image transparent
-		g.drawImage(CharacterSprite, x, y, x+game.CharacterWidth, y+game.CharacterHeight, SpriteSheetLocX, SpriteSheetLocY, SpriteSheetLocX+SpriteSheetWidth, SpriteSheetLocY+SpriteSheetHeight, null);
+		if (!game.inBoat) {
+			g.drawImage(CharacterSprite, x, y, x+game.CharacterWidth, y+game.CharacterHeight, SpriteSheetLocX, SpriteSheetLocY, SpriteSheetLocX+SpriteSheetWidth, SpriteSheetLocY+SpriteSheetHeight, null);
+		}
+		else {
+			g.drawImage(CharacterBoatSprite, x, y, x+game.CharacterWidth, y+game.CharacterHeight, SpriteSheetLocX, SpriteSheetLocY, SpriteSheetLocX+SpriteSheetWidth, SpriteSheetLocY+SpriteSheetHeight, null);
+		}
 		//g.fillRect(x+game.CharacterWidth/2, y+game.CharacterHeight/2, 2, 2);
 		//((Graphics2D) g).setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, (float) 1));
 		//g.fillRect(game.characterX+game.CharacterWidth/5, game.characterY+game.CharacterHeight/5, game.TileWidth/3, game.TileHeight/3); //Testing where the space is for items to fly towards the player after collection

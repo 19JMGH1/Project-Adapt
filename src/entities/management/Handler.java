@@ -4,6 +4,7 @@ import java.awt.Graphics;
 import java.util.LinkedList;
 
 import core.Main_Game;
+import core.Main_Game.Dimensions;
 import entities.Creature;
 import entities.EntityTypes;
 import tiles.BasicTiles;
@@ -59,10 +60,10 @@ public class Handler {
 		for (int i = 0; i < this.objects.size(); i++) {
 			EntityObject tempObject = this.objects.get(i);
 			if (tempObject.getId() == EntityTypes.Tiles) {
-				if (game.dimension == 0) {
+				if (game.dimension == Dimensions.surface) {
 					newTiles = new BasicTiles(0, 0, EntityTypes.Tiles, game, this);
 				}
-				else if (game.dimension == 1) {
+				else if (game.dimension == Dimensions.coves) {
 					newTiles = new MiningTiles(0, 0, EntityTypes.Tiles, game, this);
 				}
 				this.objects.set(i, newTiles);

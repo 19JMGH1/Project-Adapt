@@ -3,54 +3,49 @@ package processors.electronics.management;
 import java.util.Arrays;
 
 import core.Main_Game;
-import processors.management.ProcessorIDs;
 import processors.management.Processors;
 
 public abstract class Electronic extends Processors{ //The energy units that appear in the game will be Joules and Watts (Jules for power stored, watts for power transfer)
 
 	protected int powerStored; //How much power is currently stored in the electronic. This is always stored after the on/off boolean or if one doesn't exist, then its stored on the first line
-	protected int maxPower; //How much power is the maximum storage for the electronic.
-	protected short powerTransfer; //This variable stores how much power an electrical item can transfer per tick
 	protected boolean[] sendableDirections = {true, true, true, true}; //Up then down then left then right
 	protected boolean[] inputSides = {true, true, true, true}; //Both of these I/O sides go up, down, left, right
 	protected boolean[] outputSides = {true, true, true, true};
+	protected int energyPerTick = 0;
 
-	protected Electronic(Main_Game game, short id, ProcessorIDs containerID, boolean[][] validSlots, String fileName, byte neededValues, int chunkX, int chunkY, int tileX, int tileY, int maxPower, short powerTransfer) {
-		super(game, id, containerID, validSlots, fileName, neededValues, chunkX, chunkY, tileX, tileY); //Needed values does not count the current power stored.
+	protected Electronic(Main_Game game, short id, String fileName, int chunkX, int chunkY, int tileX, int tileY) {
+		super(game, id, fileName, chunkX, chunkY, tileX, tileY); //Needed values does not count the current power stored.
 		powerStored = 0;
-		this.maxPower = maxPower;
-		this.powerTransfer = powerTransfer;
+		energyPerTick = containerID.energyPerTick;
 	}
 
 	protected Electronic(String fileName) {
 		super(fileName);
+		energyPerTick = containerID.energyPerTick;
 	}
 
 	public void energyTransfer() {
-		if (powerTransfer > 0) {
+		if (containerID.powerTransfer > 0) {
 			for (int d = 0; d < ElectronicHandler.electronics.size(); d++) { //Loops through all the processors and if its electronic and if it's next to the current electronic, then transfer power
 				Electronic otherElectronic = ElectronicHandler.electronics.get(d);
 				if (otherElectronic.getContainerID().electronic) {
 					int[][] adjacents = getAdjacents();
 					for (int p = 0; p < 4; p++) {
 						if (sendableDirections[p]) {
-							//TODO redo this if statement
-							//if ((Arrays.equals(otherElectronic.getLoc(), adjacents[p]) && ((((otherElectronic.getContainerID().energyReceiver && (!otherElectronic.getContainerID().energyDonor)||(otherElectronic.getContainerID().energyReceiver))) && (containerID.energyDonor && !containerID.energyReceiver) || (containerID.energyDonor && containerID.energyReceiver && otherElectronic.getContainerID().energyDonor && otherElectronic.getContainerID().energyReceiver && ((otherElectronic.getPowerStored()/(otherElectronic.getMaxPower()+0.0)) < (powerStored/(maxPower+0.0)))))))) {
-							//if ((Arrays.equals(otherElectronic.getLoc(), adjacents[p]) && (otherElectronic.getContainerID().energyReceiver && getContainerID().energyDonor) && (((otherElectronic.getPowerStored()/(otherElectronic.getMaxPower()+0.0)) <= (powerStored/(maxPower+0.0)))||((getContainerID().energyDonor) && (!getContainerID().energyReceiver))||(otherElectronic.getContainerID().energyReceiver && !otherElectronic.getContainerID().energyDonor)))) {
 							if (checkTransferable(adjacents, p, otherElectronic)) {
-								if (otherElectronic.getPowerStored() <= otherElectronic.getMaxPower()-powerTransfer) {
-									if (powerStored <= powerTransfer) {
+								if (otherElectronic.getPowerStored() <= otherElectronic.getMaxPower()-containerID.powerTransfer) {
+									if (powerStored <= containerID.powerTransfer) {
 										otherElectronic.setPowerStored(otherElectronic.getPowerStored()+powerStored);
 										powerStored = 0;
 										otherElectronic.setSendableDirections(false, p);
 									}
-									else if (powerStored > powerTransfer) {
-										otherElectronic.setPowerStored(otherElectronic.getPowerStored()+powerTransfer);
-										powerStored -= powerTransfer;
+									else if (powerStored > containerID.powerTransfer) {
+										otherElectronic.setPowerStored(otherElectronic.getPowerStored()+containerID.powerTransfer);
+										powerStored -= containerID.powerTransfer;
 										otherElectronic.setSendableDirections(false, p);
 									}
 								}
-								else if (otherElectronic.getPowerStored() < otherElectronic.getMaxPower() && (powerStored >= powerTransfer)) {
+								else if (otherElectronic.getPowerStored() < otherElectronic.getMaxPower() && (powerStored >= containerID.powerTransfer)) {
 									int energyDifference = otherElectronic.getMaxPower()-otherElectronic.getPowerStored();
 									otherElectronic.setPowerStored(otherElectronic.getMaxPower());
 									powerStored -= energyDifference;
@@ -64,6 +59,28 @@ public abstract class Electronic extends Processors{ //The energy units that app
 					}
 				}
 			}
+		}
+		energyUse();
+	}
+
+	private void energyUse() {
+		if (getValues().length != 0) {
+			if (getValues()[0] == 1) {
+				if (powerStored >= energyPerTick) {
+					getValues()[1]--;
+					powerStored -= energyPerTick;
+				}
+			}
+		}
+	}
+	
+	protected void energyGen(int gen) {
+		if (getPowerStored() > (getMaxPower()+gen)) {
+			setPowerStored(getMaxPower());
+			setValues(0, (short) 0);
+		}
+		else {
+			setPowerStored(getPowerStored()-gen);
 		}
 	}
 
@@ -102,7 +119,7 @@ public abstract class Electronic extends Processors{ //The energy units that app
 						return true;
 					}
 					else if (otherElectronic.inputSides[i] && otherElectronic.outputSides[i]) {
-						if (((otherElectronic.powerStored)/(otherElectronic.maxPower+0.0)) < ((powerStored)/(maxPower+0.0))) {
+						if (((otherElectronic.powerStored)/(otherElectronic.containerID.baseMaxPower+0.0)) < ((powerStored)/(containerID.baseMaxPower+0.0))) {
 							return true;
 						}
 					}
@@ -117,11 +134,12 @@ public abstract class Electronic extends Processors{ //The energy units that app
 	}
 
 	public void setPowerStored(int newPower) {
+		//System.out.println(newPower);
 		powerStored = newPower;
 	}
 
 	public int getMaxPower() {
-		return maxPower;
+		return containerID.baseMaxPower;
 	}
 
 	public void setSendableDirections(boolean value, int p) {

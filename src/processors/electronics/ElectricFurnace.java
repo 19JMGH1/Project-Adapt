@@ -7,27 +7,15 @@ import core.lighting.DayTimeCycle;
 import core.lighting.Light;
 import processors.BlastFurnace;
 import processors.electronics.management.Electronic;
-import processors.management.ProcessorIDs;
 
 public class ElectricFurnace extends Electronic implements Light{
-
-	public static final boolean[][] validSlots ={{true, true, false, true, true},
-			{true, true, false, true, true},
-			{false, false, false, false, false},
-			{false, false, false, false, false},
-			{false, false, false, false, false}};
-	public static final byte neededValues = 2; //One for On/Off, one value for the flame burn time, another for the amount of time that the flame stays at its level
-	public static final int baseMaxPower = 30000;
-	public static final short powerTransfer = 200;
-	public static final short refineTickTimer = 300;
-	public static final short energyUsePerTick = 20;
-	public static final short energyPerOperation = Main_Game.FurnaceCookTime*energyUsePerTick;
+	
 	private static final byte lightLevelProduced = 8; //This is the light level that the furnace makes while running
 
 	public ElectricFurnace(Main_Game game, short id, int chunkX, int chunkY, int tileX, int tileY) {
-		super(game, id, ProcessorIDs.ElectricFurnace, validSlots, "/ElectricFurnace "+id+".txt", neededValues, chunkX, chunkY, tileX, tileY, baseMaxPower, powerTransfer);
+		super(game, id, "/ElectricFurnace "+id+".txt", chunkX, chunkY, tileX, tileY);
 		this.game = game;
-		for (int i = 0; i < neededValues; i++) {
+		for (int i = 0; i < containerID.neededValues; i++) {
 			getValues()[i] = 0;
 			outputSides[i] = false;
 			inputSides[i] = true;
@@ -38,11 +26,16 @@ public class ElectricFurnace extends Electronic implements Light{
 	public void tick() {
 		energyTransfer();
 		if (getValues()[0] == 1) {
-			if (powerStored >= energyUsePerTick) {
+			if (powerStored >= energyPerTick) {
 				getValues()[1]--;
-				powerStored -= energyUsePerTick;
+				powerStored -= energyPerTick;
 			}
-			if (getValues()[1] <= 0 && powerStored >= energyUsePerTick) {
+			else {
+				getValues()[0] = 0;
+				removeLight();
+				DayTimeCycle.reloadNeeded = true;
+			}
+			if (getValues()[1] <= 0 && powerStored >= energyPerTick) {
 				getValues()[1] = Main_Game.FurnaceCookTime;
 				boolean itemsToSmelt = BlastFurnace.smelt(this);
 				if (!itemsToSmelt) {

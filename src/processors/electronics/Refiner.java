@@ -3,28 +3,18 @@ package processors.electronics;
 import java.awt.Graphics;
 
 import core.Main_Game;
+import items.ItemIDs;
 import processors.electronics.management.Electronic;
-import processors.management.ProcessorIDs;
 
 public class Refiner extends Electronic{
 
-	public static final boolean[][] validSlots =	{{true, true, false, true, true},
-			{true, true, false, true, true},
-			{false, false, false, false, false},
-			{false, false, false, false, false},
-			{false, false, false, false, false}};
-	public static final byte neededValues = 2; //One for On/Off, another for the amount of time that the operation takes
-	public static final int baseMaxPower = 30000;
-	public static final short powerTransfer = 200;
 	public static final short refineTickTimer = 300;
-	public static final short energyUsePerTick = 20;
-	public static final short energyPerOperation = refineTickTimer*energyUsePerTick;
-
+	
 	private int tileAnimationCycle = 0;
 
 	public Refiner(Main_Game game, short id, int chunkX, int chunkY, int tileX, int tileY) {
-		super(game, id, ProcessorIDs.Refiner, validSlots, "/Refiner "+id+".txt", neededValues, chunkX, chunkY, tileX, tileY, baseMaxPower, powerTransfer);
-		for (int i = 0; i < neededValues; i++) {
+		super(game, id, "/Refiner "+id+".txt", chunkX, chunkY, tileX, tileY);
+		for (int i = 0; i < containerID.neededValues; i++) {
 			getValues()[i] = 0;
 		}
 		getValues()[1] = refineTickTimer;
@@ -50,11 +40,11 @@ public class Refiner extends Electronic{
 				tileAnimationCycle++;
 			}
 
-			if (powerStored >= energyUsePerTick) {
+			if (powerStored >= energyPerTick) {
 				getValues()[1]--;
-				powerStored -= energyUsePerTick;
+				powerStored -= energyPerTick;
 			}
-			if (getValues()[1] <= 0 && powerStored >= energyUsePerTick) {
+			if (getValues()[1] <= 0 && powerStored >= energyPerTick) {
 				getValues()[1] = refineTickTimer;
 				boolean itemsInput = false;
 				for (int j = 0; j < 2; j++) {
@@ -139,6 +129,32 @@ public class Refiner extends Electronic{
 								}
 							}
 						}
+						else if (inputSlot[0] == ItemIDs.Stone.ordinal()) {
+							itemsInput = true;
+							if (outputSlot[0] == 0 || outputSlot[0] == ItemIDs.SiliconDust.ordinal()) {
+								if (outputSlot[1] < Main_Game.maxStackSize && inputSlot[1] >= 1) {
+									inputSlot[1] -= 1;
+									if (inputSlot[1] == 0) {
+										inputSlot[0] = 0;
+									}
+									outputSlot[0] = (short) ItemIDs.SiliconDust.ordinal();
+									outputSlot[1]++;
+								}
+							}
+						}
+						else if (inputSlot[0] == ItemIDs.Meat.ordinal()) {
+							itemsInput = true;
+							if (outputSlot[0] == 0 || outputSlot[0] == ItemIDs.PhosphorusDust.ordinal()) {
+								if (outputSlot[1] < Main_Game.maxStackSize && inputSlot[1] >= 1) {
+									inputSlot[1] -= 1;
+									if (inputSlot[1] == 0) {
+										inputSlot[0] = 0;
+									}
+									outputSlot[0] = (short) ItemIDs.PhosphorusDust.ordinal();
+									outputSlot[1]++;
+								}
+							}
+						}
 					}
 				}
 				if (!itemsInput) {
@@ -157,13 +173,12 @@ public class Refiner extends Electronic{
 		if (getValues()[0] == 1) {
 			int x = (Main_Game.WIDTH/2)-game.CharacterWidth/2;
 			int y = (Main_Game.HEIGHT/2)-game.CharacterHeight/2;
-			if ((tileAnimationCycle >= 1 && tileAnimationCycle < 15)&&(powerStored >= 20)) {
-				g.drawImage(game.tileanimations.animationImage, x+(game.TileWidth*loc[2])-(game.TileX*game.TileWidth)-(game.TileWidth*16)-game.x+((loc[0]+1-game.ChunkX)*game.TileWidth*16), y+(game.TileHeight*loc[3])+(game.TileY*game.TileHeight)-(game.TileHeight*16)+game.y+((game.ChunkY+1-loc[1])*game.TileHeight*16), x+(game.TileWidth*(loc[2]+1))-(game.TileX*game.TileWidth)-(game.TileWidth*16)-game.x+((loc[0]+1-game.ChunkX)*game.TileWidth*16), y+(game.TileHeight*(loc[3]+1))+(game.TileY*game.TileHeight)-(game.TileHeight*16)+game.y+((game.ChunkY+1-loc[1])*game.TileHeight*16), 320, 0, 640, 320, null);
+			if ((tileAnimationCycle >= 1 && tileAnimationCycle < 15)&&(powerStored >= energyPerTick)) {
+				g.drawImage(game.tileanimations.animationImage, x+(game.TileWidth*loc[2])-(game.TileX*game.TileWidth)-(game.TileWidth*16)-game.x+((loc[0]+1-game.ChunkX)*game.TileWidth*16), y+(game.TileHeight*loc[3])+(game.TileY*game.TileHeight)-(game.TileHeight*16)+game.y+((game.ChunkY+1-loc[1])*game.TileHeight*16), x+(game.TileWidth*(loc[2]+1))-(game.TileX*game.TileWidth)-(game.TileWidth*16)-game.x+((loc[0]+1-game.ChunkX)*game.TileWidth*16), y+(game.TileHeight*(loc[3]+1))+(game.TileY*game.TileHeight)-(game.TileHeight*16)+game.y+((game.ChunkY+1-loc[1])*game.TileHeight*16), Main_Game.tileAditionsSpriteDims, 0, Main_Game.tileAditionsSpriteDims*2, Main_Game.tileAditionsSpriteDims, null);
 			}
-			else if ((tileAnimationCycle >= 15)&&(powerStored >= 20)) {
-				g.drawImage(game.tileanimations.animationImage, x+(game.TileWidth*loc[2])-(game.TileX*game.TileWidth)-(game.TileWidth*16)-game.x+((loc[0]+1-game.ChunkX)*game.TileWidth*16), y+(game.TileHeight*loc[3])+(game.TileY*game.TileHeight)-(game.TileHeight*16)+game.y+((game.ChunkY+1-loc[1])*game.TileHeight*16), x+(game.TileWidth*(loc[2]+1))-(game.TileX*game.TileWidth)-(game.TileWidth*16)-game.x+((loc[0]+1-game.ChunkX)*game.TileWidth*16), y+(game.TileHeight*(loc[3]+1))+(game.TileY*game.TileHeight)-(game.TileHeight*16)+game.y+((game.ChunkY+1-loc[1])*game.TileHeight*16), 0, 320, 320, 640, null);
+			else if ((tileAnimationCycle >= 15)&&(powerStored >= energyPerTick)) {
+				g.drawImage(game.tileanimations.animationImage, x+(game.TileWidth*loc[2])-(game.TileX*game.TileWidth)-(game.TileWidth*16)-game.x+((loc[0]+1-game.ChunkX)*game.TileWidth*16), y+(game.TileHeight*loc[3])+(game.TileY*game.TileHeight)-(game.TileHeight*16)+game.y+((game.ChunkY+1-loc[1])*game.TileHeight*16), x+(game.TileWidth*(loc[2]+1))-(game.TileX*game.TileWidth)-(game.TileWidth*16)-game.x+((loc[0]+1-game.ChunkX)*game.TileWidth*16), y+(game.TileHeight*(loc[3]+1))+(game.TileY*game.TileHeight)-(game.TileHeight*16)+game.y+((game.ChunkY+1-loc[1])*game.TileHeight*16), Main_Game.tileAditionsSpriteDims*2, 0, Main_Game.tileAditionsSpriteDims*3, Main_Game.tileAditionsSpriteDims, null);
 			}
 		}
 	}
-
 }

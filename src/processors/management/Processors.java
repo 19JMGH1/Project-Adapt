@@ -12,23 +12,21 @@ public abstract class Processors {
 	public abstract void tick();
 	public abstract void render(Graphics g);
 
-	transient public Main_Game game;
+	transient public Main_Game game; //Transient stops this variable from being stored in the json for the processor
 
 	protected ProcessorIDs containerID; //The id that tells the type of container
 	protected short ID; //The id that makes the container unique from the others of its kind
 	protected String fileName;
-	protected int[] loc = new int[4]; //Stores the tile Location in the order of (chunkX, chunkY, tileX, tileY
+	protected int[] loc = new int[4]; //Stores the tile Location in the order of (chunkX, chunkY, tileX, tileY)
 	protected short[] values; //Used to store various values that the container needs, the first value is always the On/Off state of the container
-	protected boolean[][] validSlots; //Which slots the container actually uses
 	protected short[][][] containerSlots = new short[5][5][2]; //The slots of the container
 
-	protected Processors(Main_Game game, short id, ProcessorIDs containerID, boolean[][] validSlots, String fileName, byte neededValues, int chunkX, int chunkY, int tileX, int tileY) {
+	protected Processors(Main_Game game, short id, String fileName, int chunkX, int chunkY, int tileX, int tileY) {
 		this.game = game;
 		setID(id);
-		this.setContainerID(containerID);
-		this.setValidSlots(validSlots);
+		this.setContainerID(ProcessorIDs.valueOf(this.getClass().getSimpleName()));
 		this.setFileName(fileName);
-		setValues(new short[neededValues]);
+		setValues(new short[containerID.neededValues]);
 		loc[0] = chunkX;
 		loc[1] = chunkY;
 		loc[2] = tileX;
@@ -108,11 +106,7 @@ public abstract class Processors {
 	}
 
 	public boolean[][] getValidSlots() {
-		return validSlots;
-	}
-
-	public void setValidSlots(boolean[][] validSlots) {
-		this.validSlots = validSlots;
+		return containerID.validSlots;
 	}
 
 	public short[] getValues() {
@@ -120,7 +114,9 @@ public abstract class Processors {
 	}
 	
 	public void setValues(int i, short value) {
-		this.values[i] = value;
+		if (this.values.length-1 >= i) { //There is a -1 after length since length is the number of things in the array while i is an index that starts at 0.
+			this.values[i] = value;
+		}
 	}
 	
 	public void setValues(short[] values) {

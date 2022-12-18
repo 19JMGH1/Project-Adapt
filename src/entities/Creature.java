@@ -20,12 +20,13 @@ public abstract class Creature {
 	protected int x, y, chunkX, chunkY, tileX, tileY; //Stores the position of the creature
 	protected int velX = 0, velY = 0; //velocities that the creature is moving at.
 	public int xPos, yPos; //Stores where on the screen to render the Creature using the above position values.
+	protected boolean inBoat = false;
 	public int width, height; //Stores the size of the creature when it appears on the screen
 	protected int spriteSheetResolution[] = new int[2]; //Stores the resolution of the sprite sheet
 	protected double aspectRatio; //Is the x resolution divided by the y resolution
 	protected BufferedImage body = null; //Buffered image for the body of the creature
 	protected BufferedImage[] limbs = null; //Buffered image array for all of the limbs of the creature
-	protected int[][] limbLocations = null;
+	protected int[][] limbLocations = null; //Stores the number of pixels from the left and how many pixels from the top to draw each limb
 	protected int numOfLimbs = 0;
 	protected Point[] rotationPoints = null; //The relative points in space that the creatures limbs rotate about
 	protected int rotations = 0; //int that stores the angle of the limbs of the creature
@@ -66,7 +67,7 @@ public abstract class Creature {
 		this.width = (int) (game.TileWidth*sizeRelativeToTiles);
 		height = (int) (this.width/aspectRatio);
 		for (int i = 0; i < numOfLimbs; i++) {
-			rotationPoints[i] = new Point((int) (x+limbLocations[i][0]*width/spriteWidthHeight[0]), y+limbLocations[i][1]*height/spriteWidthHeight[1]);
+			rotationPoints[i] = new Point((int) (x+(limbLocations[i][0]+0.5)*width/spriteWidthHeight[0]), (int) (y+(limbLocations[i][1]+0.5)*height/spriteWidthHeight[1]));
 		}
 		BufferedImage SpriteSheet = null;
 		try {
@@ -87,6 +88,7 @@ public abstract class Creature {
 	}
 	
 	public void tick() {
+		
 		this.width = (int) (game.TileWidth*sizeRelativeToTiles);
 		height = (int) (this.width/aspectRatio);
 		if (chunkX-game.ChunkX+1 > 2 || game.ChunkY-chunkY+1 > 2 || chunkX-game.ChunkX+1 < 0 || game.ChunkY-chunkY+1 < 0) {
@@ -149,12 +151,12 @@ public abstract class Creature {
 		//System.out.println(xPos+", "+yPos);
 		if (facingRight) {
 			for (int i = 0; i < numOfLimbs; i++) {
-				rotationPoints[i] = new Point((int) (xPos+width-limbLocations[i][0]*width/spriteWidthHeight[0]), yPos+limbLocations[i][1]*height/spriteWidthHeight[1]);
+				rotationPoints[i] = new Point((int) (xPos+width-(limbLocations[i][0]+0.5)*width/spriteWidthHeight[0]), (int) (yPos+limbLocations[i][1]*height/spriteWidthHeight[1]));
 			}
 		}
 		else {
 			for (int i = 0; i < numOfLimbs; i++) {
-				rotationPoints[i] = new Point((int) (xPos+limbLocations[i][0]*width/spriteWidthHeight[0]), yPos+limbLocations[i][1]*height/spriteWidthHeight[1]);
+				rotationPoints[i] = new Point((int) (xPos+(limbLocations[i][0]+0.5)*width/spriteWidthHeight[0]), (int) (yPos+limbLocations[i][1]*height/spriteWidthHeight[1]));
 			}
 		}
 		//		g.setColor(Color.black);
@@ -187,11 +189,11 @@ public abstract class Creature {
 	}
 
 	protected void positionHandler(int velX, int velY) {
-		if (game.collision.checkX(x, y, tileX, tileY, chunkX-game.ChunkX+1, game.ChunkY-chunkY+1, (int) velX))
+		if (game.collision.checkX(x, y, tileX, tileY, chunkX-game.ChunkX+1, game.ChunkY-chunkY+1, (int) velX, inBoat))
 		{
 			x += velX;
 		}
-		if (game.collision.checkY(x, y, tileX, tileY, chunkX-game.ChunkX+1, game.ChunkY-chunkY+1, (int) velY))
+		if (game.collision.checkY(x, y, tileX, tileY, chunkX-game.ChunkX+1, game.ChunkY-chunkY+1, (int) velY, inBoat))
 		{
 			y += velY;
 		}

@@ -41,7 +41,7 @@ public class MiningTiles extends EntityObject{
 	}
 
 	public void tick() {
-		if (game.dimension != 1) {
+		if (game.dimension != core.Main_Game.Dimensions.coves) {
 			removed = true;
 		}
 		if (removed) {
@@ -99,7 +99,7 @@ public class MiningTiles extends EntityObject{
 			for (int i = 0; i <= 15; i++) {
 				for (int j = 0; j <= 15; j++) {
 					//The list of the tileIDs location on the spritesheet
-					if (game.dimension == 1) { //This if statement stops the tile rendering while the dimension is changing
+					if (game.dimension == core.Main_Game.Dimensions.coves) { //This if statement stops the tile rendering while the dimension is changing
 						//SpriteSheetLocs = Identifications.getCoveTileSheet(game.StoredTiles[k][i][j][0]); //OLD way of getting sprites
 						SpriteSheetLocs = CoveTileIDs.getSpriteSheet(game.StoredTiles[k][i][j][0]);
 						g.drawImage(MiningSprite, x+(game.TileWidth*i)-(game.TileX*game.TileWidth)-(game.TileWidth*16)-game.x+(RelativeChunkX*game.TileWidth*16), y+(game.TileHeight*j)+(game.TileY*game.TileHeight)-(game.TileHeight*16)+game.y+(RelativeChunkY*game.TileHeight*16), x+(game.TileWidth*(i+1))-(game.TileX*game.TileWidth)-(game.TileWidth*16)-game.x+(RelativeChunkX*game.TileWidth*16), y+(game.TileHeight*(j+1))+(game.TileY*game.TileHeight)-(game.TileHeight*16)+game.y+(RelativeChunkY*game.TileHeight*16), SpriteSheetLocs[0]*SpriteSheetWidth, SpriteSheetLocs[1]*SpriteSheetHeight, SpriteSheetLocs[0]*SpriteSheetWidth+SpriteSheetWidth, SpriteSheetLocs[1]*SpriteSheetHeight+SpriteSheetHeight, null);

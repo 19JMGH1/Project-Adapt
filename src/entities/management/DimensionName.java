@@ -5,6 +5,7 @@ import java.awt.Font;
 import java.awt.Graphics;
 
 import core.Main_Game;
+import core.Main_Game.Dimensions;
 import entities.EntityTypes;
 
 public class DimensionName extends EntityObject{
@@ -21,7 +22,7 @@ public class DimensionName extends EntityObject{
 	private Main_Game game;
 	private Handler handler;
 
-	public DimensionName(int x, int y, EntityTypes id, Main_Game game, Handler handler, int dimension) {
+	public DimensionName(int x, int y, EntityTypes id, Main_Game game, Handler handler, Dimensions dimension) {
 		super(x, y, id);
 		
 		this.game = game;
@@ -32,10 +33,10 @@ public class DimensionName extends EntityObject{
 		
 		setVelX(startingVel);
 		
-		if (dimension == 0) { //The Surface
+		if (dimension == Dimensions.surface) { //The Surface
 			this.dimension = "The Surface";
 		}
-		else if (dimension == 1) { //The Cove
+		else if (dimension == Dimensions.coves) { //The Cove
 			this.dimension = "The Cove";
 		}
 	}

@@ -43,7 +43,7 @@ public class PlaceTile {
 		}
 		else {
 			SurfaceTileIDs tile = SurfaceTileIDs.values()[itemID.getTile()];
-			game.StoredTiles[chunk][tileX][Math.abs(tileY)][0] = itemID.getTile();
+			game.StoredTiles[chunk][tileX][Math.abs(tileY)][0] = (short) itemID.getTile();
 			if (tile.isProcessor()) {
 				ProcessorIDs processor = ProcessorIDs.NoContainer;
 				for (int i = 0; i < ProcessorIDs.values().length; i++) {

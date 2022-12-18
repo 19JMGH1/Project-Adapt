@@ -4,20 +4,14 @@ import java.awt.Graphics;
 import java.util.Random;
 
 import core.Main_Game;
-import processors.management.ProcessorIDs;
 import processors.management.Processors;
 
 public class Acorn extends Processors{
-	public static final boolean[][] validSlots ={{false, false, false, false, false},
-			{false, false, false, false, false},
-			{false, false, false, false, false},
-			{false, false, false, false, false},
-			{false, false, false, false, false}};
-	public static final byte neededValues = 2; //The first value stores how long the acorn will take to grow, the second is how long it has already bee growing.
+	
 	public static final short baseSeconds = 240; //How many seconds the acorn takes to grow
 	
 	public Acorn(Main_Game game, short id, int chunkX, int chunkY, int tileX, int tileY) {
-		super(game, id, ProcessorIDs.Acorn, validSlots, "/Acorn "+id+".txt", neededValues, chunkX, chunkY, tileX, tileY);
+		super(game, id, "/Acorn "+id+".txt", chunkX, chunkY, tileX, tileY);
 		this.game = game;
 		Random r = new Random();
 		getValues()[0] = (short) ((baseSeconds+r.nextInt(128))*Main_Game.Target_TPS);

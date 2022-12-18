@@ -57,24 +57,24 @@ public class ItemDrops extends EntityObject{
 		y+=velY;
 
 		if (game.WPressed && !game.SPressed) {
-			if (game.collision.checkY(game.x, game.y, game.TileX, game.TileY, game.ChunkX, game.ChunkY, (int) game.VelY)) {
+			if (game.collision.checkY(game.x, game.y, game.TileX, game.TileY, game.ChunkX, game.ChunkY, (int) game.VelY, game.inBoat)) {
 				y += (game.TileHeight/8);
 				startingY += (game.TileHeight/8);
 			}
 		}
 		else if (game.SPressed && !game.WPressed) {
-			if (game.collision.checkY(game.x, game.y, game.TileX, game.TileY, game.ChunkX, game.ChunkY, (int) game.VelY)) {
+			if (game.collision.checkY(game.x, game.y, game.TileX, game.TileY, game.ChunkX, game.ChunkY, (int) game.VelY, game.inBoat)) {
 				y += (-game.TileHeight/8);
 				startingY += (-game.TileHeight/8);
 			}
 		}
 		if (game.APressed && !game.DPressed) {
-			if (game.collision.checkX(game.x, game.y, game.TileX, game.TileY, game.ChunkX, game.ChunkY, (int) game.VelX)) {
+			if (game.collision.checkX(game.x, game.y, game.TileX, game.TileY, game.ChunkX, game.ChunkY, (int) game.VelX, game.inBoat)) {
 				x += (game.TileWidth/8);
 			}
 		}
 		else if (game.DPressed && !game.APressed) {
-			if (game.collision.checkX(game.x, game.y, game.TileX, game.TileY, game.ChunkX, game.ChunkY, (int) game.VelX)) {
+			if (game.collision.checkX(game.x, game.y, game.TileX, game.TileY, game.ChunkX, game.ChunkY, (int) game.VelX, game.inBoat)) {
 				x += (-game.TileWidth/8);
 			}
 		}
