@@ -75,7 +75,7 @@ public class MouseHandler extends MouseAdapter implements MouseMotionListener, M
 					//cancel button on the file menu
 					if (mousePosition (mx, my, filemenu.CancelBoxX, filemenu.CancelCreateBoxY, filemenu.CancelBoxWidth, filemenu.CancelCreateBoxHeight)) {
 						filemenu.CancelButton3D = true;
-						if (!filemenu.FileNaming) {
+						if (!filemenu.FileNaming || files.ReadLine("Files/File 1/Data.txt", 1) == null) {
 							game.AdaptState = State.MainMenu;
 						}
 						filemenu.FileNaming = false;

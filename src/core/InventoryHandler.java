@@ -378,7 +378,7 @@ public class InventoryHandler {
 						//Adds the IO button to the inventory screen for electronics that can have their outputs configured
 						g.drawImage(IO_Button, topLeftCornerX+(8)*iconSize, topLeftCornerY+6*iconSize, iconSize, iconSize, null);
 
-						//This block but the energy bar on the screen for the electronic
+						//This block puts the energy bar on the screen for the electronic
 						Electronic elecContainer = (Electronic) game.curentlyOpenedContainer;
 						double widthModifier = elecContainer.getPowerStored()/(elecContainer.getMaxPower()+0.0);
 						Graphics2D g2d = (Graphics2D) g;

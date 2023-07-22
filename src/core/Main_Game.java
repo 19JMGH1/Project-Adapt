@@ -699,7 +699,7 @@ public class Main_Game extends Canvas implements Runnable{
 		if (isShowing()) paint(g);
 		g.setColor(Color.black);
 		g.fillRect(0, 0, Main_Game.WIDTH, Main_Game.HEIGHT);
-
+		
 		if (AdaptState == State.MainMenu) {
 			mainmenu.render(g);
 		}
@@ -709,7 +709,7 @@ public class Main_Game extends Canvas implements Runnable{
 		handler.render(g);
 
 		if (AdaptState == State.InWorld) {
-
+			this.craftingLevel = 0;
 			processhandler.render(g);
 			if (Paused == false) {
 				PositionHandler(); //This is not in the tick() method since being in the tick() method caused rendering issues and flashes related to the multi-threading.

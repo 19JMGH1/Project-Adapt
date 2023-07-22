@@ -27,7 +27,7 @@ public class KeyInput extends KeyAdapter {
 	public void keyPressed(KeyEvent e) {
 		char c = e.getKeyChar();
 		int k = e.getKeyCode();
-		if (k == 122) { //122 represents F11
+		if (k == KeyEvent.VK_F11) {
 			//Go FullScreen when you press F11
 			Main_Game.FULLSCREEN = !Main_Game.FULLSCREEN;
 			if (Main_Game.FULLSCREEN) {
@@ -56,9 +56,9 @@ public class KeyInput extends KeyAdapter {
 						filemenu.FileNamingText += c;
 					}
 					else {
-						if (k >= 48 && k <= 57) {
+						if (k >= KeyEvent.VK_0 && k <= KeyEvent.VK_9) { //Adding a number onto the seed is contained in this if statement
 							if (filemenu.seed == null) {
-								filemenu.seed = k%48;
+								filemenu.seed = k%KeyEvent.VK_0;
 							}
 							else {
 								long newInt = Long.valueOf(String.valueOf(filemenu.seed) + String.valueOf(k%48));
@@ -161,6 +161,10 @@ public class KeyInput extends KeyAdapter {
 						}
 					}
 				}
+				else if (k >= KeyEvent.VK_1 && k <=KeyEvent.VK_5) {
+					game.SelectedHotbar = (byte) (k%KeyEvent.VK_1);
+				}
+				//Movement
 				else if (k == KeyEvent.VK_W) {
 					game.WPressed = true;
 				}

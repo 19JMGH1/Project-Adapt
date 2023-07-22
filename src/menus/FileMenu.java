@@ -303,7 +303,7 @@ public class FileMenu {
 					g.drawString("|", (int) (FileNamingStringX+FileNamingStringSize.getWidth()), FileNamingStringY);
 				}
 				else {
-					if (seed == null) {
+					if (seed == null || seed == 0) {
 						g.drawString("|", (int) (Main_Game.WIDTH/2+MenuStrings.getStringSize("", Font.PLAIN, (Main_Game.WIDTH+Main_Game.HEIGHT)/100).getWidth()), 7*Main_Game.HEIGHT/12+FileNamingBoxHeight);
 					}
 					else {
@@ -317,7 +317,7 @@ public class FileMenu {
 			g.setFont(CancelCreateFont);
 			g.drawString("Create", CreateStringX, CreateStringY);
 			MenuStrings.renderXCentered(g, 7*Main_Game.HEIGHT/12, Font.BOLD, Main_Game.WIDTH/40, "Enter a seed (optional)", Color.BLACK);
-			if (seed != null) {
+			if (seed != null && seed != 0) {
 				MenuStrings.renderXCentered(g, 7*Main_Game.HEIGHT/12+FileNamingBoxHeight, Font.PLAIN, (Main_Game.WIDTH+Main_Game.HEIGHT)/100, ""+seed, Color.BLACK);
 			}
 		}

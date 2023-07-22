@@ -357,6 +357,9 @@ public class Interactions {
 						game.inBoat = true;
 						game.Inventory[game.SelectedHotbar][5][1]--;
 					}
+					else {
+						game.addMessage("Craft a boat to cross the water");
+					}
 				}
 				else if (ProcessorIDs.containerExists(SurfaceTileIDs.values()[tileValue].toString())) { //Opening Containers
 					game.curentlyOpenedContainer = game.processhandler.getProcessor(ProcessorIDs.valueOf(SurfaceTileIDs.values()[tileValue].toString()), game.StoredTiles[chunk][tileX][Math.abs(tileY)][1]);

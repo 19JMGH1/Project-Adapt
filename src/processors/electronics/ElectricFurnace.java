@@ -9,7 +9,7 @@ import processors.BlastFurnace;
 import processors.electronics.management.Electronic;
 
 public class ElectricFurnace extends Electronic implements Light{
-	
+
 	private static final byte lightLevelProduced = 8; //This is the light level that the furnace makes while running
 
 	public ElectricFurnace(Main_Game game, short id, int chunkX, int chunkY, int tileX, int tileY) {
@@ -58,7 +58,9 @@ public class ElectricFurnace extends Electronic implements Light{
 			//System.out.println(loc[0]-game.ChunkX);
 			byte chunkX = (byte) (loc[0]-game.ChunkX+1);
 			byte chunkY = (byte) (game.ChunkY-loc[1]+1);
-			addLight(fileName, lightLevelProduced, game.lightLevels[(chunkX)+(3*(chunkY))][loc[2]][loc[3]+1], chunkX, chunkY, (byte) loc[2], (byte) (-loc[3]-1));
+			if (((chunkX)+(3*(chunkY))) < 9){
+				addLight(fileName, lightLevelProduced, game.lightLevels[(chunkX)+(3*(chunkY))][loc[2]][loc[3]+1], chunkX, chunkY, (byte) loc[2], (byte) (-loc[3]-1));
+			}
 		}
 	}
 

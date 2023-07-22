@@ -4,7 +4,7 @@ import java.util.LinkedList;
 
 public class ElectronicHandler {
 	
-	public static LinkedList<Electronic> electronics = new LinkedList<Electronic>();
+	public static LinkedList<Electronic> electronics = new LinkedList<Electronic>(); //TODO change this to ArrayList
 	
 	public static int baseChunkAdjust(int x, int y, int k) {
 		int chunk = k;

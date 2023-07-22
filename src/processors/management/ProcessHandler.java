@@ -10,7 +10,7 @@ import processors.electronics.management.ElectronicHandler;
 
 public class ProcessHandler implements Runnable {
 
-	public static LinkedList<Processors> processors = new LinkedList<Processors>();
+	public static LinkedList<Processors> processors = new LinkedList<Processors>(); //TODO change this to ArrayList
 
 	private Main_Game game;
 

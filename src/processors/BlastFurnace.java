@@ -19,7 +19,7 @@ public class BlastFurnace extends Processors implements Light{
 		}
 		getValues()[1] = Main_Game.FurnaceCookTime;
 	}
-	
+
 	public static boolean smelt(Processors c) {
 		boolean smelted = false;
 		for (int j = 0; j < 2; j++) {
@@ -238,7 +238,9 @@ public class BlastFurnace extends Processors implements Light{
 			g.drawImage(game.tileanimations.animationImage, x+(game.TileWidth*loc[2])-(game.TileX*game.TileWidth)-(game.TileWidth*16)-game.x+((loc[0]+1-game.ChunkX)*game.TileWidth*16), y+(game.TileHeight*loc[3])+(game.TileY*game.TileHeight)-(game.TileHeight*16)+game.y+((game.ChunkY+1-loc[1])*game.TileHeight*16), x+(game.TileWidth*(loc[2]+1))-(game.TileX*game.TileWidth)-(game.TileWidth*16)-game.x+((loc[0]+1-game.ChunkX)*game.TileWidth*16), y+(game.TileHeight*(loc[3]+1))+(game.TileY*game.TileHeight)-(game.TileHeight*16)+game.y+((game.ChunkY+1-loc[1])*game.TileHeight*16), 0, 0, 320, 320, null);
 			byte chunkX = (byte) (loc[0]-game.ChunkX+1);
 			byte chunkY = (byte) (game.ChunkY-loc[1]+1);
-			addLight(fileName ,lightLevelProduced, game.lightLevels[(chunkX)+(3*(chunkY))][loc[2]][loc[3]], chunkX, chunkY, (byte) loc[2], (byte) (-loc[3]));
+			if (((chunkX)+(3*(chunkY))) < 9){
+				addLight(fileName ,lightLevelProduced, game.lightLevels[(chunkX)+(3*(chunkY))][loc[2]][loc[3]], chunkX, chunkY, (byte) loc[2], (byte) (-loc[3]));
+			}
 		}
 	}
 }
