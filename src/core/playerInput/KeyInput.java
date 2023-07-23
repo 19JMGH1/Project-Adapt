@@ -7,7 +7,7 @@ import core.Main_Game;
 import core.Main_Game.Dimensions;
 import core.Main_Game.State;
 import core.lighting.DayTimeCycle;
-import items.CraftingRecipes;
+import items.CraftingManager;
 import items.ItemIDs;
 import menus.FileMenu;
 import tiles.SurfaceTileIDs;
@@ -16,9 +16,9 @@ public class KeyInput extends KeyAdapter {
 
 	private Main_Game game;
 	private FileMenu filemenu;
-	private CraftingRecipes craftingrecipes;
+	private CraftingManager craftingrecipes;
 
-	public KeyInput(Main_Game game, FileMenu filemenu, CraftingRecipes craftingrecipes) {
+	public KeyInput(Main_Game game, FileMenu filemenu, CraftingManager craftingrecipes) {
 		this.game = game;
 		this.filemenu = filemenu;
 		this.craftingrecipes = craftingrecipes;

@@ -1,488 +1,229 @@
 package items;
 
-import core.Identifications;
-import core.InventoryHandler;
-import core.Main_Game;
+public enum CraftingRecipes {
 
-public class CraftingRecipes {
-
-	private Main_Game game;
-	private InventoryHandler inventoryhandler;
-
-	public CraftingRecipes(Main_Game game, InventoryHandler inventoryhandler)
-	{
-		this.game = game;
-		this.inventoryhandler = inventoryhandler;
-	}
-
-	public void craft()
-	{
-		//Shaped crafting recipes go at the top to take priority
-		if (stonePick()) {}
-		else if (woodenWall()) {}
-		else if (woodenDoor()) {}
-		else if (cabinet()) {}
-		else if (stoneAxe()) {}
-		else if (stoneTable()) {}
-		else if (mine()) {}
-		else if (blastFurnace()) {}
-		else if (tier2Crafting()) {}
-		else if (anvil()) {}
-		else if (ironPick()) {}
-		else if (copperWires()) {}
-		else if (LESU()) {}
-		else if (coalGenerator()) {}
-		else if (refiner()) {}
-		else if (heatingCoil()) {}
-		else if (electricFurnace()) {}
-		else if (assembler()) {}
-		else if (solarPanel()) {}
-		else if (boat()) {}
-
-		//Shapeless crafting recipes go at the bottom to take less priority
-		else if (sharpStone()) {}
-		else if (tier1Crafting()) {}
-		else {System.out.println("No craft");} //Used for testing purposes
-	}
-
-	//Shaped crafting recipes start here
-	public boolean stonePick()
-	{
-		int IDs[][] = {{1, 4},
-				{2, 0}};
-		int numOfItems[][] = {{1, 1}, {2, 1}, {4, 1}};
-		return shapedCrafting(IDs, numOfItems, 6, 1);
-	}
-
-	public boolean stoneAxe()
-	{
-		int IDs[][] = {{2, 4},
-				{2, 0}};
-		int numOfItems[][] = {{4, 1}, {2, 2}};
-		return shapedCrafting(IDs, numOfItems, 7, 1);
-	}
-
-	public boolean woodenWall()
-	{
-		int IDs[][] = {{2, 2},
-				{2, 2}};
-		int numOfItems[][] = {{2, 4}};
-		return shapedCrafting(IDs, numOfItems, 8, 4);
-	}
-
-	public boolean woodenDoor()
-	{
-		int IDs[][] = {{2},
-				{2}};
-		int numOfItems[][] = {{2, 2}};
-		return shapedCrafting(IDs, numOfItems, 9, 1);
-	}
-
-	public boolean cabinet()
-	{
-		int IDs[][] =  {{2, 2, 2},
-				{2, 0, 2},
-				{2, 2, 2}};
-		int numOfItems[][] = {{2, 8}};
-		return shapedCrafting(IDs, numOfItems, 40, 1);
-	}
-
-	public boolean stoneTable()
-	{
-		int IDs[][] = {{1, 1},
-				{2, 2}};
-		int numOfItems[][] = {{1, 2}, {2, 2}};
-		return shapedCrafting(IDs, numOfItems, 10, 1);
-	}
-
-	public boolean mine()
-	{
-		int IDs[][] = {{1, 1, 1}, 
-				{1, 0, 1},
-				{1, 6, 1}};
-		int numOfItems[][] = {{1, 7}, {6, 1}};
-		return shapedCrafting(IDs, numOfItems, 11, 1);
-	}
-	public boolean blastFurnace()
-	{
-		int IDs[][] = {{1, 0, 1}, 
-				{1, 0, 1},
-				{1, 12, 1}};
-		int numOfItems[][] = {{12, 1}, {1, 7}};
-		return shapedCrafting(IDs, numOfItems, 21, 1);
-	}
-
-	public boolean tier2Crafting()
-	{
-		int IDs[][] = {{22, 22, 22}, 
-				{22, 23, 22},
-				{22, 22, 22}};
-		int numOfItems[][] = {{23, 1}, {22, 8}};
-		return shapedCrafting(IDs, numOfItems, 28, 1);
-	}
-
-	public boolean ironPick()
-	{
-		int IDs[][] = {{22, 22, 22, 0}, 
-				{0, 2, 0, 22},
-				{0, 2, 0, 0},
-				{0, 2, 0, 0}};
-		int numOfItems[][] = {{2, 3}, {22, 4}};
-		return shapedCrafting(IDs, numOfItems, 20, 1);
-	}
-
-	public boolean anvil()
-	{
-		int IDs[][] = {{22, 22, 22}, 
-				{0, 22, 0},
-				{22, 22, 22}};
-		int numOfItems[][] = {{22, 7}};
-		return shapedCrafting(IDs, numOfItems, 29, 1);
-	}
-
-	public boolean copperWires()
-	{
-		int IDs[][] = {{23, 23, 23}};
-		int numOfItems[][] = {{23, 3}};
-		return shapedCrafting(IDs, numOfItems, 31, 10); 
-	}
-
-	public boolean LESU() //LESU stands for lithium energy storage unit
-	{
-		int IDs[][] = {{22, 31, 31, 22}, 
-				{31, 25, 25, 31},
-				{31, 25, 25, 31},
-				{22, 31, 31, 22}};
-		int numOfItems[][] = {{22, 4}, {31, 8}, {25, 4}};
-		return shapedCrafting(IDs, numOfItems, 30, 1);
-	}
-
-	public boolean coalGenerator()
-	{
-		int IDs[][] =  {{22, 31, 31, 22}, 
-				{31, 22, 22, 31},
-				{31, 22, 22, 31},
-				{22, 31, 31, 22}};
-		int numOfItems[][] = {{22, 8}, {31, 8}};
-		return shapedCrafting(IDs, numOfItems, 32, 1);
-	}
-
-	public boolean refiner()
-	{
-		int IDs[][] =  {{22, 31, 31, 22}, 
-				{31, 24, 24, 31},
-				{31, 24, 24, 31},
-				{22, 31, 31, 22}};
-		int numOfItems[][] = {{22, 4}, {24, 4}, {31, 8}};
-		return shapedCrafting(IDs, numOfItems, 33, 1);
-	}
-
-	private boolean heatingCoil() {
-		int IDs[][] =  {{31, 22, 22, 0}, 
-				{0, 22, 0, 22},
-				{22, 0, 0, 22},
-				{0, 22, 22, 0}};
-		int numOfItems[][] = {{22, 8}, {31, 1}};
-		return shapedCrafting(IDs, numOfItems, 42, 4);
-	}
-
-	private boolean electricFurnace() {
-		int IDs[][] =  {{22, 31, 31, 22}, 
-				{31, 42, 42, 31},
-				{31, 42, 42, 31},
-				{22, 31, 31, 22}};
-		int numOfItems[][] = {{22, 4}, {31, 8}, {42, 4}};
-		return shapedCrafting(IDs, numOfItems, 41, 1);
+	//All the shaped crafting recipes go before the shapeless ones.
+	StonePick((byte) 1, false, (byte) 2, (byte) 2, new ItemIDs[][]
+			{	{ItemIDs.Stone,	ItemIDs.SharpStone},
+				{ItemIDs.Wood,	ItemIDs.Blank}},
+			new int[][] {{ItemIDs.Stone.ordinal(), 1}, {ItemIDs.SharpStone.ordinal(), 1}, {ItemIDs.Wood.ordinal(), 1}},
+			ItemIDs.StonePickaxe, (byte) 1),
+	StoneAxe((byte) 1, false, (byte) 2, (byte) 2, new ItemIDs[][]
+			{	{ItemIDs.Wood,	ItemIDs.SharpStone},
+				{ItemIDs.Wood,	ItemIDs.Blank}},
+			new int[][] {{ItemIDs.SharpStone.ordinal(), 1}, {ItemIDs.Wood.ordinal(), 2}},
+			ItemIDs.StoneAxe, (byte) 1),
+	WoddenWall((byte) 1, false, (byte) 2, (byte) 2, new ItemIDs[][]
+			{	{ItemIDs.Wood,	ItemIDs.Wood},
+				{ItemIDs.Wood,	ItemIDs.Wood}},
+			new int[][] {{ItemIDs.Wood.ordinal(), 4}},
+			ItemIDs.WoodenWall, (byte) 4),
+	WoddenDoor((byte) 0, false, (byte) 2, (byte) 2, new ItemIDs[][]
+			{	{ItemIDs.Wood},
+				{ItemIDs.Wood}},
+			new int[][] {{ItemIDs.Wood.ordinal(), 2}},
+			ItemIDs.WoodenDoor, (byte) 1),
+	Cabinet((byte) 2, false, (byte) 3, (byte) 3, new ItemIDs[][]
+			{	{ItemIDs.Wood,	ItemIDs.Wood,	ItemIDs.Wood},
+				{ItemIDs.Wood,	ItemIDs.Blank,	ItemIDs.Wood},
+				{ItemIDs.Wood,	ItemIDs.Wood,	ItemIDs.Wood}},
+			new int[][] {{ItemIDs.Wood.ordinal(), 8}},
+			ItemIDs.Cabinet, (byte) 1),
+	StoneTable((byte) 1, false, (byte) 2, (byte) 2, new ItemIDs[][]
+			{	{ItemIDs.Stone,	ItemIDs.Stone},
+				{ItemIDs.Wood,	ItemIDs.Wood}},
+			new int[][] {{ItemIDs.Wood.ordinal(), 2}, {ItemIDs.Stone.ordinal(), 2}},
+			ItemIDs.StoneTable, (byte) 1),
+	Mine((byte) 2, false, (byte) 3, (byte) 3, new ItemIDs[][]
+			{	{ItemIDs.Stone,	ItemIDs.Stone,			ItemIDs.Stone},
+				{ItemIDs.Stone,	ItemIDs.Blank,			ItemIDs.Stone},
+				{ItemIDs.Stone,	ItemIDs.StonePickaxe,	ItemIDs.Stone}},
+			new int[][] {{ItemIDs.Stone.ordinal(), 7}, {ItemIDs.StonePickaxe.ordinal(), 1}},
+			ItemIDs.Mine, (byte) 1),
+	BlastFurnace((byte) 2, false, (byte) 3, (byte) 3, new ItemIDs[][]
+			{	{ItemIDs.Stone,	ItemIDs.Blank,	ItemIDs.Stone},
+				{ItemIDs.Stone,	ItemIDs.Blank,	ItemIDs.Stone},
+				{ItemIDs.Stone,	ItemIDs.Coal,	ItemIDs.Stone}},
+			new int[][] {{ItemIDs.Stone.ordinal(), 6}, {ItemIDs.Coal.ordinal(), 1}},
+			ItemIDs.BlastFurnace, (byte) 1),
+	Tier2Crafting((byte) 2, false, (byte) 3, (byte) 3, new ItemIDs[][]
+			{	{ItemIDs.IronBar,	ItemIDs.IronBar,	ItemIDs.IronBar},
+				{ItemIDs.IronBar,	ItemIDs.CopperBar,	ItemIDs.IronBar},
+				{ItemIDs.IronBar,	ItemIDs.IronBar,	ItemIDs.IronBar}},
+			new int[][] {{ItemIDs.IronBar.ordinal(), 8}, {ItemIDs.CopperBar.ordinal(), 1}},
+			ItemIDs.Tier2CraftingUpgrade, (byte) 1),
+	IronPick((byte) 3, false, (byte) 4, (byte) 4, new ItemIDs[][]
+			{	{ItemIDs.IronBar,	ItemIDs.IronBar,	ItemIDs.IronBar,	ItemIDs.Blank},
+				{ItemIDs.Blank,		ItemIDs.Wood,		ItemIDs.Blank,			ItemIDs.IronBar},
+				{ItemIDs.Blank,		ItemIDs.Wood,		ItemIDs.Blank,			ItemIDs.Blank},
+				{ItemIDs.Blank,		ItemIDs.Wood,		ItemIDs.Blank,			ItemIDs.Blank}},
+			new int[][] {{ItemIDs.IronBar.ordinal(), 4}, {ItemIDs.Wood.ordinal(), 3}},
+			ItemIDs.IronPickaxe, (byte) 1),
+	Anvil((byte) 2, false, (byte) 3, (byte) 3, new ItemIDs[][]
+			{	{ItemIDs.IronBar,	ItemIDs.IronBar,	ItemIDs.IronBar},
+				{ItemIDs.Blank,		ItemIDs.IronBar,	ItemIDs.Blank},
+				{ItemIDs.IronBar,	ItemIDs.IronBar,	ItemIDs.IronBar}},
+			new int[][] {{ItemIDs.IronBar.ordinal(), 6}},
+			ItemIDs.Anvil, (byte) 1),
+	CopperWire((byte) 2, false, (byte) 3, (byte) 1, new ItemIDs[][]
+			{	{ItemIDs.CopperBar,	ItemIDs.CopperBar,	ItemIDs.CopperBar}},
+			new int[][] {{ItemIDs.CopperBar.ordinal(), 3}},
+			ItemIDs.CopperWire, (byte) 10),
+	LESU((byte) 3, false, (byte) 4, (byte) 4, new ItemIDs[][]
+			{	{ItemIDs.IronBar,		ItemIDs.CopperWire,		ItemIDs.CopperWire,		ItemIDs.IronBar},
+				{ItemIDs.CopperWire,	ItemIDs.LithiumShard,	ItemIDs.LithiumShard,	ItemIDs.CopperWire},
+				{ItemIDs.CopperWire,	ItemIDs.LithiumShard,	ItemIDs.LithiumShard,	ItemIDs.CopperWire},
+				{ItemIDs.IronBar,		ItemIDs.CopperWire,		ItemIDs.CopperWire,		ItemIDs.IronBar}},
+			new int[][] {{ItemIDs.IronBar.ordinal(), 4}, {ItemIDs.CopperWire.ordinal(), 8}, {ItemIDs.LithiumShard.ordinal(), 4}},
+			ItemIDs.LESU, (byte) 1),
+	CoalGenerator((byte) 3, false, (byte) 4, (byte) 4, new ItemIDs[][]
+			{	{ItemIDs.IronBar,		ItemIDs.CopperWire,	ItemIDs.CopperWire,	ItemIDs.IronBar},
+				{ItemIDs.CopperWire,	ItemIDs.IronBar,	ItemIDs.IronBar,		ItemIDs.CopperWire},
+				{ItemIDs.CopperWire,	ItemIDs.IronBar,	ItemIDs.IronBar,		ItemIDs.CopperWire},
+				{ItemIDs.IronBar,		ItemIDs.CopperWire,	ItemIDs.CopperWire,	ItemIDs.IronBar}},
+			new int[][] {{ItemIDs.IronBar.ordinal(), 8}, {ItemIDs.CopperWire.ordinal(), 8}},
+			ItemIDs.CoalGenerator, (byte) 1),
+	Refiner((byte) 3, false, (byte) 4, (byte) 4, new ItemIDs[][]
+			{	{ItemIDs.IronBar,		ItemIDs.CopperWire,	ItemIDs.CopperWire,	ItemIDs.IronBar},
+				{ItemIDs.CopperWire,	ItemIDs.GoldBar,	ItemIDs.GoldBar,	ItemIDs.CopperWire},
+				{ItemIDs.CopperWire,	ItemIDs.GoldBar,	ItemIDs.GoldBar,	ItemIDs.CopperWire},
+				{ItemIDs.IronBar,		ItemIDs.CopperWire,	ItemIDs.CopperWire,	ItemIDs.IronBar}},
+			new int[][] {{ItemIDs.IronBar.ordinal(), 4}, {ItemIDs.CopperWire.ordinal(), 8}, {ItemIDs.GoldBar.ordinal(), 4}},
+			ItemIDs.Refiner, (byte) 1),
+	HeatingCoil((byte) 3, false, (byte) 4, (byte) 4, new ItemIDs[][]
+			{	{ItemIDs.CopperWire,	ItemIDs.IronBar,	ItemIDs.IronBar,	ItemIDs.Blank},
+				{ItemIDs.Blank,			ItemIDs.IronBar,	ItemIDs.Blank,		ItemIDs.IronBar},
+				{ItemIDs.IronBar,		ItemIDs.Blank,		ItemIDs.Blank,		ItemIDs.IronBar},
+				{ItemIDs.Blank,			ItemIDs.IronBar,	ItemIDs.IronBar,	ItemIDs.Blank}},
+			new int[][] {{ItemIDs.IronBar.ordinal(), 8}, {ItemIDs.CopperWire.ordinal(), 1}},
+			ItemIDs.HeatingCoil, (byte) 4),
+	ElectricFurnace((byte) 3, false, (byte) 4, (byte) 4, new ItemIDs[][]
+			{	{ItemIDs.IronBar,		ItemIDs.CopperWire,	ItemIDs.CopperWire,			ItemIDs.IronBar},
+				{ItemIDs.CopperWire,	ItemIDs.HeatingCoil,	ItemIDs.HeatingCoil,	ItemIDs.CopperWire},
+				{ItemIDs.CopperWire,	ItemIDs.HeatingCoil,	ItemIDs.HeatingCoil,	ItemIDs.CopperWire},
+				{ItemIDs.IronBar,		ItemIDs.CopperWire,	ItemIDs.CopperWire,			ItemIDs.IronBar}},
+			new int[][] {{ItemIDs.IronBar.ordinal(), 4}, {ItemIDs.CopperWire.ordinal(), 8}, {ItemIDs.HeatingCoil.ordinal(), 4}},
+			ItemIDs.ElectricFurnace, (byte) 1),
+	Assembler((byte) 3, false, (byte) 4, (byte) 4, new ItemIDs[][]
+			{	{ItemIDs.GoldBar,		ItemIDs.CopperWire,		ItemIDs.CopperWire,		ItemIDs.GoldBar},
+				{ItemIDs.CopperWire,	ItemIDs.AluminumBar,	ItemIDs.AluminumBar,	ItemIDs.CopperWire},
+				{ItemIDs.CopperWire,	ItemIDs.AluminumBar,	ItemIDs.AluminumBar,	ItemIDs.CopperWire},
+				{ItemIDs.GoldBar,		ItemIDs.CopperWire,		ItemIDs.CopperWire,		ItemIDs.GoldBar}},
+			new int[][] {{ItemIDs.IronBar.ordinal(), 4}, {ItemIDs.CopperWire.ordinal(), 8}, {ItemIDs.AluminumBar.ordinal(), 4}},
+			ItemIDs.Assembler, (byte) 1),
+	SolarPanel((byte) 3, false, (byte) 4, (byte) 4, new ItemIDs[][]
+			{	{ItemIDs.IronBar,		ItemIDs.CopperWire,	ItemIDs.CopperWire,	ItemIDs.IronBar},
+				{ItemIDs.CopperWire,	ItemIDs.SolarCell,	ItemIDs.SolarCell,	ItemIDs.CopperWire},
+				{ItemIDs.CopperWire,	ItemIDs.SolarCell,	ItemIDs.SolarCell,	ItemIDs.CopperWire},
+				{ItemIDs.IronBar,		ItemIDs.CopperWire,	ItemIDs.CopperWire,	ItemIDs.IronBar}},
+			new int[][] {{ItemIDs.IronBar.ordinal(), 4}, {ItemIDs.CopperWire.ordinal(), 8}, {ItemIDs.SolarCell.ordinal(), 4}},
+			ItemIDs.SolarPanel, (byte) 1),
+	Boat((byte) 2, false, (byte) 3, (byte) 3, new ItemIDs[][]
+			{	{ItemIDs.Wood,	ItemIDs.Blank,	ItemIDs.Wood},
+				{ItemIDs.Wood,	ItemIDs.Wood,	ItemIDs.Wood}},
+			new int[][] {{ItemIDs.Wood.ordinal(), 5}},
+			ItemIDs.Boat, (byte) 1),
+	
+	//All the shapeless crafting recipes must follow (They go at the bottom to be given less priority)
+	SharpStone((byte) 0, true,
+		new int[][] {{ItemIDs.Stone.ordinal(), 2}},
+		ItemIDs.SharpStone, (byte) 1),
+	Tier1Crafting((byte) 0, true,
+			new int[][] {{ItemIDs.Stone.ordinal(), 1}, {ItemIDs.Wood.ordinal(), 1}},
+			ItemIDs.Tier1CraftingUpgrade, (byte) 1);
+	
+	private byte unlockLevel; //This is the crafting level required for the recipe to appear in the recipe book.
+	private boolean isShapeless; //This the recipe shaped or shapeless
+	
+	private byte recipeWidth; //This is the width of the recipe
+	private byte recipeHeight; //This is the height of the recipe (Leave blank for shapeless recipes)
+	private ItemIDs[][] items; //The items required for the recipe
+	private int[][] numOfItems; //How many of each item ID are needed for the recipe
+	
+	private ItemIDs output; //What item is made from this recipe
+	private byte numOutput; //How many items does this recipe make
+	
+	CraftingRecipes(byte unlockLevel, boolean isShapeless, byte recipeWidth, byte recipeHeight, ItemIDs[][] items,
+			int[][] numOfItems ,ItemIDs output, byte numOutput){
+		this.setUnlockLevel(unlockLevel);
+		this.setShapeless(isShapeless);
+		this.setRecipeWidth(recipeWidth);
+		this.setRecipeHeight(recipeHeight);
+		this.setItems(items);
+		this.setNumOfItems(numOfItems);
+		this.setOutput(output);
+		this.setNumOutput(numOutput);
 	}
 	
-	private boolean assembler() {
-		int IDs[][] =  {{24, 31, 31, 24}, 
-				{31, 27, 27, 31},
-				{31, 27, 27, 31},
-				{24, 31, 31, 24}};
-		int numOfItems[][] = {{24, 4}, {31, 8}, {27, 4}};
-		return shapedCrafting(IDs, numOfItems, 44, 1);
+	CraftingRecipes(byte unlockLevel, boolean isShapeless, int[][] numOfItems ,ItemIDs output, byte numOutput){
+		this.setUnlockLevel(unlockLevel);
+		this.setShapeless(isShapeless);
+		this.setNumOfItems(numOfItems);
+		this.setOutput(output);
+		this.setNumOutput(numOutput);
+	}
+
+	public byte getUnlockLevel() {
+		return unlockLevel;
+	}
+
+	public void setUnlockLevel(byte unlockLevel) {
+		this.unlockLevel = unlockLevel;
+	}
+
+	public boolean isShapeless() {
+		return isShapeless;
+	}
+
+	public void setShapeless(boolean isShapeless) {
+		this.isShapeless = isShapeless;
+	}
+
+	public byte getRecipeWidth() {
+		return recipeWidth;
+	}
+
+	public void setRecipeWidth(byte recipeWidth) {
+		this.recipeWidth = recipeWidth;
+	}
+
+	public byte getRecipeHeight() {
+		return recipeHeight;
+	}
+
+	public void setRecipeHeight(byte recipeHeight) {
+		this.recipeHeight = recipeHeight;
+	}
+
+	public ItemIDs[][] getItems() {
+		return items;
+	}
+
+	public void setItems(ItemIDs[][] items) {
+		this.items = items;
+	}
+
+	public int[][] getNumOfItems() {
+		return numOfItems;
+	}
+
+	public void setNumOfItems(int[][] numOfItems) {
+		this.numOfItems = numOfItems;
 	}
 	
-	private boolean solarPanel() {
-		int IDs[][] =  {{22, 31, 31, 22}, 
-				{31, 47, 47, 31},
-				{31, 47, 47, 31},
-				{22, 31, 31, 22}};
-		int numOfItems[][] = {{22, 4}, {31, 8}, {47, 4}};
-		return shapedCrafting(IDs, numOfItems, ItemIDs.SolarPanel.ordinal(), 1);
-	}
-	
-	private boolean boat() {
-		int IDs[][] =  {{2, 0, 2},
-						{2, 2, 2}};
-		int numOfItems[][] = {{2, 6}};
-		return shapedCrafting(IDs, numOfItems, ItemIDs.Boat.ordinal(), 1);
+	public ItemIDs getOutput() {
+		return output;
 	}
 
-	//Shapeless crafting recipes start here
-	public boolean sharpStone()
-	{
-		int IDs[] = {1};
-		int numPerID[] = {2};
-		return shapelessCrafting(IDs, numPerID, 4, 1);
+	public void setOutput(ItemIDs output) {
+		this.output = output;
 	}
 
-	public boolean tier1Crafting()
-	{
-		int IDs[] = {1, 2};
-		int numPerID[] = {1, 1};
-		return shapelessCrafting(IDs, numPerID, 5, 1);
+	public byte getNumOutput() {
+		return numOutput;
 	}
 
-	public boolean shapedCrafting(int itemIDs[][], int numPerID[][], int IDToCraft, int numToCraft)
-	{
-		//The "firstItem" variable and the for loop below makes it possible
-		//for the top left slot of any crafting recipe to be an empty slot.
-		byte firstItem = 0;
-		for (byte i = 0; i < itemIDs[0].length; i++) {
-			if (itemIDs[0][i] != 0) {
-				firstItem = i;
-				break;
-			}
-		}
-		
-		boolean correctRecipe = true;
-		boolean enoughItems = true;
-		//Checks for the correct recipe
-		byte numOfRecipes = 0;
-		boolean itemSlotUsed[][] = {{false, false, false, false, false}, {false, false, false, false, false}, {false, false, false, false, false}, {false, false, false, false, false}, {false, false, false, false, false}};
-		for (int j = 0; j < 5; j++)
-		{
-			for (int i = 0; i < 5; i++)
-			{
-				if (game.craftingBoxes[i][j] == itemIDs[0][0+firstItem] && !itemSlotUsed[i][j])
-				{
-					//System.out.println(itemIDs.length+", "+itemIDs[0].length); //For testing purposes
-					for (int y = 0; y < itemIDs.length; y++)
-					{
-						for (int x = 0; x < itemIDs[0].length; x++)
-						{
-							if (((i+x-firstItem) > 4)||(j+y > 4))
-							{
-								correctRecipe = false;
-								return false;
-							}
-							if (!(game.craftingBoxes[i+x-firstItem][j+y] == itemIDs[y][x]))
-							{
-								y = itemIDs.length;
-								x = itemIDs[0].length;
-								numOfRecipes--;
-								correctRecipe = false;
-							}
-							else
-							{
-								itemSlotUsed[i+x-firstItem][j+y] = true;
-							}
-						}
-					}
-					numOfRecipes++;
-				}
-				else if (game.craftingBoxes[i][j] != 0)
-				{
-					if (!itemSlotUsed[i][j])
-					{
-						correctRecipe = false;
-						return false;
-					}
-				}
-			}
-		}
-		if (numOfRecipes != 1)
-		{
-			return false;
-		}
-		//Checks if the player has enough items to make the craft
-		if (correctRecipe)
-		{
-			for (int y = 0; y < numPerID.length; y++)
-			{
-				int itemID = numPerID[y][0];
-				int numNeeded = numPerID[y][1];
-				int numInInv = 0;
-				for (int j = 0; j < 6; j++)
-				{
-					for (int i = 0; i < 5; i++)
-					{
-						if (game.Inventory[i][j][0] == itemID)
-						{
-							numInInv += game.Inventory[i][j][1];
-						}
-					}
-				}
-				if (numInInv < numNeeded)
-				{
-					enoughItems = false;
-				}
-			}
-			if (enoughItems)
-			{
-				if (inventoryhandler.addToInv((byte) IDToCraft, numToCraft))
-				{
-					for (int k  = 0; k < numPerID.length; k++)
-					{
-						int itemID = numPerID[k][0];
-						int numNeeded = numPerID[k][1];
-						int numUsed = 0;
-						for (int j = 0; j < 6; j++)
-						{
-							for (int i = 0; i < 5; i++)
-							{
-								if (numUsed != numNeeded)
-								{
-									if (game.Inventory[i][j][0] == itemID)
-									{
-										if (!inventoryhandler.unstackable((short) itemID))
-										{
-											if (game.Inventory[i][j][1] > numNeeded)
-											{
-												numUsed = numNeeded;
-												game.Inventory[i][j][1] -= numNeeded;
-											}
-											else
-											{
-												numUsed += game.Inventory[i][j][1];
-												game.Inventory[i][j][1] = 0;
-											}
-										}
-										else
-										{
-											String fileNameIdentifier = Identifications.getDurabilityFileName((short) itemID);
-											game.files.deleteTextFile("Files/File "+game.CurrentFile+"/Inventory/"+fileNameIdentifier+" "+game.Inventory[i][j][1]+".txt");
-											game.Inventory[i][j][0] = 0;
-											game.Inventory[i][j][1] = 0;
-											numUsed++;
-										}
-									}
-								}
-							}
-						}
-					}
-				}
-				else
-				{
-					game.addMessage("Please make room in your inventory to craft this item");
-					return false;
-				}
-			}
-			else
-			{
-				game.addMessage("You don't have enough items to complete this craft");
-				return false;
-			}
-		}
-		return true;
-	}
-
-	public boolean shapelessCrafting(int itemIDs[], int numPerID[], int IDToCraft, int numToCraft)
-	{
-		boolean correctRecipe = true;
-		boolean enoughItems = true;
-		for (int k = 0; k < itemIDs.length; k++)
-		{
-			int ID = itemIDs[k];
-			int num = 0;
-			for (int j = 0; j < 5; j++)
-			{
-				for (int i = 0; i < 5; i++)
-				{
-					if (game.craftingBoxes[i][j] == ID)
-					{
-						num++;
-					}
-					else if (game.craftingBoxes[i][j] != 0)
-					{
-						boolean neededItem = false;
-						for (int p = 0; p < itemIDs.length; p++)
-						{
-							if (game.craftingBoxes[i][j] == itemIDs[p])
-							{
-								neededItem = true;
-							}
-						}
-						if (!neededItem)
-						{
-							return false;
-						}
-					}
-				}
-			}
-			if (num != numPerID[k])
-			{
-				correctRecipe = false;
-				return false;
-			}
-		}
-		if (correctRecipe)
-		{
-			for (int k  = 0; k < itemIDs.length; k++)
-			{
-				int numNeeded = numPerID[k];
-				int numInInv = 0;
-				for (int j = 0; j < 6; j++)
-				{
-					for (int i = 0; i < 5; i++)
-					{
-						if (game.Inventory[i][j][0] == itemIDs[k])
-						{
-							numInInv += game.Inventory[i][j][1];
-						}
-					}
-				}
-				if (numInInv < numNeeded)
-				{
-					enoughItems = false;
-				}
-			}
-			if (enoughItems)
-			{
-				if (inventoryhandler.addToInv((byte) IDToCraft, numToCraft))
-				{
-					for (int k  = 0; k < itemIDs.length; k++)
-					{
-						int numNeeded = numPerID[k];
-						int numUsed = 0;
-						for (int j = 0; j < 6; j++)
-						{
-							for (int i = 0; i < 5; i++)
-							{
-								if (numUsed != numNeeded)
-								{
-									if (game.Inventory[i][j][0] == itemIDs[k])
-									{
-										if (game.Inventory[i][j][1] > numNeeded)
-										{
-											numUsed = numNeeded;
-											game.Inventory[i][j][1] -= numNeeded;
-										}
-										else
-										{
-											numUsed += game.Inventory[i][j][1];
-											game.Inventory[i][j][1] = 0;
-										}
-									}
-								}
-							}
-						}
-					}
-				}
-				else
-				{
-					game.addMessage("Please make room in your inventory to craft this item");
-					return false;
-				}
-			}
-			else
-			{
-				game.addMessage("You don't have enough of a certain item to complete this craft");
-				return false;
-			}
-		}
-		return true;
+	public void setNumOutput(byte numOutput) {
+		this.numOutput = numOutput;
 	}
 }

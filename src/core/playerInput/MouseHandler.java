@@ -12,7 +12,7 @@ import core.InGameHud;
 import core.Main_Game;
 import core.Main_Game.State;
 import entities.Creature;
-import items.CraftingRecipes;
+import items.CraftingManager;
 import items.InventoryManagement;
 import items.ItemIDs;
 import menus.FileMenu;
@@ -35,7 +35,7 @@ public class MouseHandler extends MouseAdapter implements MouseMotionListener, M
 
 	private boolean Unpressed = true;
 
-	public MouseHandler(Main_Game game, MainMenu mainmenu, FileMenu filemenu, Files files, InGameHud ingamehud, Interactions interactions, CraftingRecipes craftingrecipes) {
+	public MouseHandler(Main_Game game, MainMenu mainmenu, FileMenu filemenu, Files files, InGameHud ingamehud, Interactions interactions, CraftingManager craftingrecipes) {
 		this.game = game;
 		this.mainmenu = mainmenu;
 		this.filemenu = filemenu;

@@ -34,7 +34,7 @@ import entities.management.DimensionName;
 import entities.management.Handler;
 import entities.management.ItemDrops;
 import entities.management.SpawnEvent;
-import items.CraftingRecipes;
+import items.CraftingManager;
 import items.InventoryManagement;
 import menus.FileMenu;
 import menus.MainMenu;
@@ -143,7 +143,7 @@ public class Main_Game extends Canvas implements Runnable{
 	private InGameHud ingamehud;
 	public InventoryHandler inventoryhandler;
 	public Collision collision;
-	private CraftingRecipes craftingrecipes;
+	private CraftingManager craftingrecipes;
 	public Interactions interactions;
 	public ProcessHandler processhandler;
 	public HarvestTile harvesttile;
@@ -185,7 +185,7 @@ public class Main_Game extends Canvas implements Runnable{
 		ingamehud = new InGameHud(this);
 		inventoryhandler = new InventoryHandler(this, files);
 		collision = new Collision(this);
-		craftingrecipes = new CraftingRecipes(this, inventoryhandler);
+		craftingrecipes = new CraftingManager(this, inventoryhandler);
 		interactions = new Interactions(this, files);
 		processhandler = new ProcessHandler(this);
 		harvesttile = new HarvestTile(this, inventoryhandler);
