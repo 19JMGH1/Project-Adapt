@@ -1,5 +1,6 @@
 package tiles.interactions;
 
+import java.awt.Color;
 import java.awt.Graphics;
 
 import core.Files;
@@ -8,6 +9,7 @@ import core.Main_Game;
 import core.Main_Game.Dimensions;
 import items.ItemIDs;
 import processors.management.ProcessorIDs;
+import tiles.CoveTileIDs;
 import tiles.SurfaceTileIDs;
 
 public class Interactions {
@@ -15,13 +17,61 @@ public class Interactions {
 	private Main_Game game;
 	private Files files;
 
+	private final short MAXDESTROYTIMER = (short) (Main_Game.Target_FPS*0.25); //This is the time it takes a tile to destroy
+	public boolean destroying = false; //This starts the timer and the progress bar for destroying a tile
+	private short destroyTimer = 0; //The current timer value
+	private short destroyTile = 0;
+	public int destroyChunk = 0;
+	public int destroyTileX = 0;
+	public int destroyTileY = 0;
+
 	public Interactions(Main_Game game, Files files)
 	{
 		this.game = game;
 		this.files = files;
 	}
-
-	public void destroyCheck(int location)
+	
+	private boolean destroyable(String tool) {
+		if (!tool.equals("unbreakable")) {
+			
+			if (tool.equals("pickaxe")) {
+				if (game.inventoryhandler.isPick(game.Inventory[game.SelectedHotbar][5][0])) {
+					return true;
+				}
+				else {
+					return false;
+				}
+			}
+			else if (tool.equals("axe")) {
+				if (game.inventoryhandler.isAxe(game.Inventory[game.SelectedHotbar][5][0])) {
+					return true;
+				}
+				else {
+					return false;
+				}
+			}
+			
+			return true;
+			
+		}
+		
+		return false;
+		
+	}
+	
+	private String getTool() {
+		if (game.dimension == Dimensions.surface) {
+			return SurfaceTileIDs.values()[destroyTile].getTool();
+		}
+		else if (game.dimension == Dimensions.coves) {
+			if (game.inventoryhandler.comparePickHardness(game.Inventory[game.SelectedHotbar][5][0], CoveTileIDs.values()[destroyTile].neededHardness)) {
+				return "pickaxe"; //Assuming all resources in the mining dimension require pickaxes
+			}
+		}
+		return "unbreakable";
+	}
+	
+	public boolean destroyCheck(int location)
 	{
 		//System.out.println("checking tile..."); //For testing purposes
 		int chunk = 4;
@@ -35,18 +85,24 @@ public class Interactions {
 			tileX = tileXAdjust(tileX);
 			chunk = chunkYAdjust(chunk, tileY);
 			tileY = tileYAdjust(tileY);
-			synchronized(game.StoredTiles) {
-				collect(game.StoredTiles[chunk][tileX][Math.abs(tileY)][0], chunk, tileX, tileY);
-			}
+			destroyTile = game.StoredTiles[chunk][tileX][Math.abs(tileY)][0];
+			destroyChunk = chunk;
+			destroyTileX = tileX;
+			destroyTileY = tileY;
+			String tool = getTool();
+			return destroyable(tool);
 		}
 		else if (location == 2)
 		{
 			tileY++;
 			chunk = chunkYAdjust(chunk, tileY);
 			tileY = tileYAdjust(tileY);
-			synchronized(game.StoredTiles) {
-				collect(game.StoredTiles[chunk][tileX][Math.abs(tileY)][0], chunk, tileX, tileY);
-			}
+			destroyTile = game.StoredTiles[chunk][tileX][Math.abs(tileY)][0];
+			destroyChunk = chunk;
+			destroyTileX = tileX;
+			destroyTileY = tileY;
+			String tool = getTool();
+			return destroyable(tool);
 		}
 		else if (location == 3)
 		{
@@ -56,33 +112,45 @@ public class Interactions {
 			tileX = tileXAdjust(tileX);
 			chunk = chunkYAdjust(chunk, tileY);
 			tileY = tileYAdjust(tileY);
-			synchronized(game.StoredTiles) {
-				collect(game.StoredTiles[chunk][tileX][Math.abs(tileY)][0], chunk, tileX, tileY);
-			}
+			destroyTile = game.StoredTiles[chunk][tileX][Math.abs(tileY)][0];
+			destroyChunk = chunk;
+			destroyTileX = tileX;
+			destroyTileY = tileY;
+			String tool = getTool();
+			return destroyable(tool);
 		}
 		else if (location == 4)
 		{
 			tileX--;
 			chunk = chunkXAdjust(chunk, tileX);
 			tileX = tileXAdjust(tileX);
-			synchronized(game.StoredTiles) {
-				collect(game.StoredTiles[chunk][tileX][Math.abs(tileY)][0], chunk, tileX, tileY);
-			}
+			destroyTile = game.StoredTiles[chunk][tileX][Math.abs(tileY)][0];
+			destroyChunk = chunk;
+			destroyTileX = tileX;
+			destroyTileY = tileY;
+			String tool = getTool();
+			return destroyable(tool);
 		}
 		else if (location == 5)
 		{
-			synchronized(game.StoredTiles) {
-				collect(game.StoredTiles[chunk][tileX][Math.abs(tileY)][0], chunk, tileX, tileY);
-			}
+			destroyTile = game.StoredTiles[chunk][tileX][Math.abs(tileY)][0];
+			destroyChunk = chunk;
+			destroyTileX = tileX;
+			destroyTileY = tileY;
+			String tool = getTool();
+			return destroyable(tool);
 		}
 		else if (location == 6)
 		{
 			tileX++;
 			chunk = chunkXAdjust(chunk, tileX);
 			tileX = tileXAdjust(tileX);
-			synchronized(game.StoredTiles) {
-				collect(game.StoredTiles[chunk][tileX][Math.abs(tileY)][0], chunk, tileX, tileY);
-			}
+			destroyTile = game.StoredTiles[chunk][tileX][Math.abs(tileY)][0];
+			destroyChunk = chunk;
+			destroyTileX = tileX;
+			destroyTileY = tileY;
+			String tool = getTool();
+			return destroyable(tool);
 		}
 		else if (location == 7)
 		{
@@ -92,18 +160,24 @@ public class Interactions {
 			tileX = tileXAdjust(tileX);
 			chunk = chunkYAdjust(chunk, tileY);
 			tileY = tileYAdjust(tileY);
-			synchronized(game.StoredTiles) {
-				collect(game.StoredTiles[chunk][tileX][Math.abs(tileY)][0], chunk, tileX, tileY);
-			}
+			destroyTile = game.StoredTiles[chunk][tileX][Math.abs(tileY)][0];
+			destroyChunk = chunk;
+			destroyTileX = tileX;
+			destroyTileY = tileY;
+			String tool = getTool();
+			return destroyable(tool);
 		}
 		else if (location == 8)
 		{
 			tileY--;
 			chunk = chunkYAdjust(chunk, tileY);
 			tileY = tileYAdjust(tileY);
-			synchronized(game.StoredTiles) {
-				collect(game.StoredTiles[chunk][tileX][Math.abs(tileY)][0], chunk, tileX, tileY);
-			}
+			destroyTile = game.StoredTiles[chunk][tileX][Math.abs(tileY)][0];
+			destroyChunk = chunk;
+			destroyTileX = tileX;
+			destroyTileY = tileY;
+			String tool = getTool();
+			return destroyable(tool);
 		}
 		else if (location == 9)
 		{
@@ -113,10 +187,14 @@ public class Interactions {
 			tileX = tileXAdjust(tileX);
 			chunk = chunkYAdjust(chunk, tileY);
 			tileY = tileYAdjust(tileY);
-			synchronized(game.StoredTiles) {
-				collect(game.StoredTiles[chunk][tileX][Math.abs(tileY)][0], chunk, tileX, tileY);
-			}
+			destroyTile = game.StoredTiles[chunk][tileX][Math.abs(tileY)][0];
+			destroyChunk = chunk;
+			destroyTileX = tileX;
+			destroyTileY = tileY;
+			String tool = getTool();
+			return destroyable(tool);
 		}
+		return false;
 	}
 
 	public void useCheck(short location)
@@ -361,7 +439,7 @@ public class Interactions {
 						game.addMessage("Craft a boat to cross the water");
 					}
 				}
-				else if (ProcessorIDs.containerExists(SurfaceTileIDs.values()[tileValue].toString())) { //Opening Containers
+				else if (ProcessorIDs.isContainer(SurfaceTileIDs.values()[tileValue].toString())) { //Opening Containers
 					game.curentlyOpenedContainer = game.processhandler.getProcessor(ProcessorIDs.valueOf(SurfaceTileIDs.values()[tileValue].toString()), game.StoredTiles[chunk][tileX][Math.abs(tileY)][1]);
 					game.inventoryOpened = true;
 				}
@@ -381,14 +459,14 @@ public class Interactions {
 	{
 		game.placetile.place(chunk, tileX, tileY);
 	}
-	
+
 	public boolean checkSurroundingsNot(short tileWanted, int chunk, int tileX, int tileY) {
 		if (!checkAbove(tileWanted, chunk, tileX, tileY) || !checkBelow(tileWanted, chunk, tileX, tileY) || !checkLeft(tileWanted, chunk, tileX, tileY) || !checkRight(tileWanted, chunk, tileX, tileY)) {
 			return true;
 		}
 		return false;
 	}
-	
+
 	public boolean checkAbove(short tileWanted, int chunk, int tileX, int tileY)
 	{
 		tileY++;
@@ -526,11 +604,6 @@ public class Interactions {
 		return false;
 	}
 
-	private void collect(short tileValue, int chunk, int tileX, int tileY)
-	{
-		game.harvesttile.collect(tileValue, chunk, tileX, tileY);
-	}
-
 	public void itemBroken(short itemID, int x, int y) {
 		if (Identifications.isDurabilityItem(itemID)) {
 			String fileNameIdentifier = Identifications.getDurabilityFileName(itemID);
@@ -591,23 +664,47 @@ public class Interactions {
 		}
 		//These statements check if there is a stone table or anvil around to increase the players crafting level
 		//It check the anvil and if there is none, it checks for the stone table afterwards
-		if (checkNearbyTiles((short) SurfaceTileIDs.Anvil.ordinal(), 4, game.TileX, game.TileY))
-		{
-			//System.out.println("we got here"); //Just for testing purposes
-			game.tempCraftingLevel = 3;
+		if (game.inventoryOpened) {
+			if (checkNearbyTiles((short) SurfaceTileIDs.Anvil.ordinal(), 4, game.TileX, game.TileY))
+			{
+				//System.out.println("we got here"); //Just for testing purposes
+				game.tempCraftingLevel = 3;
+			}
+			else if (checkNearbyTiles((short) SurfaceTileIDs.StoneTable.ordinal(), 4, game.TileX, game.TileY))
+			{
+				game.tempCraftingLevel = 2;
+			}
+			else
+			{
+				game.tempCraftingLevel = 0;
+			}
 		}
-		else if (checkNearbyTiles((short) SurfaceTileIDs.StoneTable.ordinal(), 4, game.TileX, game.TileY))
-		{
-			game.tempCraftingLevel = 2;
+
+		if (destroying) {
+			if (destroyTimer == MAXDESTROYTIMER) {
+				game.harvesttile.collect(destroyTile, destroyChunk, destroyTileX, destroyTileY);
+				destroyTimer = 0;
+				destroying = false;
+			}
+			else {
+				destroyTimer++;
+			}
 		}
-		else
-		{
-			game.tempCraftingLevel = 0;
+		else {
+			destroyTimer = 0;
+			destroyTile = 0;
 		}
 	}
 
 	public void render(Graphics g)
 	{
-
+		if (destroying) {
+			g.setColor(Color.darkGray);
+			System.out.println((Main_Game.WIDTH/2)-game.CharacterWidth/2+(game.TileWidth*destroyTileX)-(game.TileX*game.TileWidth)-(game.TileWidth*16)-game.x+(destroyChunk%3*game.TileWidth*16)+ ", " + ((Main_Game.HEIGHT/2)-game.CharacterHeight/2+(game.TileHeight*(-destroyTileY))+(game.TileY*game.TileHeight)-(game.TileHeight*16)+game.y+((destroyChunk/3)*game.TileHeight*16)));
+			g.fillRect((Main_Game.WIDTH/2)-game.CharacterWidth/2+(game.TileWidth*destroyTileX)-(game.TileX*game.TileWidth)-(game.TileWidth*16)-game.x+(destroyChunk%3*game.TileWidth*16)+game.TileWidth/10, (Main_Game.HEIGHT/2)-game.CharacterHeight/2+(game.TileHeight*(-destroyTileY))+(game.TileY*game.TileHeight)-(game.TileHeight*16)+game.y+((destroyChunk/3)*game.TileHeight*16)+game.TileHeight/2-game.TileHeight/16, game.TileWidth-game.TileWidth/5, game.TileHeight/8);
+			g.setColor(Color.green);
+			//System.out.println(((destroyTimer+0.0)/MAXDESTROYTIMER));
+			g.fillRect((Main_Game.WIDTH/2)-game.CharacterWidth/2+(game.TileWidth*destroyTileX)-(game.TileX*game.TileWidth)-(game.TileWidth*16)-game.x+(destroyChunk%3*game.TileWidth*16)+game.TileWidth/10+game.TileWidth/60, (Main_Game.HEIGHT/2)-game.CharacterHeight/2+(game.TileHeight*(-destroyTileY))+(game.TileY*game.TileHeight)-(game.TileHeight*16)+game.y+((destroyChunk/3)*game.TileHeight*16)+game.TileHeight/2-game.TileHeight/16+game.TileHeight/60, (int) (((destroyTimer+0.0)/MAXDESTROYTIMER)*(game.TileWidth-game.TileWidth/5+game.TileWidth/30)), game.TileHeight/8-game.TileHeight/30);
+		}
 	}
 }

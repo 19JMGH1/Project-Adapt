@@ -118,6 +118,7 @@ public class Main_Game extends Canvas implements Runnable{
 	public int TileY = 0;
 	public int ChunkX = 0;
 	public int ChunkY = 0;
+	
 	//Aspect Ratio is WIDTH = 320 and HEIGHT = 320
 	public int TileWidth = Main_Game.WIDTH/18;
 	public int TileHeight = TileWidth;
@@ -415,9 +416,17 @@ public class Main_Game extends Canvas implements Runnable{
 		handler.addObject(new DimensionName(0, 0, EntityTypes.Other, this, handler, dimension));
 	}
 
-	public void addDropedItem(byte itemID, int numToDrop) {
+	/**
+	 * @param atMouse When this is true, the items to appear where your mouse is positioned. If this is false, it assumes you harvested a tile so it generates the dropped items wherever the tile was broken.
+	 */
+	public void addDropedItem(byte itemID, int numToDrop, boolean atMouse) {
 		for (int  i = 0; i < numToDrop; i++) {
-			handler.addObject(new ItemDrops(MouseHandler.mouseX, MouseHandler.mouseY, itemID, EntityTypes.ItemDrop, this, handler));
+			if (atMouse) {
+				handler.addObject(new ItemDrops(MouseHandler.mouseX , MouseHandler.mouseY, itemID, EntityTypes.ItemDrop, this, handler));
+			}
+			else {
+			handler.addObject(new ItemDrops((Main_Game.WIDTH/2)-CharacterWidth/2+(TileWidth*interactions.destroyTileX)-(TileX*TileWidth)-(TileWidth*16)-x+(interactions.destroyChunk%3*TileWidth*16)+(TileWidth/4), (Main_Game.HEIGHT/2)-CharacterHeight/2+(TileHeight*(-interactions.destroyTileY))+(TileY*TileHeight)-(TileHeight*16)+y+((interactions.destroyChunk/3)*TileHeight*16), itemID, EntityTypes.ItemDrop, this, handler));
+			}
 		}
 	}
 
@@ -463,23 +472,23 @@ public class Main_Game extends Canvas implements Runnable{
 		//System.out.println(TileWidth/10);
 
 		//Changes the player's tile position on the every time crosses a tile border
-		if (x < 0) {
+		if (x < -CharacterWidth/2) {
 			TileX--;
 			x += TileWidth;
 			//System.out.println(TileX);
 		}
-		else if (x >= TileWidth) {
+		else if (x >= TileWidth-CharacterWidth/2) {
 			TileX++;
 			x -= TileWidth;
 			//System.out.println(TileX);
 		}
 
-		if (y < 0) {
+		if (y < 0-CharacterHeight/2) {
 			TileY--;
 			y += TileHeight;
 			//System.out.println(TileY);
 		}
-		else if (y >= TileHeight) {
+		else if (y >= TileHeight-CharacterHeight/2) {
 			TileY++;
 			y -= TileHeight;
 			//System.out.println(TileY);
@@ -632,9 +641,11 @@ public class Main_Game extends Canvas implements Runnable{
 	//Declaring variables for timing of autosaving
 	long currentTime = System.currentTimeMillis();
 	long prevTime = currentTime;
-	int savePeriod = 60000;
+	int savePeriod = 60000; //This is the number of milliseconds between each save
 
 	public void tick() {
+//		System.out.println("y: "+y);
+//		System.out.println("x: "+x);
 		//System.out.println(AdaptState);
 		if ((window.frame.getWidth() < window.frame.getHeight())) {
 			//System.out.println("here");
@@ -686,7 +697,7 @@ public class Main_Game extends Canvas implements Runnable{
 		handler.tick();
 		resized = false;
 	}
-
+	
 	public void render() {
 		rendering = true;
 		BufferStrategy bs = this.getBufferStrategy();
@@ -699,7 +710,6 @@ public class Main_Game extends Canvas implements Runnable{
 		if (isShowing()) paint(g);
 		g.setColor(Color.black);
 		g.fillRect(0, 0, Main_Game.WIDTH, Main_Game.HEIGHT);
-		
 		if (AdaptState == State.MainMenu) {
 			mainmenu.render(g);
 		}
@@ -709,7 +719,6 @@ public class Main_Game extends Canvas implements Runnable{
 		handler.render(g);
 
 		if (AdaptState == State.InWorld) {
-			this.craftingLevel = 0;
 			processhandler.render(g);
 			if (Paused == false) {
 				PositionHandler(); //This is not in the tick() method since being in the tick() method caused rendering issues and flashes related to the multi-threading.
@@ -732,7 +741,6 @@ public class Main_Game extends Canvas implements Runnable{
 		//	         new RadialGradientPaint(center, radius, dist, colors);
 		//	    g2d.setPaint(p);
 		//	    g2d.fillRect((int) (center.getX()-radius), (int) (center.getY()-radius), (int) (radius*4), (int) (radius*4));
-
 		g.dispose();
 		bs.show();
 		rendering = false;

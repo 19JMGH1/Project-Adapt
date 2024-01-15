@@ -4,25 +4,27 @@ import core.Main_Game;
 
 public enum CoveTileIDs {
 	Blank(),
-	CoalOre("Coal Ore"),
-	IronOre("Iron Ore"),
-	CopperOre("Copper Ore"),
-	GoldOre("Gold Ore"),
-	LithiumOre("Lithium Ore"),
-	UraniumOre("Uranium Ore"),
-	AluminumOre("Aluminum Ore"),
+	CoalOre("Coal Ore", (byte) 2),
+	IronOre("Iron Ore", (byte) 3),
+	CopperOre("Copper Ore", (byte) 2),
+	GoldOre("Gold Ore", (byte) 4),
+	LithiumOre("Lithium Ore", (byte) 1),
+	UraniumOre("Uranium Ore", (byte) 6),
+	AluminumOre("Aluminum Ore", (byte) 4),
 	Topaz(),
 	Mine(),
 	ENDOFLIST;
 	
 	private String name;
+	public byte neededHardness = 0;
 	
 	CoveTileIDs() {
 		name = this.toString();
 	}
 	
-	CoveTileIDs(String name){
+	CoveTileIDs(String name, byte neededHardness){
 		this.name = name;
+		this.neededHardness = neededHardness;
 	}
 	
 	public String getName() {

@@ -185,7 +185,7 @@ public class MouseHandler extends MouseAdapter implements MouseMotionListener, M
 							if ((c.HP-item.damage) <= 0) {
 								for (int i = 0 ; i < c.drops.length; i++) {
 									if (game.inventoryhandler.addToInv((short) c.drops[i][0], c.drops[i][1])) {
-										game.addDropedItem((byte) c.drops[i][0], c.drops[i][1]);
+										game.addDropedItem((byte) c.drops[i][0], c.drops[i][1], true);
 									}
 								}
 							}
@@ -195,31 +195,49 @@ public class MouseHandler extends MouseAdapter implements MouseMotionListener, M
 						else
 						{
 							if (mousePosition(mx, my, game.characterX-game.x-game.TileWidth, game.characterY+game.y-game.TileHeight, game.TileWidth, game.TileHeight)) {
-								interactions.destroyCheck(1);
+								if (interactions.destroyCheck(1)) {
+									interactions.destroying = true;
+								}
 							}
 							else if (mousePosition(mx, my, game.characterX-game.x, game.characterY+game.y-game.TileHeight, game.TileWidth, game.TileHeight)) {
-								interactions.destroyCheck(2);
+								if (interactions.destroyCheck(2)) {
+									interactions.destroying = true;
+								}
 							}
 							else if (mousePosition(mx, my, game.characterX-game.x+game.TileWidth, game.characterY+game.y-game.TileHeight, game.TileWidth, game.TileHeight)) {
-								interactions.destroyCheck(3);
+								if (interactions.destroyCheck(3)) {
+									interactions.destroying = true;
+								}
 							}
 							else if (mousePosition(mx, my, game.characterX-game.x-game.TileWidth, game.characterY+game.y, game.TileWidth, game.TileHeight)) {
-								interactions.destroyCheck(4);
+								if (interactions.destroyCheck(4)) {
+									interactions.destroying = true;
+								}
 							}
 							else if (mousePosition(mx, my, game.characterX-game.x, game.characterY+game.y, game.TileWidth, game.TileHeight)) {
-								interactions.destroyCheck(5);
+								if (interactions.destroyCheck(5)) {
+									interactions.destroying = true;
+								}
 							}
 							else if (mousePosition(mx, my, game.characterX-game.x+game.TileWidth, game.characterY+game.y, game.TileWidth, game.TileHeight)) {
-								interactions.destroyCheck(6);
+								if (interactions.destroyCheck(6)) {
+									interactions.destroying = true;
+								}
 							}
 							else if (mousePosition(mx, my, game.characterX-game.x-game.TileWidth, game.characterY+game.y+game.TileHeight, game.TileWidth, game.TileHeight)) {
-								interactions.destroyCheck(7);
+								if (interactions.destroyCheck(7)) {
+									interactions.destroying = true;
+								}
 							}
 							else if (mousePosition(mx, my, game.characterX-game.x, game.characterY+game.y+game.TileHeight, game.TileWidth, game.TileHeight)) {
-								interactions.destroyCheck(8);
+								if (interactions.destroyCheck(8)) {
+									interactions.destroying = true;
+								}
 							}
 							else if (mousePosition(mx, my, game.characterX-game.x+game.TileWidth, game.characterY+game.y+game.TileHeight, game.TileWidth, game.TileHeight)) {
-								interactions.destroyCheck(9);
+								if (interactions.destroyCheck(9)) {
+									interactions.destroying = true;
+								}
 							}
 						}
 					}
@@ -386,6 +404,7 @@ public class MouseHandler extends MouseAdapter implements MouseMotionListener, M
 				InventoryManagement.inventoryRightDrag[5][i] = false;
 			}
 		}
+		interactions.destroying = false;
 	}
 
 	public void mouseDragged(MouseEvent e) {

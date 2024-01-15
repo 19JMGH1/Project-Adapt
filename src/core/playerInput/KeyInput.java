@@ -112,6 +112,7 @@ public class KeyInput extends KeyAdapter {
 			if (k == KeyEvent.VK_ESCAPE) {
 				if (game.inventoryOpened)
 				{
+					game.tempCraftingLevel = 0;
 					game.inventoryOpened = false;
 					game.configuringIO = false;
 					for (int j = 0; j < 5; j++)

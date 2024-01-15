@@ -22,145 +22,147 @@ public class HarvestTile {
 
 	public void collect(short tileValue, int chunk, int tileX, int tileY)
 	{
-		if (game.dimension == Dimensions.surface) { //This else-if runs through all the methods needed to harvest a given tile
-			SurfaceTileIDs tile = SurfaceTileIDs.values()[tileValue]; //Save a variable of the tile that was broken for ease of access
-			if (!tile.getTool().equals("unbreakable")) //Harvesting any tile
-			{
-				if (tileValue == 13) { //Removes the mine tile in the mining dimension if its surface counterpart is removed
-					game.files.RewriteLine("Files/File "+game.CurrentFile+"/Mine Chunks/Chunk "+((game.ChunkX-1)+(chunk%3))+" "+((game.ChunkY-1)+(chunk/3))+".txt", (Math.abs(tileY)+1+(tileX*16)), "0 0 0");
-				}
-				if (tile.getTool().equals("pickaxe")) { //Makes sure you are holding a pickaxe is the tile needs a pickaxe to be mined
-					if (inventoryhandler.isPick(game.Inventory[game.SelectedHotbar][5][0])) {
-						useHarvestingItem(game.Inventory[game.SelectedHotbar][5][0], game.SelectedHotbar, 5);
+		synchronized(game.StoredTiles) {
+			if (game.dimension == Dimensions.surface) { //This else-if runs through all the methods needed to harvest a given tile
+				SurfaceTileIDs tile = SurfaceTileIDs.values()[tileValue]; //Save a variable of the tile that was broken for ease of access
+				if (!tile.getTool().equals("unbreakable")) //Harvesting any tile
+				{
+					if (tileValue == 13) { //Removes the mine tile in the mining dimension if its surface counterpart is removed
+						game.files.RewriteLine("Files/File "+game.CurrentFile+"/Mine Chunks/Chunk "+((game.ChunkX-1)+(chunk%3))+" "+((game.ChunkY-1)+(chunk/3))+".txt", (Math.abs(tileY)+1+(tileX*16)), "0 0 0");
+					}
+					if (tile.getTool().equals("pickaxe")) { //Makes sure you are holding a pickaxe is the tile needs a pickaxe to be mined
+						if (inventoryhandler.isPick(game.Inventory[game.SelectedHotbar][5][0])) {
+							useHarvestingItem(game.Inventory[game.SelectedHotbar][5][0], game.SelectedHotbar, 5);
+						}
+						else {
+							return;
+						}
+					}
+					if (tile.getTool().equals("axe")) { //Makes sure you are holding a axe is the tile needs a axe to be mined
+						if (inventoryhandler.isAxe(game.Inventory[game.SelectedHotbar][5][0])) {
+							useHarvestingItem(game.Inventory[game.SelectedHotbar][5][0], game.SelectedHotbar, 5);
+						}
+						else {
+							return;
+						}
+					}
+					if (!tile.isProcessor()) { //Makes sure the text file for the container is removed if a container is what was removed.
+						for (int j = 0; j < tile.getItems().length; j++) {
+							basicHarvest((byte) tile.getItems()[j][0], tile.getItems()[j][1], chunk, tileX, tileY);
+						}
 					}
 					else {
-						return;
+						basicContainerHarvest((byte) tile.getItems()[0][0], chunk, tileX, tileY, tile);
 					}
-				}
-				if (tile.getTool().equals("axe")) { //Makes sure you are holding a axe is the tile needs a axe to be mined
-					if (inventoryhandler.isAxe(game.Inventory[game.SelectedHotbar][5][0])) {
-						useHarvestingItem(game.Inventory[game.SelectedHotbar][5][0], game.SelectedHotbar, 5);
-					}
-					else {
-						return;
-					}
-				}
-				if (!tile.isProcessor()) { //Makes sure the text file for the container is removed if a container is what was removed.
-					for (int j = 0; j < tile.getItems().length; j++) {
-						basicHarvest((byte) tile.getItems()[j][0], tile.getItems()[j][1], chunk, tileX, tileY);
-					}
-				}
-				else {
-					basicContainerHarvest((byte) tile.getItems()[0][0], chunk, tileX, tileY, tile);
 				}
 			}
-		}
-		else if (game.dimension == Dimensions.coves) { //Harvesting items in the mining dimension
-			if (tileValue == 1) //Harvesting coal
-			{
-				if (inventoryhandler.comparePickHardness(game.Inventory[game.SelectedHotbar][5][0], 2))
+			else if (game.dimension == Dimensions.coves) { //Harvesting items in the mining dimension
+				if (tileValue == 1) //Harvesting coal
 				{
-					byte invValue = 12;
-					if (inventoryhandler.addToInv(invValue, 2))
+					if (inventoryhandler.comparePickHardness(game.Inventory[game.SelectedHotbar][5][0], 2))
 					{
-						harvestBulder();
-						game.addDropedItem(invValue, 2);
-						useHarvestingItem(game.Inventory[game.SelectedHotbar][5][0], game.SelectedHotbar, 5);
-						game.StoredTiles[chunk][tileX][Math.abs(tileY)][0] = 0;
+						byte invValue = 12;
+						if (inventoryhandler.addToInv(invValue, 2))
+						{
+							harvestBulder();
+							game.addDropedItem(invValue, 2, false);
+							useHarvestingItem(game.Inventory[game.SelectedHotbar][5][0], game.SelectedHotbar, 5);
+							game.StoredTiles[chunk][tileX][Math.abs(tileY)][0] = 0;
+						}
 					}
 				}
-			}
-			else if (tileValue == 2) //Harvesting iron
-			{
-				if (inventoryhandler.comparePickHardness(game.Inventory[game.SelectedHotbar][5][0], 3))
+				else if (tileValue == 2) //Harvesting iron
 				{
-					byte invValue = 13;
-					if (inventoryhandler.addToInv(invValue, 2))
+					if (inventoryhandler.comparePickHardness(game.Inventory[game.SelectedHotbar][5][0], 3))
 					{
-						harvestBulder();
-						game.addDropedItem(invValue, 2);
-						useHarvestingItem(game.Inventory[game.SelectedHotbar][5][0], game.SelectedHotbar, 5);
-						game.StoredTiles[chunk][tileX][Math.abs(tileY)][0] = 0;
+						byte invValue = 13;
+						if (inventoryhandler.addToInv(invValue, 2))
+						{
+							harvestBulder();
+							game.addDropedItem(invValue, 2, false);
+							useHarvestingItem(game.Inventory[game.SelectedHotbar][5][0], game.SelectedHotbar, 5);
+							game.StoredTiles[chunk][tileX][Math.abs(tileY)][0] = 0;
+						}
 					}
 				}
-			}
-			else if (tileValue == 3) //Harvesting copper
-			{
-				if (inventoryhandler.comparePickHardness(game.Inventory[game.SelectedHotbar][5][0], 2))
+				else if (tileValue == 3) //Harvesting copper
 				{
-					byte invValue = 14;
-					if (inventoryhandler.addToInv(invValue, 2))
+					if (inventoryhandler.comparePickHardness(game.Inventory[game.SelectedHotbar][5][0], 2))
 					{
-						harvestBulder();
-						game.addDropedItem(invValue, 2);
-						useHarvestingItem(game.Inventory[game.SelectedHotbar][5][0], game.SelectedHotbar, 5);
-						game.StoredTiles[chunk][tileX][Math.abs(tileY)][0] = 0;
+						byte invValue = 14;
+						if (inventoryhandler.addToInv(invValue, 2))
+						{
+							harvestBulder();
+							game.addDropedItem(invValue, 2, false);
+							useHarvestingItem(game.Inventory[game.SelectedHotbar][5][0], game.SelectedHotbar, 5);
+							game.StoredTiles[chunk][tileX][Math.abs(tileY)][0] = 0;
+						}
 					}
 				}
-			}
-			else if (tileValue == 4) //Harvesting gold
-			{
-				if (inventoryhandler.comparePickHardness(game.Inventory[game.SelectedHotbar][5][0], 4))
+				else if (tileValue == 4) //Harvesting gold
 				{
-					byte invValue = 15;
-					if (inventoryhandler.addToInv(invValue, 2))
+					if (inventoryhandler.comparePickHardness(game.Inventory[game.SelectedHotbar][5][0], 4))
 					{
-						harvestBulder();
-						game.addDropedItem(invValue, 2);
-						useHarvestingItem(game.Inventory[game.SelectedHotbar][5][0], game.SelectedHotbar, 5);
-						game.StoredTiles[chunk][tileX][Math.abs(tileY)][0] = 0;
+						byte invValue = 15;
+						if (inventoryhandler.addToInv(invValue, 2))
+						{
+							harvestBulder();
+							game.addDropedItem(invValue, 2, false);
+							useHarvestingItem(game.Inventory[game.SelectedHotbar][5][0], game.SelectedHotbar, 5);
+							game.StoredTiles[chunk][tileX][Math.abs(tileY)][0] = 0;
+						}
 					}
 				}
-			}
-			else if (tileValue == 5) //Harvesting lithium
-			{
-				if (inventoryhandler.comparePickHardness(game.Inventory[game.SelectedHotbar][5][0], 1))
+				else if (tileValue == 5) //Harvesting lithium
 				{
-					byte invValue = 16;
-					if (inventoryhandler.addToInv(invValue, 2))
+					if (inventoryhandler.comparePickHardness(game.Inventory[game.SelectedHotbar][5][0], 1))
 					{
-						harvestBulder();
-						game.addDropedItem(invValue, 2);
-						useHarvestingItem(game.Inventory[game.SelectedHotbar][5][0], game.SelectedHotbar, 5);
-						game.StoredTiles[chunk][tileX][Math.abs(tileY)][0] = 0;
+						byte invValue = 16;
+						if (inventoryhandler.addToInv(invValue, 2))
+						{
+							harvestBulder();
+							game.addDropedItem(invValue, 2, false);
+							useHarvestingItem(game.Inventory[game.SelectedHotbar][5][0], game.SelectedHotbar, 5);
+							game.StoredTiles[chunk][tileX][Math.abs(tileY)][0] = 0;
+						}
 					}
 				}
-			}
-			else if (tileValue == 6) //Harvesting uranium
-			{
-				if (inventoryhandler.comparePickHardness(game.Inventory[game.SelectedHotbar][5][0], 6))
+				else if (tileValue == 6) //Harvesting uranium
 				{
-					byte invValue = 17;
+					if (inventoryhandler.comparePickHardness(game.Inventory[game.SelectedHotbar][5][0], 6))
+					{
+						byte invValue = 17;
+						if (inventoryhandler.addToInv(invValue, 1))
+						{
+							harvestBulder();
+							game.addDropedItem(invValue, 1, false);
+							useHarvestingItem(game.Inventory[game.SelectedHotbar][5][0], game.SelectedHotbar, 5);
+							game.StoredTiles[chunk][tileX][Math.abs(tileY)][0] = 0;
+						}
+					}
+				}
+				else if (tileValue == 7) //Harvesting aluminum
+				{
+					if (inventoryhandler.comparePickHardness(game.Inventory[game.SelectedHotbar][5][0], 4))
+					{
+						byte invValue = 18;
+						if (inventoryhandler.addToInv(invValue, 2))
+						{
+							harvestBulder();
+							game.addDropedItem(invValue, 2, false);
+							useHarvestingItem(game.Inventory[game.SelectedHotbar][5][0], game.SelectedHotbar, 5);
+							game.StoredTiles[chunk][tileX][Math.abs(tileY)][0] = 0;
+						}
+					}
+				}
+				else if (tileValue == 8) //Harvesting topaz gems
+				{
+					byte invValue = 19;
 					if (inventoryhandler.addToInv(invValue, 1))
 					{
-						harvestBulder();
-						game.addDropedItem(invValue, 1);
-						useHarvestingItem(game.Inventory[game.SelectedHotbar][5][0], game.SelectedHotbar, 5);
+						game.addDropedItem(invValue, 1, false);
 						game.StoredTiles[chunk][tileX][Math.abs(tileY)][0] = 0;
 					}
-				}
-			}
-			else if (tileValue == 7) //Harvesting aluminum
-			{
-				if (inventoryhandler.comparePickHardness(game.Inventory[game.SelectedHotbar][5][0], 4))
-				{
-					byte invValue = 18;
-					if (inventoryhandler.addToInv(invValue, 2))
-					{
-						harvestBulder();
-						game.addDropedItem(invValue, 2);
-						useHarvestingItem(game.Inventory[game.SelectedHotbar][5][0], game.SelectedHotbar, 5);
-						game.StoredTiles[chunk][tileX][Math.abs(tileY)][0] = 0;
-					}
-				}
-			}
-			else if (tileValue == 8) //Harvesting topaz gems
-			{
-				byte invValue = 19;
-				if (inventoryhandler.addToInv(invValue, 1))
-				{
-					game.addDropedItem(invValue, 1);
-					game.StoredTiles[chunk][tileX][Math.abs(tileY)][0] = 0;
 				}
 			}
 		}
@@ -169,7 +171,7 @@ public class HarvestTile {
 	private void basicHarvest(byte invValue, int num, int chunk, int tileX, int tileY) {
 		if (inventoryhandler.addToInv(invValue, num))
 		{
-			game.addDropedItem(invValue, num);
+			game.addDropedItem(invValue, num, false);
 			game.StoredTiles[chunk][tileX][Math.abs(tileY)][0] = 0;
 		}
 	}
@@ -184,7 +186,7 @@ public class HarvestTile {
 			}
 		}
 		if (inventoryhandler.addToInv(invValue, 1)) {
-			game.addDropedItem(invValue, 1);
+			game.addDropedItem(invValue, 1, false);
 		}
 		game.files.deleteTextFile("Files/File "+game.CurrentFile+"/Tiles/"+tile.getName()+" "+game.StoredTiles[chunk][tileX][Math.abs(tileY)][1]+".txt");
 		game.StoredTiles[chunk][tileX][Math.abs(tileY)][0] = 0;
@@ -203,7 +205,7 @@ public class HarvestTile {
 			byte invValue = 1;
 			if (inventoryhandler.addToInv(invValue, 1))
 			{
-				game.addDropedItem(invValue, 1);
+				game.addDropedItem(invValue, 1, false);
 			}
 		}
 	}

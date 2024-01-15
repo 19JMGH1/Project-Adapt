@@ -41,7 +41,7 @@ public class InventoryHandler {
 	public int iconSize = Main_Game.WIDTH/20;
 	public int topLeftCornerX = (int) (Main_Game.WIDTH/2-iconSize*2.5);
 	public int topLeftCornerY = (int) (Main_Game.HEIGHT/2-iconSize*2.5);
-	private Font numberFont = new Font("Cooper Black", Font.BOLD, Main_Game.WIDTH/70);
+	private Font numberFont = new Font("Cooper Black", Font.BOLD, Main_Game.WIDTH/50);
 	private Color highilghtedItemColor = (new Color(255, 242, 0, 50));
 
 	public InventoryHandler(Main_Game game, Files files) {
@@ -140,7 +140,7 @@ public class InventoryHandler {
 			iconSize = Main_Game.WIDTH/20;
 			topLeftCornerX = (int) (Main_Game.WIDTH/2-iconSize*2.5);
 			topLeftCornerY = (int) (Main_Game.HEIGHT/2-iconSize*2.5);
-			numberFont = new Font("Cooper Black", Font.BOLD, Main_Game.WIDTH/70);
+			numberFont = new Font("Cooper Black", Font.BOLD, Main_Game.WIDTH/50);
 		}
 
 		spriteSheetXY[0] = 0;

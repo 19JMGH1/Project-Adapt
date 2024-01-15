@@ -29,11 +29,12 @@ public class Collision {
 		if (tileX == 16)
 			tileX = 15;
 
+		//Right collision
 		if (X >= game.TileWidth/8 && X <= game.TileWidth/4)
 		{
 			if (velX > 0) 
 			{
-				if (!(Y >= 0 && Y <= game.TileHeight/4))
+				if (Y > game.TileHeight/4)
 				{
 					if (tileX == 15)
 					{
@@ -47,6 +48,23 @@ public class Collision {
 						if (checkTile(tileX+1, tileY, chunkX, chunkY, inBoat))
 							return false;
 						if (checkTile(tileX+1, tileY+1, chunkX, chunkY, inBoat))
+							return false;
+					}
+				}
+				else if (Y < 0)
+				{
+					if (tileX == 15)
+					{
+						if (checkTile(0, tileY, chunkX+1, chunkY, inBoat))
+							return false;
+						if (checkTile(0, tileY-1, chunkX+1, chunkY, inBoat))
+							return false;
+					}
+					else
+					{
+						if (checkTile(tileX+1, tileY, chunkX, chunkY, inBoat))
+							return false;
+						if (checkTile(tileX+1, tileY-1, chunkX, chunkY, inBoat))
 							return false;
 					}
 				}
@@ -65,11 +83,12 @@ public class Collision {
 				}
 			}
 		}
+		//Left collision
 		if (X >= 0 && X <= game.TileWidth/8)
 		{
 			if (velX < 0) 
 			{
-				if (!(Y >= 0 && Y <= game.TileHeight/4))
+				if (Y > game.TileHeight/4)
 				{
 					if (tileX == 0)
 					{
@@ -83,6 +102,23 @@ public class Collision {
 						if (checkTile(tileX-1, tileY, chunkX, chunkY, inBoat))
 							return false;
 						if (checkTile(tileX-1, tileY+1, chunkX, chunkY, inBoat))
+							return false;
+					}
+				}
+				else if (Y < 0)
+				{
+					if (tileX == 0)
+					{
+						if (checkTile(15, tileY, chunkX-1, chunkY, inBoat))
+							return false;
+						if (checkTile(15, tileY-1, chunkX-1, chunkY, inBoat))
+							return false;
+					}
+					else
+					{
+						if (checkTile(tileX-1, tileY, chunkX, chunkY, inBoat))
+							return false;
+						if (checkTile(tileX-1, tileY-1, chunkX, chunkY, inBoat))
 							return false;
 					}
 				}
@@ -117,7 +153,7 @@ public class Collision {
 		{
 			if (velY > 0) 
 			{
-				if (!(X >= 0 && X <= game.TileWidth/4))
+				if (X > game.TileWidth/4)
 				{
 					if (tileY == 0)
 					{
@@ -131,6 +167,23 @@ public class Collision {
 						if (checkTile(tileX, tileY+1, chunkX, chunkY, inBoat))
 							return false;
 						if (checkTile(tileX+1, tileY+1, chunkX, chunkY, inBoat))
+							return false;
+					}
+				}
+				else if (X < 0)
+				{
+					if (tileY == 0)
+					{
+						if (checkTile(tileX, -15, chunkX, chunkY-1, inBoat))
+							return false;
+						if (checkTile(tileX-1, -15, chunkX, chunkY-1, inBoat))
+							return false;
+					}
+					else
+					{
+						if (checkTile(tileX, tileY+1, chunkX, chunkY, inBoat))
+							return false;
+						if (checkTile(tileX-1, tileY+1, chunkX, chunkY, inBoat))
 							return false;
 					}
 				}
@@ -152,7 +205,7 @@ public class Collision {
 		if (Y >= 0 && Y <= game.TileHeight/8)
 			if (velY < 0) 
 			{
-				if (!(X >= 0 && X <= game.TileWidth/4))
+				if (X > game.TileWidth/4)
 				{
 					if (tileY == -15)
 					{
@@ -166,6 +219,23 @@ public class Collision {
 						if (checkTile(tileX, tileY-1, chunkX, chunkY, inBoat))
 							return false;
 						if (checkTile(tileX+1, tileY-1, chunkX, chunkY, inBoat))
+							return false;
+					}
+				}
+				else if (X < 0)
+				{
+					if (tileY == -15)
+					{
+						if (checkTile(tileX, 0, chunkX, chunkY+1, inBoat))
+							return false;
+						if (checkTile(tileX-1, 0, chunkX, chunkY+1, inBoat))
+							return false;
+					}
+					else
+					{
+						if (checkTile(tileX, tileY-1, chunkX, chunkY, inBoat))
+							return false;
+						if (checkTile(tileX-1, tileY-1, chunkX, chunkY, inBoat))
 							return false;
 					}
 				}
