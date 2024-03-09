@@ -34,8 +34,8 @@ public class Window extends Canvas{
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.setResizable(true);
 		frame.setLocationRelativeTo(null);
-		frame.setVisible(true);
 		frame.add(game);
+		frame.setVisible(true);
 		
 		//Makes the current file save whenever the window is closed
 		frame.addWindowListener(new WindowAdapter() {
@@ -46,7 +46,6 @@ public class Window extends Canvas{
 				game.close();
 				}
 			});
-		
 		resize(game);
 		ResizeDetector(game);
 		game.start();
@@ -94,7 +93,6 @@ public class Window extends Canvas{
     	
     	//Variable that tells all objects to resize themselves
     	game.resized = true;
-    	
     	//System.out.println("resized: " +dims);
 	}
 }

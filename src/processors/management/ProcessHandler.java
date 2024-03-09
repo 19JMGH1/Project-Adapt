@@ -39,6 +39,12 @@ public class ProcessHandler implements Runnable {
 		long wait;
 		final int TARGET_FPS = 30;
 		final long OPTIMAL_TIME = 1000000000 / TARGET_FPS;
+		try {
+			Thread.sleep(250); //Sleep before starting the game loop to give the window time to get situated.
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		while (running) {
 			now = System.nanoTime();
 			if (reload) {

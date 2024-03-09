@@ -249,7 +249,11 @@ public class Main_Game extends Canvas implements Runnable{
 		long updateTime;
 		long wait;
 		final long OPTIMAL_TIME = 1000000000 / Target_FPS;
-
+		try {
+			Thread.sleep(250); //Sleep before starting the game loop to give the window time to get situated.
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
 		while (running) {
 			now = System.nanoTime();
 			//tick();
@@ -702,7 +706,7 @@ public class Main_Game extends Canvas implements Runnable{
 		rendering = true;
 		BufferStrategy bs = this.getBufferStrategy();
 		if (bs == null) {
-			this.createBufferStrategy(3);
+			this.createBufferStrategy(2);
 			return;
 		}
 

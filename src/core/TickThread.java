@@ -27,6 +27,12 @@ public class TickThread implements Runnable{
 		long updateTime;
 		long wait;
 		final long OPTIMAL_TIME = 1000000000 / Main_Game.Target_TPS;
+		try {
+			Thread.sleep(250); //Sleep before starting the game loop to give the window time to get situated.
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		};
 		while (running) {
 			now = System.nanoTime();
 			if (game.Paused == false) {
