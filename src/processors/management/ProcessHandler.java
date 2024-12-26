@@ -198,6 +198,7 @@ public class ProcessHandler implements Runnable {
 
 	public void removeAllProcessors() {
 		saveAllProcessors();
+		game.daytimecycle.removeLightSources();
 		int CurrentNumberOfProcessors = processors.size();
 		int CurrentNumberOfElectronics = ElectronicHandler.electronics.size();
 		for (int i = 0; i < CurrentNumberOfProcessors; i++) {

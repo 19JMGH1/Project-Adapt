@@ -88,6 +88,7 @@ public class DayTimeCycle {
 		}
 
 		if (reloadNeeded) {
+			//wipeAndReload();
 			reloadLights();
 			reloadNeeded = false;
 		}
@@ -103,6 +104,12 @@ public class DayTimeCycle {
 			//The line below was for debugging
 			//System.out.println("Transparency for light level "+i+" is: "+(transparency-(i*(transparency/Main_Game.MAX_LIGHT_LEVEL))));
 		}
+		
+//		System.out.println(lightSources.size());
+//		for (LightsData ld : lightSources) {
+//			System.out.println(ld.lightName);
+//		}
+		
 	}
 
 	private int getTransparency(int time) {
@@ -152,7 +159,7 @@ public class DayTimeCycle {
 	}
 
 	public void setLight(byte lightLevel, byte tileX, byte tileY, byte chunk) {
-		if (chunk < 0 || chunk > 8) {
+		if (chunk < 0 || chunk > 8 || lightLevel <= 0) {
 			return;
 		}
 		if (game.lightLevels[chunk][tileX][Math.abs(tileY)] >= lightLevel) {

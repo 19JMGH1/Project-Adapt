@@ -353,6 +353,7 @@ public class Main_Game extends Canvas implements Runnable{
 		//This has to stay at the very end
 		tileanimations = null;
 		inBoat = false;
+		daytimecycle.removeLightSources();
 	}
 
 	public void SaveFile() {
@@ -502,13 +503,12 @@ public class Main_Game extends Canvas implements Runnable{
 		if (TileY > 0) {
 			TileY -= 16;
 			ChunkY++;
-			lightLevels[6] = lightLevels[3];
-			lightLevels[7] = lightLevels[4];
-			lightLevels[8] = lightLevels[5];
-			lightLevels[3] = lightLevels[0];
-			lightLevels[4] = lightLevels[1];
-			lightLevels[5] = lightLevels[2];
-			daytimecycle.removeLightSources();
+			//lightLevels[6] = lightLevels[3];
+			//lightLevels[7] = lightLevels[4];
+			//lightLevels[8] = lightLevels[5];
+			//lightLevels[3] = lightLevels[0];
+			//lightLevels[4] = lightLevels[1];
+			//lightLevels[5] = lightLevels[2];
 			synchronized(StoredTiles) {
 				files.WriteChunk(CurrentFile, ChunkX-1, ChunkY-2, StoredTiles[6], dimension);
 				files.WriteChunk(CurrentFile, ChunkX, ChunkY-2, StoredTiles[7], dimension);
@@ -523,18 +523,18 @@ public class Main_Game extends Canvas implements Runnable{
 				StoredTiles[1] = files.ReadChunk(CurrentFile, ChunkX, ChunkY+1, dimension);
 				StoredTiles[2] = files.ReadChunk(CurrentFile, ChunkX+1, ChunkY+1, dimension);
 			}
+			daytimecycle.clearLights();
 			processhandler.reload = true;
 		}
 		else if (TileY < -15) {
 			TileY += 16;
 			ChunkY--;
-			lightLevels[0] = lightLevels[3];
-			lightLevels[1] = lightLevels[4];
-			lightLevels[2] = lightLevels[5];
-			lightLevels[3] = lightLevels[6];
-			lightLevels[4] = lightLevels[7];
-			lightLevels[5] = lightLevels[8];
-			daytimecycle.removeLightSources();
+			//lightLevels[0] = lightLevels[3];
+			//lightLevels[1] = lightLevels[4];
+			//lightLevels[2] = lightLevels[5];
+			//lightLevels[3] = lightLevels[6];
+			//lightLevels[4] = lightLevels[7];
+			//lightLevels[5] = lightLevels[8];
 			synchronized(StoredTiles) {
 				files.WriteChunk(CurrentFile, ChunkX-1, ChunkY+2, StoredTiles[0], dimension);
 				files.WriteChunk(CurrentFile, ChunkX, ChunkY+2, StoredTiles[1], dimension);
@@ -549,18 +549,18 @@ public class Main_Game extends Canvas implements Runnable{
 				StoredTiles[7] = files.ReadChunk(CurrentFile, ChunkX, ChunkY-1, dimension);
 				StoredTiles[8] = files.ReadChunk(CurrentFile, ChunkX+1, ChunkY-1, dimension);
 			}
+			daytimecycle.clearLights();
 			processhandler.reload = true;
 		}
 		if (TileX < 0) {
 			TileX += 16;
 			ChunkX--;
-			lightLevels[2] = lightLevels[1];
-			lightLevels[5] = lightLevels[4];
-			lightLevels[8] = lightLevels[7];
-			lightLevels[1] = lightLevels[0];
-			lightLevels[4] = lightLevels[3];
-			lightLevels[7] = lightLevels[6];
-			daytimecycle.removeLightSources();
+			//lightLevels[2] = lightLevels[1];
+			//lightLevels[5] = lightLevels[4];
+			//lightLevels[8] = lightLevels[7];
+			//lightLevels[1] = lightLevels[0];
+			//lightLevels[4] = lightLevels[3];
+			//lightLevels[7] = lightLevels[6];
 			synchronized(StoredTiles) {
 				files.WriteChunk(CurrentFile, ChunkX+2, ChunkY+1, StoredTiles[2], dimension);
 				files.WriteChunk(CurrentFile, ChunkX+2, ChunkY, StoredTiles[5], dimension);
@@ -575,18 +575,18 @@ public class Main_Game extends Canvas implements Runnable{
 				StoredTiles[3] = files.ReadChunk(CurrentFile, ChunkX-1, ChunkY, dimension);
 				StoredTiles[6] = files.ReadChunk(CurrentFile, ChunkX-1, ChunkY-1, dimension);
 			}
+			daytimecycle.clearLights();
 			processhandler.reload = true;
 		}
 		else if (TileX > 15) {
 			TileX -= 16;
 			ChunkX++;
-			lightLevels[0] = lightLevels[1];
-			lightLevels[3] = lightLevels[4];
-			lightLevels[6] = lightLevels[7];
-			lightLevels[1] = lightLevels[2];
-			lightLevels[4] = lightLevels[5];
-			lightLevels[7] = lightLevels[8];
-			daytimecycle.removeLightSources();
+			//lightLevels[0] = lightLevels[1];
+			//lightLevels[3] = lightLevels[4];
+			//lightLevels[6] = lightLevels[7];
+			//lightLevels[1] = lightLevels[2];
+			//lightLevels[4] = lightLevels[5];
+			//lightLevels[7] = lightLevels[8];
 			synchronized(StoredTiles) {
 				files.WriteChunk(CurrentFile, ChunkX-2, ChunkY+1, StoredTiles[0], dimension);
 				files.WriteChunk(CurrentFile, ChunkX-2, ChunkY, StoredTiles[3], dimension);
@@ -601,6 +601,7 @@ public class Main_Game extends Canvas implements Runnable{
 				StoredTiles[5] = files.ReadChunk(CurrentFile, ChunkX+1, ChunkY, dimension);
 				StoredTiles[8] = files.ReadChunk(CurrentFile, ChunkX+1, ChunkY-1, dimension);
 			}
+			daytimecycle.clearLights();
 			processhandler.reload = true;
 		}
 	}
